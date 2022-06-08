@@ -82,10 +82,10 @@ export const CustomerListTable = (props) => {
           indeterminate={selectedSomeCustomers}
           onChange={handleSelectAllCustomers}
         />
-        <Button size="small" sx={{ ml: 2 }}>
+        <Button size='small' sx={{ ml: 2 }}>
           Delete
         </Button>
-        <Button size="small" sx={{ ml: 2 }}>
+        <Button size='small' sx={{ ml: 2 }}>
           Edit
         </Button>
       </Box>
@@ -95,7 +95,7 @@ export const CustomerListTable = (props) => {
             sx={{ visibility: enableBulkActions ? "collapse" : "visible" }}
           >
             <TableRow>
-              <TableCell padding="checkbox">
+              <TableCell padding='checkbox'>
                 <Checkbox
                   checked={selectedAllCustomers}
                   indeterminate={selectedSomeCustomers}
@@ -105,7 +105,7 @@ export const CustomerListTable = (props) => {
               <TableCell>Name</TableCell>
               <TableCell>Phone Number</TableCell>
               <TableCell>Gender</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell align='right'>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -116,7 +116,7 @@ export const CustomerListTable = (props) => {
 
               return (
                 <TableRow hover key={customer.id} selected={isCustomerSelected}>
-                  <TableCell padding="checkbox">
+                  <TableCell padding='checkbox'>
                     <Checkbox
                       checked={isCustomerSelected}
                       onChange={(event) =>
@@ -142,12 +142,12 @@ export const CustomerListTable = (props) => {
                         {getInitials(customer.name)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
-                        <NextLink href="/dashboard/customers/1" passHref>
-                          <Link color="inherit" variant="subtitle2">
+                        <NextLink href='/dashboard/customers/1' passHref>
+                          <Link color='inherit' variant='subtitle2'>
                             {customer.name}
                           </Link>
                         </NextLink>
-                        <Typography color="textSecondary" variant="body2">
+                        <Typography color='textSecondary' variant='body2'>
                           {customer.email}
                         </Typography>
                       </Box>
@@ -162,18 +162,13 @@ export const CustomerListTable = (props) => {
                       )}
                     </Typography>
                   </TableCell> */}
-                  <TableCell align="right">
+                  <TableCell align='right'>
                     <NextLink
-                      href={`/dashboard/customers/${customer.id}/edit`}
+                      href={`/dashboard/customers/${customer.id}`}
                       passHref
                     >
-                      <IconButton component="a">
-                        <PencilAltIcon fontSize="small" />
-                      </IconButton>
-                    </NextLink>
-                    <NextLink href="/dashboard/customers/1" passHref>
-                      <IconButton component="a">
-                        <ArrowRightIcon fontSize="small" />
+                      <IconButton component='a'>
+                        <ArrowRightIcon fontSize='small' />
                       </IconButton>
                     </NextLink>
                   </TableCell>
@@ -184,7 +179,7 @@ export const CustomerListTable = (props) => {
         </Table>
       </Scrollbar>
       <TablePagination
-        component="div"
+        component='div'
         count={customersCount}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
