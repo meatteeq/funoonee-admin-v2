@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import NextLink from "next/link";
 import Head from "next/head";
+import axios from "axios";
 import {
   Avatar,
   Box,
@@ -14,6 +15,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
+import config from "../../../../config";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { customerApi } from "../../../../__fake-api__/customer-api";
@@ -33,11 +35,12 @@ import { getInitials } from "../../../../utils/get-initials";
 
 const tabs = [
   { label: "Details", value: "details" },
-  { label: "Invoices", value: "invoices" },
-  { label: "Logs", value: "logs" },
+  // { label: "Invoices", value: "invoices" },
+  // { label: "Logs", value: "logs" },
 ];
 
-const CustomerDetails = () => {
+const CustomerDetails = (props) => {
+  console.log(props, "data");
   const isMounted = useMounted();
   const [customer, setCustomer] = useState(null);
   const [currentTab, setCurrentTab] = useState("details");
@@ -80,30 +83,30 @@ const CustomerDetails = () => {
         <title>Dashboard: Customer Details</title>
       </Head>
       <Box
-        component="main"
+        component='main'
         sx={{
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth="md">
+        <Container maxWidth='md'>
           <div>
             <Box sx={{ mb: 4 }}>
-              <NextLink href="/dashboard/customers" passHref>
+              <NextLink href='/dashboard/customers' passHref>
                 <Link
-                  color="textPrimary"
-                  component="a"
+                  color='textPrimary'
+                  component='a'
                   sx={{
                     alignItems: "center",
                     display: "flex",
                   }}
                 >
-                  <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
-                  <Typography variant="subtitle2">Customers</Typography>
+                  <ArrowBackIcon fontSize='small' sx={{ mr: 1 }} />
+                  <Typography variant='subtitle2'>Customers</Typography>
                 </Link>
               </NextLink>
             </Box>
-            <Grid container justifyContent="space-between" spacing={3}>
+            <Grid container justifyContent='space-between' spacing={3}>
               <Grid
                 item
                 sx={{
@@ -123,46 +126,46 @@ const CustomerDetails = () => {
                   {getInitials(customer.name)}
                 </Avatar>
                 <div>
-                  <Typography variant="h4">{customer.email}</Typography>
+                  <Typography variant='h4'>{props?.data?.email}</Typography>
                   <Box
                     sx={{
                       display: "flex",
                       alignItems: "center",
                     }}
                   >
-                    <Typography variant="subtitle2">user_id:</Typography>
-                    <Chip label={customer.id} size="small" sx={{ ml: 1 }} />
+                    <Typography variant='subtitle2'>user_id:</Typography>
+                    <Chip label={props?.data?.id} size='small' sx={{ ml: 1 }} />
                   </Box>
                 </div>
               </Grid>
               <Grid item sx={{ m: -1 }}>
-                <NextLink href="/dashboard/customers/1/edit" passHref>
+                {/* <NextLink href={`/dashboard/customers/${}/edit`} passHref>
                   <Button
-                    component="a"
-                    endIcon={<PencilAltIcon fontSize="small" />}
+                    component='a'
+                    endIcon={<PencilAltIcon fontSize='small' />}
                     sx={{ m: 1 }}
-                    variant="outlined"
+                    variant='outlined'
                   >
                     Edit
                   </Button>
-                </NextLink>
-                <Button
-                  endIcon={<ChevronDownIcon fontSize="small" />}
+                </NextLink> */}
+                {/* <Button
+                  endIcon={<ChevronDownIcon fontSize='small' />}
                   sx={{ m: 1 }}
-                  variant="contained"
+                  variant='contained'
                 >
                   Actions
-                </Button>
+                </Button> */}
               </Grid>
             </Grid>
             <Tabs
-              indicatorColor="primary"
+              indicatorColor='primary'
               onChange={handleTabsChange}
-              scrollButtons="auto"
+              scrollButtons='auto'
               sx={{ mt: 3 }}
-              textColor="primary"
+              textColor='primary'
               value={currentTab}
-              variant="scrollable"
+              variant='scrollable'
             >
               {tabs.map((tab) => (
                 <Tab key={tab.value} label={tab.label} value={tab.value} />
@@ -177,14 +180,14 @@ const CustomerDetails = () => {
                   <CustomerBasicDetails
                     address1={customer.address1}
                     address2={customer.address2}
-                    country={customer.country}
-                    email={customer.email}
+                    gender={props?.data?.gender}
+                    email={props?.data?.email}
                     isVerified={!!customer.isVerified}
-                    phone={customer.phone}
-                    state={customer.state}
+                    phone={props?.data?.phoneNumber}
+                    status={props?.data?.status ? "Active" : "InActive"}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                   <CustomerPayment />
                 </Grid>
                 <Grid item xs={12}>
@@ -192,11 +195,11 @@ const CustomerDetails = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <CustomerDataManagement />
-                </Grid>
+                </Grid> */}
               </Grid>
             )}
-            {currentTab === "invoices" && <CustomerInvoices />}
-            {currentTab === "logs" && <CustomerLogs />}
+            {/* {currentTab === "invoices" && <CustomerInvoices />}
+            {currentTab === "logs" && <CustomerLogs />} */}
           </Box>
         </Container>
       </Box>
@@ -209,5 +212,26 @@ CustomerDetails.getLayout = (page) => (
     <DashboardLayout>{page}</DashboardLayout>
   </AuthGuard>
 );
+
+export async function getServerSideProps(ctx) {
+  try {
+    const data = await axios.get(
+      `${config.apiRoute}admin/customer/${ctx.query.customerId}`,
+      {
+        headers: {
+          Authorization: config.token,
+        },
+      }
+    );
+    return {
+      props: { data: data.data },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      props: {},
+    };
+  }
+}
 
 export default CustomerDetails;
