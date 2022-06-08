@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+
 import Head from "next/head";
 import { Avatar, Box, Chip, Container, Link, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -124,8 +126,8 @@ VendorEdit.getLayout = (page) => (
     <DashboardLayout>{page}</DashboardLayout>
   </AuthGuard>
 );
-export async function getServerSideProps({ params: { id } }) {
-  const res = await axios.get(`${config.apiRoute}/vendor/${id}`, {
+export async function getServerSideProps({ params: { vendoriId } }) {
+  const res = await axios.get(`${config.apiRoute}/vendor/${vendoriId}`, {
     headers: {
       Authorization: config.token,
     },

@@ -9,6 +9,7 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  TableHead,
 } from "@mui/material";
 import { SeverityPill } from "../../severity-pill";
 
@@ -34,6 +35,15 @@ export const OrderListTable = (props) => {
   return (
     <div {...other}>
       <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>Phone Number</TableCell>
+            <TableCell>country</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell align="right">Actions</TableCell>
+          </TableRow>
+        </TableHead>
         <TableBody>
           {orders?.map((order) => (
             <TableRow
@@ -77,6 +87,10 @@ export const OrderListTable = (props) => {
                   </Typography>
                 </Box>
               </TableCell>
+              <TableCell>{order.cName}</TableCell>
+              <TableCell>{order.cName}</TableCell>
+              <TableCell>{order.cName}</TableCell>
+
               <TableCell align="right">
                 <SeverityPill
                   color={severityMap[order.orderStatus] || "warning"}

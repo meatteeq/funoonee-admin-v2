@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import numeral from "numeral";
 import PropTypes from "prop-types";
+
+import { SeverityPill } from "../severity-pill";
 import {
   Avatar,
   Box,
@@ -91,9 +93,7 @@ const VendorListTable = (props) => {
       </Box>
       <Scrollbar>
         <Table sx={{ minWidth: 700 }}>
-          <TableHead
-            sx={{ visibility: enableBulkActions ? "collapse" : "visible" }}
-          >
+          <TableHead>
             <TableRow>
               <TableCell padding="checkbox">
                 <Checkbox
@@ -105,6 +105,7 @@ const VendorListTable = (props) => {
               <TableCell>Name</TableCell>
               <TableCell>Phone Number</TableCell>
               <TableCell>country</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -153,6 +154,17 @@ const VendorListTable = (props) => {
                   </TableCell>
                   <TableCell>{vendor.phoneNumber}</TableCell>
                   <TableCell>{vendor.country}</TableCell>
+                  <TableCell>
+                    <SeverityPill
+                      color={
+                        (vendor.status === "APPROVED" && "success") ||
+                        (vendor.status === "REJECT" && "error") ||
+                        "warning"
+                      }
+                    >
+                      {vendor.status}
+                    </SeverityPill>
+                  </TableCell>
                   {/* <TableCell>
                     <Typography color="success.main" variant="subtitle2">
                       {numeral(customer.totalAmountSpent).format(

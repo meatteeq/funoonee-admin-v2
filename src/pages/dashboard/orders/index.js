@@ -240,7 +240,7 @@ const OrderList = ({ data }) => {
                 </Button>
               </Grid> */}
             </Grid>
-            <Tabs
+            {/* <Tabs
               indicatorColor="primary"
               onChange={handleTabsChange}
               scrollButtons="auto"
@@ -252,7 +252,7 @@ const OrderList = ({ data }) => {
               {tabs.map((tab) => (
                 <Tab key={tab.value} label={tab.label} value={tab.value} />
               ))}
-            </Tabs>
+            </Tabs> */}
           </Box>
           <Divider />
           <Box

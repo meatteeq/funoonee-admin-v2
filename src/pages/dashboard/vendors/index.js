@@ -26,6 +26,7 @@ import { Plus as PlusIcon } from "../../../icons/plus";
 import { Search as SearchIcon } from "../../../icons/search";
 import { Upload as UploadIcon } from "../../../icons/upload";
 import { gtm } from "../../../lib/gtm";
+import Link from "next/link";
 
 const tabs = [
   {
@@ -243,12 +244,14 @@ const VendorList = ({ data }) => {
                 <Typography variant="h4">Vendors</Typography>
               </Grid>
               <Grid item>
-                <Button
-                  startIcon={<PlusIcon fontSize="small" />}
-                  variant="contained"
-                >
-                  Add
-                </Button>
+                <Link href="/dashboard/vendors/new">
+                  <Button
+                    startIcon={<PlusIcon fontSize="small" />}
+                    variant="contained"
+                  >
+                    Add
+                  </Button>
+                </Link>
               </Grid>
             </Grid>
             {/* <Box

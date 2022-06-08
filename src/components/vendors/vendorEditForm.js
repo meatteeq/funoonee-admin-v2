@@ -1,7 +1,12 @@
 import NextLink from "next/link";
 import PropTypes from "prop-types";
 import toast from "react-hot-toast";
+import { useRouter } from "next/router";
+import axios from "axios";
 import * as Yup from "yup";
+import config from "../../config";
+import { useState, useEffect } from "react";
+import Select from "react-select";
 import { useFormik } from "formik";
 import {
   Box,
@@ -18,42 +23,39 @@ import {
 } from "@mui/material";
 import { wait } from "../../utils/wait";
 
-export const VendorEditForm = (props) => {
-  const { customer, ...other } = props;
+export const VendorEditForm = ({ vendor }) => {
+  const router = useRouter();
+
+  const [venodrEditStatus, setStatus] = useState("");
   const formik = useFormik({
     initialValues: {
-      address1: customer.address1 || "",
-      address2: customer.address2 || "",
-      country: customer.country || "",
-      email: customer.email || "",
-      hasDiscount: customer.hasDiscount || false,
-      isVerified: customer.isVerified || false,
-      name: customer.name || "",
-      phone: customer.phone || "",
-      state: customer.state || "",
-      submit: null,
+      name: vendor.name,
+      email: vendor.email,
+      phoneNumber: vendor.phoneNumber,
+      street: vendor.street,
+      postalCode: vendor.postalCode,
+      country: vendor.country,
+      status: vendor.status,
     },
-    validationSchema: Yup.object({
-      address1: Yup.string().max(255),
-      address2: Yup.string().max(255),
-      country: Yup.string().max(255),
-      email: Yup.string()
-        .email("Must be a valid email")
-        .max(255)
-        .required("Email is required"),
-      hasDiscount: Yup.bool(),
-      isVerified: Yup.bool(),
-      name: Yup.string().max(255).required("Name is required"),
-      phone: Yup.string().max(15),
-      state: Yup.string().max(255),
-    }),
     onSubmit: async (values, helpers) => {
+      const payload = {
+        status: venodrEditStatus.value,
+      };
       try {
-        // NOTE: Make API request
+        const res = await axios.put(
+          `${config.apiRoute}/vendor/change-status/${vendor.id}`,
+          payload,
+          {
+            headers: {
+              Authorization: config.token,
+            },
+          }
+        );
         await wait(500);
         helpers.setStatus({ success: true });
         helpers.setSubmitting(false);
-        toast.success("Customer updated!");
+        toast.success("Vendor updated!");
+        router.push("/dashboard/vendors").catch(console.error);
       } catch (err) {
         console.error(err);
         toast.error("Something went wrong!");
@@ -63,16 +65,37 @@ export const VendorEditForm = (props) => {
       }
     },
   });
+  const venodrStatus = [
+    {
+      value: "PENDING",
+      label: "PENDING",
+    },
+    {
+      value: "APPROVED",
+      label: "APPROVED",
+    },
+    {
+      value: "REJECT",
+      label: "REJECT",
+    },
+  ];
+
+  useEffect(() => {
+    const datas = venodrStatus.filter((item) => item.label === vendor?.status);
+    console.log();
+    setStatus(datas[0]);
+  }, [vendor]);
 
   return (
-    <form onSubmit={formik.handleSubmit} {...other}>
+    <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader title="Edit customer" />
+        <CardHeader title="Edit Vendor" />
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
               <TextField
+                disabled
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
@@ -86,6 +109,7 @@ export const VendorEditForm = (props) => {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
+                disabled
                 error={Boolean(formik.touched.email && formik.errors.email)}
                 fullWidth
                 helperText={formik.touched.email && formik.errors.email}
@@ -99,6 +123,25 @@ export const VendorEditForm = (props) => {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
+                disabled
+                error={Boolean(
+                  formik.touched.phoneNumber && formik.errors.phoneNumber
+                )}
+                fullWidth
+                helperText={
+                  formik.touched.phoneNumber && formik.errors.phoneNumber
+                }
+                label="phoneNumber "
+                name="phoneNumber"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                required
+                value={formik.values.phoneNumber}
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                disabled
                 error={Boolean(formik.touched.country && formik.errors.country)}
                 fullWidth
                 helperText={formik.touched.country && formik.errors.country}
@@ -111,11 +154,12 @@ export const VendorEditForm = (props) => {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
-                error={Boolean(formik.touched.state && formik.errors.state)}
+                disabled
+                error={Boolean(formik.touched.city && formik.errors.city)}
                 fullWidth
-                helperText={formik.touched.state && formik.errors.state}
-                label="State/Region"
-                name="state"
+                helperText={formik.touched.city && formik.errors.city}
+                label="city/Region"
+                name="city"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.state}
@@ -123,42 +167,42 @@ export const VendorEditForm = (props) => {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
+                disabled
                 error={Boolean(
-                  formik.touched.address1 && formik.errors.address1
+                  formik.touched.postalCode && formik.errors.postalCode
                 )}
                 fullWidth
-                helperText={formik.touched.address1 && formik.errors.address1}
+                helperText={
+                  formik.touched.postalCode && formik.errors.postalCode
+                }
                 label="Address 1"
-                name="address1"
+                name="postalCode"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.address1}
+                value={formik.values.postalCode}
               />
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
-                error={Boolean(
-                  formik.touched.address2 && formik.errors.address2
-                )}
+                disabled
+                error={Boolean(formik.touched.country && formik.errors.country)}
                 fullWidth
-                helperText={formik.touched.address2 && formik.errors.address2}
+                helperText={formik.touched.country && formik.errors.country}
                 label="Address 2"
-                name="address2"
+                name="country"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.address2}
+                value={formik.values.country}
               />
             </Grid>
             <Grid item md={6} xs={12}>
-              <TextField
-                error={Boolean(formik.touched.phone && formik.errors.phone)}
-                fullWidth
-                helperText={formik.touched.phone && formik.errors.phone}
-                label="Phone number"
-                name="phone"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.phone}
+              <Select
+                labelId="demo-simple-select-label"
+                options={venodrStatus}
+                name="status"
+                value={venodrEditStatus}
+                label="Select Status"
+                onChange={(selectCat) => setStatus(selectCat)}
               />
             </Grid>
           </Grid>
@@ -169,51 +213,8 @@ export const VendorEditForm = (props) => {
               justifyContent: "space-between",
               mt: 3,
             }}
-          >
-            <div>
-              <Typography gutterBottom variant="subtitle1">
-                Make Contact Info Public
-              </Typography>
-              <Typography color="textSecondary" variant="body2" sx={{ mt: 1 }}>
-                Means that anyone viewing your profile will be able to see your
-                contacts details
-              </Typography>
-            </div>
-            <Switch
-              checked={formik.values.isVerified}
-              color="primary"
-              edge="start"
-              name="isVerified"
-              onChange={formik.handleChange}
-              value={formik.values.isVerified}
-            />
-          </Box>
+          ></Box>
           <Divider sx={{ my: 3 }} />
-          <Box
-            sx={{
-              alignItems: "center",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <div>
-              <Typography gutterBottom variant="subtitle1">
-                Available to hire
-              </Typography>
-              <Typography color="textSecondary" variant="body2" sx={{ mt: 1 }}>
-                Toggling this will let your teammates know that you are
-                available for acquiring new projects
-              </Typography>
-            </div>
-            <Switch
-              checked={formik.values.hasDiscount}
-              color="primary"
-              edge="start"
-              name="hasDiscount"
-              onChange={formik.handleChange}
-              value={formik.values.hasDiscount}
-            />
-          </Box>
         </CardContent>
         <CardActions
           sx={{
@@ -242,9 +243,6 @@ export const VendorEditForm = (props) => {
               Cancel
             </Button>
           </NextLink>
-          <Button color="error" disabled={formik.isSubmitting}>
-            Delete user
-          </Button>
         </CardActions>
       </Card>
     </form>
