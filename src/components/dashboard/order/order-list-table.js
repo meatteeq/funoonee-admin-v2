@@ -37,7 +37,7 @@ export const OrderListTable = (props) => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
+            <TableCell>Order No</TableCell>
             <TableCell>Phone Number</TableCell>
             <TableCell>country</TableCell>
             <TableCell>Status</TableCell>

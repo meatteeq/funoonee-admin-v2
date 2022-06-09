@@ -58,7 +58,7 @@ const categoryOptions = [
   },
 ];
 
-export const ProductListTable = (props) => {
+export const CategoriesListTable = (props) => {
   const {
     onPageChange,
     onRowsPerPageChange,
@@ -78,64 +78,7 @@ export const ProductListTable = (props) => {
     setOpenProduct(null);
     toast.success("Product updated");
   };
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      ar_name: "",
-      description: "",
-      ar_description: "",
-      image: "imag.jpg",
-      is_multiple_allowed: true,
-      price: 0,
-      special_price: 0,
-      status: true,
-      isFeatured: false,
-    },
-    validationSchema: Yup.object({
-      ar_name: Yup.string().required("Email is required"),
-      name: Yup.string().max(255).required("Name is required"),
-      price: Yup.number().required("Price  is required"),
-      image: Yup.string().required("Image is required"),
-      special_price: Yup.string().required("special is required"),
-      sku: Yup.string().required("sku is required"),
-      description: Yup.string().required("description is required"),
-      ar_description: Yup.string().required("ar_description is Required"),
-      //   category: Yup.string().required("cities are required"),
-      //   city: Yup.array().required("cities are required"),
-    }),
-    onSubmit: async (values, helpers) => {
-      console.log("submit run");
-      const payload = {
-        ...values,
-        city: city.map((e) => e.value),
-        category_id: cat.value,
-      };
-      console.log(payload);
 
-      try {
-        // NOTE: Make API request
-        const res = await axios.post(
-          `${config.apiRoute}/product/add`,
-          payload,
-          {
-            headers: {
-              Authorization: config.token,
-            },
-          }
-        );
-
-        console.log(res.data);
-        toast.success("Product created!");
-        router.push("/dashboard/products").catch(console.error);
-      } catch (err) {
-        console.error(err);
-        toast.error("Something went wrong!");
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
-      }
-    },
-  });
   const handleCancelEdit = () => {
     setOpenProduct(null);
   };
@@ -151,12 +94,9 @@ export const ProductListTable = (props) => {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell width="25%">Name</TableCell>
-              <TableCell width="25%">Ar Name</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>sku</TableCell>
-              <TableCell>Special Price</TableCell>
-              {/* <TableCell align="right">Actions</TableCell> */}
+              <TableCell>Name</TableCell>
+              <TableCell>Ar Name</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -245,37 +185,9 @@ export const ProductListTable = (props) => {
                         </Box>
                       </Box>
                     </TableCell>
-                    <TableCell width="25%">
-                      {/* <LinearProgress
-                        value={product.quantity}
-                        variant="determinate"
-                        color={product.quantity >= 10 ? "success" : "error"}
-                        sx={{
-                          height: 8,
-                          width: 36,
-                        }}
-                      />
-                      <Typography color="textSecondary" variant="body2">
-                        {product.quantity} in stock
-                        {product.variants > 1 &&
-                          ` in ${product.variants} variants`}
-                      </Typography> */}
-                      {product.arName}
-                    </TableCell>
-                    <TableCell>
-                      {numeral(product.price).format(
-                        `${product.currency}0,0.00`
-                      )}
-                    </TableCell>
-                    <TableCell>{product.sku}</TableCell>
-                    <TableCell>
-                      {/* <SeverityPill
-                        color={product.status === true ? "success" : "info"}
-                      >
-                        {product.status}
-                      </SeverityPill> */}
-                      {product.specialPrice ? product.specialPrice : 0}
-                    </TableCell>
+                    <TableCell width="25%">{product.arName}</TableCell>
+                    {/* <TableCell width="25%">{product.status}</TableCell> */}
+
                     {/* <TableCell align="right">
                       <IconButton>
                         <DotsHorizontalIcon fontSize="small" />
@@ -316,19 +228,11 @@ export const ProductListTable = (props) => {
                                     name="name"
                                   />
                                 </Grid>
-                                <Grid item md={6} xs={12}>
-                                  <TextField
-                                    defaultValue={product.sku}
-                                    disabled
-                                    fullWidth
-                                    label="SKU"
-                                    name="sku"
-                                  />
-                                </Grid>
+
                                 <Grid item md={6} xs={12}>
                                   <TextField
                                     defaultValue={product.arName}
-                                    disabled
+                                    // disabled
                                     fullWidth
                                     label="Ar Name"
                                     name="arName"
@@ -337,7 +241,7 @@ export const ProductListTable = (props) => {
                                 <Grid item md={6} xs={12}>
                                   <TextField
                                     defaultValue={product.description}
-                                    disabled
+                                    // disabled
                                     fullWidth
                                     label="Description"
                                     name="description"
@@ -346,7 +250,7 @@ export const ProductListTable = (props) => {
                                 <Grid item md={6} xs={12}>
                                   <TextField
                                     defaultValue={product.arDescription}
-                                    disabled
+                                    // disabled
                                     fullWidth
                                     label="Ar Description"
                                     name="arDescription"
@@ -358,95 +262,17 @@ export const ProductListTable = (props) => {
                                     defaultValue={product.id}
                                     disabled
                                     fullWidth
-                                    label="Barcode"
+                                    label="Id"
                                     name="barcode"
                                   />
                                 </Grid>
                               </Grid>
                             </Grid>
                             <Grid item md={6} xs={12}>
-                              <Typography variant="h6">
-                                Pricing and Categories
-                              </Typography>
+                              <Typography variant="h6">Status</Typography>
                               <Divider sx={{ my: 2 }} />
                               <Grid container spacing={3}>
                                 <Grid item md={6} xs={12}>
-                                  <TextField
-                                    defaultValue={product.price}
-                                    fullWidth
-                                    label="Old price"
-                                    name="old-price"
-                                    InputProps={{
-                                      startAdornment: (
-                                        <InputAdornment position="start">
-                                          {product.currency}
-                                        </InputAdornment>
-                                      ),
-                                    }}
-                                    type="number"
-                                  />
-                                </Grid>
-                                <Grid item md={6} xs={12}>
-                                  <TextField
-                                    defaultValue={product.specialPrice}
-                                    fullWidth
-                                    label="specialPrice"
-                                    name="new-price"
-                                    InputProps={{
-                                      startAdornment: (
-                                        <InputAdornment position="start">
-                                          $
-                                        </InputAdornment>
-                                      ),
-                                    }}
-                                    type="number"
-                                  />
-                                </Grid>
-                                <Grid item md={6} xs={12}>
-                                  <TextField
-                                    defaultValue={product.category}
-                                    fullWidth
-                                    label="Category"
-                                    select
-                                  >
-                                    {categoryOptions.map((option) => (
-                                      <MenuItem
-                                        key={option.value}
-                                        value={option.value}
-                                      >
-                                        {option.label}
-                                      </MenuItem>
-                                    ))}
-                                  </TextField>
-                                </Grid>
-                                <Grid item md={6} xs={12}>
-                                  <TextField
-                                    defaultValue={product.city}
-                                    fullWidth
-                                    label="City"
-                                    select
-                                  >
-                                    {categoryOptions.map((option) => (
-                                      <MenuItem
-                                        key={option.value}
-                                        value={option.value}
-                                      >
-                                        {option.label}
-                                      </MenuItem>
-                                    ))}
-                                  </TextField>
-                                </Grid>
-                                <Grid item md={6} xs={12}>
-                                  <FormControlLabel
-                                    control={
-                                      <Checkbox
-                                        checked={product.FormControlLabel}
-                                        // onChange={formik.handleChange}
-                                      />
-                                    }
-                                    label="Is Multipal Allowed"
-                                    name="is_multiple_allowed"
-                                  />
                                   <FormControlLabel
                                     control={
                                       <Checkbox
@@ -456,16 +282,6 @@ export const ProductListTable = (props) => {
                                     }
                                     label="Status"
                                     name="status"
-                                  />
-                                  <FormControlLabel
-                                    control={
-                                      <Checkbox
-                                        checked={product.isFeatured}
-                                        // onChange={formik.handleChange}
-                                      />
-                                    }
-                                    label="Is Featured"
-                                    name="isFeatured"
                                   />
                                 </Grid>
                                 {/* <Grid
@@ -543,7 +359,7 @@ export const ProductListTable = (props) => {
   );
 };
 
-ProductListTable.propTypes = {
+CategoriesListTable.propTypes = {
   products: PropTypes.array.isRequired,
   productsCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
