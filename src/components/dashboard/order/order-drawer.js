@@ -58,9 +58,9 @@ const OrderPreview = (props) => {
   const status = [
     { label: "NEW", value: "NEW" },
     { label: "CONFIRMED", value: "CONFIRMED" },
-    { label: "PROCESSING", value: "PROCESSING" },
-    { label: "REPAIR", value: "REPAIR" },
-    { label: "DONE", value: "DONE" },
+    // { label: "PROCESSING", value: "PROCESSING" },
+    // { label: "REPAIR", value: "REPAIR" },
+    // { label: "DONE", value: "DONE" },
     { label: "CANCELLED", value: "CANCELLED" },
   ];
 
@@ -75,15 +75,18 @@ const OrderPreview = (props) => {
       },
     };
     try {
-      const res = axios.put(
-        `${config.apiRoute}/order/update-status/${order.id}`,
-        data,
-        options
-      );
-      console.log(res);
-      toast.success("Order Confirmed Successfully");
-      props.onclose();
-      router.push("/dashboard/orders").catch(console.error);
+      const res = axios
+        .put(
+          `${config.apiRoute}/order/update-status/${order.id}`,
+          data,
+          options
+        )
+        .then((res) => {
+          toast.success(res.data.message);
+          props.onclose();
+          router.push("/dashboard/orders").catch(console.error);
+        });
+      // console.log(res.data.message);
     } catch (error) {
       // toast.error(error.);
     }
