@@ -242,12 +242,12 @@ const CustomerList = ({ data }) => {
                 <Typography variant="h4">Customers</Typography>
               </Grid>
               <Grid item>
-                <Button
+                {/* <Button
                   startIcon={<PlusIcon fontSize="small" />}
                   variant="contained"
                 >
                   Add
-                </Button>
+                </Button> */}
               </Grid>
             </Grid>
             {/* <Box

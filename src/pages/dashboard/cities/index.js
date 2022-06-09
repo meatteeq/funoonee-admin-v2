@@ -11,9 +11,9 @@ import { useMounted } from "../../../hooks/use-mounted";
 import { Download as DownloadIcon } from "../../../icons/download";
 import { Upload as UploadIcon } from "../../../icons/upload";
 import { Plus as PlusIcon } from "../../../icons/plus";
-import { gtm } from "../../../lib/gtm";
 import axios from "axios";
 import config from "../../../config";
+import { CategoriesListTable } from "../../../components/dashboard/product/servicelistTable";
 const applyFilters = (products, filters) =>
   products.filter((product) => {
     if (filters.name) {
@@ -59,7 +59,7 @@ const applyFilters = (products, filters) =>
 const applyPagination = (products, page, rowsPerPage) =>
   products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-const ProductList = ({ data }) => {
+const Categories = ({ data }) => {
   const products = data;
   const isMounted = useMounted();
   const [page, setPage] = useState(0);
@@ -70,8 +70,6 @@ const ProductList = ({ data }) => {
     status: [],
     inStock: undefined,
   });
-
- 
 
   const handleFiltersChange = (filters) => {
     setFilters(filters);
@@ -96,7 +94,7 @@ const ProductList = ({ data }) => {
   return (
     <>
       <Head>
-        <title>Dashboard: Product List | Material Kit Pro</title>
+        <title>Dashboard: Cities List </title>
       </Head>
       <Box
         component="main"
@@ -109,10 +107,10 @@ const ProductList = ({ data }) => {
           <Box sx={{ mb: 4 }}>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">Products</Typography>
+                <Typography variant="h4">Cities</Typography>
               </Grid>
               <Grid item>
-                <NextLink href="/dashboard/products/new" passHref>
+                <NextLink href="/dashboard/category/new" passHref>
                   <Button
                     component="a"
                     startIcon={<PlusIcon fontSize="small" />}
@@ -123,26 +121,10 @@ const ProductList = ({ data }) => {
                 </NextLink>
               </Grid>
             </Grid>
-            {/* <Box
-              sx={{
-                m: -1,
-                mt: 3,
-              }}
-            >
-              <Button startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }}>
-                Import
-              </Button>
-              <Button
-                startIcon={<DownloadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
-                Export
-              </Button>
-            </Box> */}
           </Box>
           <Card>
             <ProjectListFilters onChange={handleFiltersChange} />
-            <ProductListTable
+            <CategoriesListTable
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
@@ -157,13 +139,13 @@ const ProductList = ({ data }) => {
   );
 };
 
-ProductList.getLayout = (page) => (
-  <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
+Categories.getLayout = (page) => (
+  //   <AuthGuard>
+  <DashboardLayout>{page}</DashboardLayout>
+  //   </AuthGuard>
 );
 export async function getServerSideProps() {
-  const res = await axios.get(`${config.apiRoute}product/list`, {
+  const res = await axios.get(`${config.apiRoute}/city/list`, {
     headers: {
       Authorization: config.token,
     },
@@ -173,5 +155,4 @@ export async function getServerSideProps() {
     props: { data: res.data },
   };
 }
-
-export default ProductList;
+export default Categories;

@@ -107,6 +107,11 @@ const getSections = (t) => [
         //   },
         // ],
       },
+      {
+        title: t("Categories"),
+        icon: <ShoppingCartIcon fontSize="small" />,
+        path: "/dashboard/category",
+      },
       // {
       //   title: t("Invoices"),
       //   path: "/dashboard/invoices",

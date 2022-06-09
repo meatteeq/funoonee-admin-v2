@@ -143,7 +143,6 @@ const applyPagination = (customers, page, rowsPerPage) =>
 
 const VendorList = ({ data }) => {
   const customers = data;
-  const isMounted = useMounted();
   const queryRef = useRef(null);
   // const [customers, setCustomers] = useState([]);
   const [currentTab, setCurrentTab] = useState("all");
@@ -156,29 +155,6 @@ const VendorList = ({ data }) => {
     isProspect: undefined,
     isReturning: undefined,
   });
-
-  // useEffect(() => {
-  //   gtm.push({ event: "page_view" });
-  // }, []);
-
-  // const getCustomers = useCallback(async () => {
-  //   try {
-  //     const data = await customerApi.getCustomers();
-
-  //     if (isMounted()) {
-  //       setCustomers(data);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }, [isMounted]);
-
-  // useEffect(
-  //   () => {
-  //     getCustomers();
-  //   },
-  //   []
-  // );
 
   const handleTabsChange = (event, value) => {
     const updatedFilters = {
@@ -254,41 +230,8 @@ const VendorList = ({ data }) => {
                 </Link>
               </Grid>
             </Grid>
-            {/* <Box
-              sx={{
-                m: -1,
-                mt: 3,
-              }}
-            >
-              <Button startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }}>
-                Import
-              </Button>
-              <Button
-                startIcon={<DownloadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
-                Export
-              </Button>
-            </Box> */}
           </Box>
           <Card>
-            {/* <Tabs
-              indicatorColor="primary"
-              onChange={handleTabsChange}
-              scrollButtons="auto"
-              sx={{ px: 3 }}
-              textColor="primary"
-              value={currentTab}
-              variant="scrollable"
-            >
-              {tabs.map((tab) => (
-                <Tab
-                  key={tab.value}
-                  label={tab.label}
-                  value={tab.value}
-                />
-              ))}
-            </Tabs> */}
             <Divider />
             <Box
               sx={{
