@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { format } from "date-fns";
 import numeral from "numeral";
@@ -17,12 +17,19 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useMemo } from "react";
+import toast from "react-hot-toast";
+
 import { styled } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/Edit";
 import { X as XIcon } from "../../../icons/x";
 import { PropertyList } from "../../property-list";
 import { PropertyListItem } from "../../property-list-item";
 import { Scrollbar } from "../../scrollbar";
+import axios from "axios";
+import Select from "react-select";
+import config from "../../../config";
+import { useRouter } from "next/router";
 
 const statusOptions = [
   {
@@ -44,9 +51,52 @@ const statusOptions = [
 ];
 
 const OrderPreview = (props) => {
+  const [statuss, setStatuss] = useState({});
   const { lgUp, onApprove, onEdit, onReject, order } = props;
   const align = lgUp ? "horizontal" : "vertical";
+  const router = useRouter();
+  const status = [
+    { label: "NEW", value: "NEW" },
+    { label: "CONFIRMED", value: "CONFIRMED" },
+    { label: "PROCESSING", value: "PROCESSING" },
+    { label: "REPAIR", value: "REPAIR" },
+    { label: "DONE", value: "DONE" },
+    { label: "CANCELLED", value: "CANCELLED" },
+  ];
 
+  const handleSubmit = () => {
+    const data = {
+      status: statuss.label,
+    };
+    const options = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: config.token,
+      },
+    };
+    try {
+      const res = axios.put(
+        `${config.apiRoute}/order/update-status/${order.id}`,
+        data,
+        options
+      );
+      console.log(res);
+      toast.success("Order Confirmed Successfully");
+      router.push("/dashboard/orders").catch(console.error);
+    } catch (error) {
+      // toast.error(error.);
+    }
+  };
+
+  useEffect(() => {
+    const data = status.filter((item) => item.label === order.orderStatus);
+    setStatuss(data[0]);
+  }, []);
+
+  const filterdStatus = useMemo(() => {
+    const data = status.filter((item) => item.label !== order.orderStatus);
+    return data;
+  });
   return (
     <>
       <Box
@@ -76,18 +126,21 @@ const OrderPreview = (props) => {
             },
           }}
         >
-          <Button onClick={onApprove} size="small" variant="contained">
-            Approve
-          </Button>
-          <Button onClick={onReject} size="small" variant="outlined">
-            Reject
-          </Button>
+          <Select
+            labelId="statusDropdown"
+            options={filterdStatus}
+            name="category"
+            value={statuss}
+            label="Select Category"
+            onChange={(selectdStatus) => setStatuss(selectdStatus)}
+          />
+
           <Button
-            onClick={onEdit}
+            onClick={handleSubmit}
             size="small"
             startIcon={<EditIcon fontSize="small" />}
           >
-            Edit
+            Update
           </Button>
         </Box>
       </Box>
@@ -124,18 +177,7 @@ const OrderPreview = (props) => {
             {order.street}
           </Typography>
         </PropertyListItem>
-        {/* <PropertyListItem
-          align={align}
-          disableGutters
-          label="Date"
-          value={format(order.serviceDate, "dd/MM/yyyy HH:mm")}
-        /> */}
-        {/* <PropertyListItem
-          align={align}
-          disableGutters
-          label="Promotion Code"
-          value={order.promotionCode}
-        /> */}
+
         <PropertyListItem
           align={align}
           disableGutters

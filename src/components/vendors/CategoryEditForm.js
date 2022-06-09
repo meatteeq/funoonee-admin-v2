@@ -1,65 +1,37 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
+import NextLink from "next/link";
+import PropTypes from "prop-types";
 import toast from "react-hot-toast";
-import * as Yup from "yup";
-import { useFormik } from "formik";
+import { useRouter } from "next/router";
 import axios from "axios";
-import config from "../../../config";
+import * as Yup from "yup";
+import config from "../../config";
+import { useState, useEffect } from "react";
+import Select from "react-select";
+import { QuillEditor } from "../quill-editor";
+import { useFormik } from "formik";
 import {
   Box,
   Button,
   Card,
+  CardActions,
   CardContent,
-  FormControlLabel,
-  FormHelperText,
+  CardHeader,
+  Divider,
   Grid,
-  MenuItem,
   Switch,
   TextField,
-  InputLabel,
   Typography,
 } from "@mui/material";
-import Select from "react-select";
+import { wait } from "../../utils/wait";
 
-import { FileDropzone } from "../../file-dropzone";
-import { QuillEditor } from "../../quill-editor";
-
-const categoryOptions = [
-  {
-    label: "Healthcare",
-    value: "healthcare",
-  },
-  {
-    label: "Makeup",
-    value: "makeup",
-  },
-  {
-    label: "Dress",
-    value: "dress",
-  },
-  {
-    label: "Skincare",
-    value: "skincare",
-  },
-  {
-    label: "Jewelry",
-    value: "jewelry",
-  },
-  {
-    label: "Blouse",
-    value: "blouse",
-  },
-];
-
-export const CategoryCreateForm = ({ cityAndCategory }) => {
-  const [files, setFiles] = useState([]);
+export const CategoryEditForm = ({ category }) => {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      name: "",
-      ar_name: "",
-      description: "",
-      ar_description: "",
+      name: category.name,
+      ar_name: category.arName,
+      description: category.description,
+      ar_description: category.arDescription,
       image: "imag.jpg",
 
       status: true,
@@ -68,17 +40,18 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
       ar_name: Yup.string().required("Email is required"),
       name: Yup.string().max(255).required("Name is required"),
       // price: Yup.number().required("Price  is required"),
-      image: Yup.string().required("Image is required"),
+      //   image: Yup.string().required("Image is required"),
       // special_price: Yup.string().required("special is required"),
       // sku: Yup.string().required("sku is required"),
       description: Yup.string().required("description is required"),
       ar_description: Yup.string().required("ar_description is Required"),
     }),
     onSubmit: async (values, helpers) => {
+  
       try {
         // NOTE: Make API request
-        const res = await axios.post(
-          `${config.apiRoute}/category/add`,
+        const res = await axios.put(
+          `${config.apiRoute}/category/${category.id}`,
           values,
           {
             headers: {
@@ -87,9 +60,11 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
           }
         );
 
-        toast.success("Category created!");
+        console.log(res.data);
+        toast.success("Category Updated!");
         router.push("/dashboard/category").catch(console.error);
       } catch (err) {
+        console.error(err);
         toast.error("Something went wrong!");
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -98,54 +73,41 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
     },
   });
 
-  const handleDrop = (newFiles) => {
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-  };
-
-  const handleRemove = (file) => {
-    setFiles((prevFiles) =>
-      prevFiles.filter((_file) => _file.path !== file.path)
-    );
-  };
-
-  const handleRemoveAll = () => {
-    setFiles([]);
-  };
-  console.log(formik.values);
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
+        <CardHeader title="Edit Category" />
+        <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item md={4} xs={12}>
-              <Typography variant="h6">Basic details</Typography>
-            </Grid>
-            <Grid item md={8} xs={12}>
+            <Grid item md={6} xs={12}>
               <TextField
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label="Category Name"
+                label="Full name"
                 name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
+                required
                 value={formik.values.name}
               />
+            </Grid>
+            <Grid item md={6} xs={12}>
               <TextField
-                sx={{
-                  // mb: 1,
-                  mt: 3,
-                }}
                 error={Boolean(formik.touched.ar_name && formik.errors.ar_name)}
                 fullWidth
                 helperText={formik.touched.ar_name && formik.errors.ar_name}
-                label="Ar Name"
+                label="ar_name "
                 name="ar_name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
+                required
                 value={formik.values.ar_name}
               />
+            </Grid>
 
+            <Grid item md={6} xs={12}>
               <Typography
                 color="textSecondary"
                 sx={{
@@ -164,6 +126,8 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
                 sx={{ height: 200 }}
                 value={formik.values.description}
               />
+            </Grid>
+            <Grid item md={6} xs={12}>
               <Typography
                 color="textSecondary"
                 sx={{
@@ -193,53 +157,49 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
               )}
             </Grid>
           </Grid>
+          <Box
+            sx={{
+              alignItems: "center",
+              display: "flex",
+              justifyContent: "space-between",
+              mt: 3,
+            }}
+          ></Box>
+          <Divider sx={{ my: 3 }} />
         </CardContent>
-      </Card>
-      <Card sx={{ mt: 3 }}>
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item md={4} xs={12}>
-              <Typography variant="h6">Images</Typography>
-              <Typography color="textSecondary" variant="body2" sx={{ mt: 1 }}>
-                Images will appear in the store front of your website.
-              </Typography>
-            </Grid>
-            <Grid item md={8} xs={12}>
-              <FileDropzone
-                accept={{
-                  "image/*": [],
-                }}
-                files={files}
-                onDrop={handleDrop}
-                onRemove={handleRemove}
-                onRemoveAll={handleRemoveAll}
-              />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-      {/* <Card sx={{ mt: 3 }}> */}
-
-      {/* </Card> */}
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          mx: -1,
-          mb: -1,
-          mt: 3,
-        }}
-      >
-        <Button
-          sx={{ m: 1 }}
-          type="submit"
-          variant="contained"
-          disabled={formik.isSubmitting}
+        <CardActions
+          sx={{
+            flexWrap: "wrap",
+            m: -1,
+          }}
         >
-          Create
-        </Button>
-      </Box>
+          <Button
+            disabled={formik.isSubmitting}
+            type="submit"
+            sx={{ m: 1 }}
+            variant="contained"
+          >
+            Update
+          </Button>
+          <NextLink href="/dashboard/category" passHref>
+            <Button
+              component="a"
+              disabled={formik.isSubmitting}
+              sx={{
+                m: 1,
+                mr: "auto",
+              }}
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+          </NextLink>
+        </CardActions>
+      </Card>
     </form>
   );
+};
+
+CategoryEditForm.propTypes = {
+  customer: PropTypes.object.isRequired,
 };

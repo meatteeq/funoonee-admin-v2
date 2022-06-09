@@ -29,7 +29,10 @@ import { ChevronRight as ChevronRightIcon } from "../../../icons/chevron-right";
 import { DotsHorizontal as DotsHorizontalIcon } from "../../../icons/dots-horizontal";
 import { Image as ImageIcon } from "../../../icons/image";
 import { Scrollbar } from "../../scrollbar";
+import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
+
 import { SeverityPill } from "../../severity-pill";
+import Link from "next/link";
 
 const categoryOptions = [
   {
@@ -78,64 +81,7 @@ export const ProductListTable = (props) => {
     setOpenProduct(null);
     toast.success("Product updated");
   };
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      ar_name: "",
-      description: "",
-      ar_description: "",
-      image: "imag.jpg",
-      is_multiple_allowed: true,
-      price: 0,
-      special_price: 0,
-      status: true,
-      isFeatured: false,
-    },
-    validationSchema: Yup.object({
-      ar_name: Yup.string().required("Email is required"),
-      name: Yup.string().max(255).required("Name is required"),
-      price: Yup.number().required("Price  is required"),
-      image: Yup.string().required("Image is required"),
-      special_price: Yup.string().required("special is required"),
-      sku: Yup.string().required("sku is required"),
-      description: Yup.string().required("description is required"),
-      ar_description: Yup.string().required("ar_description is Required"),
-      //   category: Yup.string().required("cities are required"),
-      //   city: Yup.array().required("cities are required"),
-    }),
-    onSubmit: async (values, helpers) => {
-      console.log("submit run");
-      const payload = {
-        ...values,
-        city: city.map((e) => e.value),
-        category_id: cat.value,
-      };
-      console.log(payload);
 
-      try {
-        // NOTE: Make API request
-        const res = await axios.post(
-          `${config.apiRoute}/product/add`,
-          payload,
-          {
-            headers: {
-              Authorization: config.token,
-            },
-          }
-        );
-
-        console.log(res.data);
-        toast.success("Product created!");
-        router.push("/dashboard/products").catch(console.error);
-      } catch (err) {
-        console.error(err);
-        toast.error("Something went wrong!");
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
-      }
-    },
-  });
   const handleCancelEdit = () => {
     setOpenProduct(null);
   };
@@ -156,7 +102,7 @@ export const ProductListTable = (props) => {
               <TableCell>Price</TableCell>
               <TableCell>sku</TableCell>
               <TableCell>Special Price</TableCell>
-              {/* <TableCell align="right">Actions</TableCell> */}
+              <TableCell>Edit</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -276,11 +222,13 @@ export const ProductListTable = (props) => {
                       </SeverityPill> */}
                       {product.specialPrice ? product.specialPrice : 0}
                     </TableCell>
-                    {/* <TableCell align="right">
-                      <IconButton>
-                        <DotsHorizontalIcon fontSize="small" />
-                      </IconButton>
-                    </TableCell> */}
+                    <TableCell>
+                      <Link href={`/dashboard/products/${product.id}`}>
+                        <IconButton>
+                          <PencilAltIcon fontSize="small" />
+                        </IconButton>
+                      </Link>
+                    </TableCell>
                   </TableRow>
                   {open && (
                     <TableRow>
@@ -310,6 +258,7 @@ export const ProductListTable = (props) => {
                               <Grid container spacing={3}>
                                 <Grid item md={6} xs={12}>
                                   <TextField
+                                    disabled
                                     defaultValue={product.name}
                                     fullWidth
                                     label="Product name"
@@ -372,6 +321,7 @@ export const ProductListTable = (props) => {
                               <Grid container spacing={3}>
                                 <Grid item md={6} xs={12}>
                                   <TextField
+                                    disabled
                                     defaultValue={product.price}
                                     fullWidth
                                     label="Old price"
@@ -402,7 +352,7 @@ export const ProductListTable = (props) => {
                                     type="number"
                                   />
                                 </Grid>
-                                <Grid item md={6} xs={12}>
+                                {/* <Grid item md={6} xs={12}>
                                   <TextField
                                     defaultValue={product.category}
                                     fullWidth
@@ -435,11 +385,12 @@ export const ProductListTable = (props) => {
                                       </MenuItem>
                                     ))}
                                   </TextField>
-                                </Grid>
+                                </Grid> */}
                                 <Grid item md={6} xs={12}>
                                   <FormControlLabel
                                     control={
                                       <Checkbox
+                                        disabled
                                         checked={product.FormControlLabel}
                                         // onChange={formik.handleChange}
                                       />
@@ -450,6 +401,7 @@ export const ProductListTable = (props) => {
                                   <FormControlLabel
                                     control={
                                       <Checkbox
+                                        disabled
                                         checked={product.status}
                                         // onChange={formik.handleChange}
                                       />
@@ -460,6 +412,7 @@ export const ProductListTable = (props) => {
                                   <FormControlLabel
                                     control={
                                       <Checkbox
+                                        disabled
                                         checked={product.isFeatured}
                                         // onChange={formik.handleChange}
                                       />
@@ -495,7 +448,7 @@ export const ProductListTable = (props) => {
                             py: 1,
                           }}
                         >
-                          <Button
+                          {/* <Button
                             onClick={handleUpdateProduct}
                             sx={{ m: 1 }}
                             type="submit"
@@ -509,7 +462,7 @@ export const ProductListTable = (props) => {
                             variant="outlined"
                           >
                             Cancel
-                          </Button>
+                          </Button> */}
                           {/* <Button
                             onClick={handleDeleteProduct}
                             color="error"
