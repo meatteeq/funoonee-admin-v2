@@ -14,10 +14,10 @@ import {
 import { SeverityPill } from "../../severity-pill";
 
 const severityMap = {
-  complete: "success",
-  pending: "info",
+  CONFIRMED: "success",
+  NEW: "info",
   canceled: "warning",
-  rejected: "error",
+  REJECT: "error",
 };
 
 export const OrderListTable = (props) => {
@@ -38,10 +38,10 @@ export const OrderListTable = (props) => {
         <TableHead>
           <TableRow>
             <TableCell>Order No</TableCell>
+            <TableCell>Name</TableCell>
             <TableCell>Phone Number</TableCell>
-            <TableCell>country</TableCell>
+            <TableCell>Total Amount</TableCell>
             <TableCell>Status</TableCell>
-            <TableCell align="right">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -58,40 +58,13 @@ export const OrderListTable = (props) => {
                   display: "flex",
                 }}
               >
-                <Box
-                  sx={{
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === "dark"
-                        ? "neutral.800"
-                        : "neutral.200",
-                    borderRadius: 2,
-                    maxWidth: "fit-content",
-                    ml: 3,
-                    p: 1,
-                  }}
-                >
-                  {/* <Typography align="center" variant="subtitle2">
-                    {format(order.createdAt, "LLL").toUpperCase()}
-                  </Typography>
-                  <Typography align="center" variant="h6">
-                    {format(order.createdAt, "d")}
-                  </Typography> */}
-                </Box>
-                <Box sx={{ ml: 2 }}>
-                  <Typography variant="subtitle2">{order.orderNo}</Typography>
-                  <Typography color="textSecondary" variant="body2">
-                    Total of{" "}
-                    {numeral(order.grandTotal).format(
-                      `${order.currency}0,0.00`
-                    )}
-                  </Typography>
-                </Box>
+                {order.orderNo}
               </TableCell>
               <TableCell>{order.cName}</TableCell>
-              <TableCell>{order.cName}</TableCell>
-              <TableCell>{order.cName}</TableCell>
+              <TableCell>{order.cPhone}</TableCell>
+              <TableCell>{order.grandTotal}</TableCell>
 
-              <TableCell align="right">
+              <TableCell>
                 <SeverityPill
                   color={severityMap[order.orderStatus] || "warning"}
                 >

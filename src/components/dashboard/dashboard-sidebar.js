@@ -94,7 +94,7 @@ const getSections = (t) => [
       },
       {
         title: t("Vendors"),
-        icon: <ShoppingCartIcon fontSize="small" />,
+        icon: <UsersIcon fontSize="small" />,
         path: "/dashboard/vendors",
         // children: [
         //   {
@@ -111,6 +111,11 @@ const getSections = (t) => [
         title: t("Categories"),
         icon: <ShoppingCartIcon fontSize="small" />,
         path: "/dashboard/category",
+      },
+      {
+        title: t("Cities"),
+        icon: <ShoppingCartIcon fontSize="small" />,
+        path: "/dashboard/cities",
       },
       // {
       //   title: t("Invoices"),

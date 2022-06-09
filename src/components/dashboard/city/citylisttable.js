@@ -30,6 +30,8 @@ import { DotsHorizontal as DotsHorizontalIcon } from "../../../icons/dots-horizo
 import { Image as ImageIcon } from "../../../icons/image";
 import { Scrollbar } from "../../scrollbar";
 import { SeverityPill } from "../../severity-pill";
+import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
+import Link from "next/link";
 
 const categoryOptions = [
   {
@@ -58,7 +60,7 @@ const categoryOptions = [
   },
 ];
 
-export const CategoriesListTable = (props) => {
+export const CityListTable = (props) => {
   const {
     onPageChange,
     onRowsPerPageChange,
@@ -95,7 +97,7 @@ export const CategoriesListTable = (props) => {
             <TableRow>
               <TableCell />
               <TableCell>Name</TableCell>
-              <TableCell>Ar Name</TableCell>
+              <TableCell>Edit</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -179,20 +181,17 @@ export const CategoriesListTable = (props) => {
                           <Typography variant="subtitle2">
                             {product.name}
                           </Typography>
-                          {/* <Typography color="textSecondary" variant="body2">
-                            in {product.category}
-                          </Typography> */}
                         </Box>
                       </Box>
                     </TableCell>
-                    <TableCell width="25%">{product.arName}</TableCell>
-                    {/* <TableCell width="25%">{product.status}</TableCell> */}
 
-                    {/* <TableCell align="right">
+                    <TableCell>
                       <IconButton>
-                        <DotsHorizontalIcon fontSize="small" />
+                        <Link href={`/dashboard/cities/${product.id}`}>
+                          <PencilAltIcon fontSize="small" />
+                        </Link>
                       </IconButton>
-                    </TableCell> */}
+                    </TableCell>
                   </TableRow>
                   {open && (
                     <TableRow>
@@ -222,6 +221,7 @@ export const CategoriesListTable = (props) => {
                               <Grid container spacing={3}>
                                 <Grid item md={6} xs={12}>
                                   <TextField
+                                    disabled
                                     defaultValue={product.name}
                                     fullWidth
                                     label="Product name"
@@ -229,7 +229,7 @@ export const CategoriesListTable = (props) => {
                                   />
                                 </Grid>
 
-                                <Grid item md={6} xs={12}>
+                                {/* <Grid item md={6} xs={12}>
                                   <TextField
                                     defaultValue={product.arName}
                                     // disabled
@@ -265,7 +265,7 @@ export const CategoriesListTable = (props) => {
                                     label="Id"
                                     name="barcode"
                                   />
-                                </Grid>
+                                </Grid> */}
                               </Grid>
                             </Grid>
                             <Grid item md={6} xs={12}>
@@ -276,6 +276,7 @@ export const CategoriesListTable = (props) => {
                                   <FormControlLabel
                                     control={
                                       <Checkbox
+                                        disabled
                                         checked={product.status}
                                         // onChange={formik.handleChange}
                                       />
@@ -303,40 +304,6 @@ export const CategoriesListTable = (props) => {
                           </Grid>
                         </CardContent>
                         <Divider />
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            px: 2,
-                            py: 1,
-                          }}
-                        >
-                          <Button
-                            onClick={handleUpdateProduct}
-                            sx={{ m: 1 }}
-                            type="submit"
-                            variant="contained"
-                          >
-                            Update
-                          </Button>
-                          <Button
-                            onClick={handleCancelEdit}
-                            sx={{ m: 1 }}
-                            variant="outlined"
-                          >
-                            Cancel
-                          </Button>
-                          {/* <Button
-                            onClick={handleDeleteProduct}
-                            color="error"
-                            sx={{
-                              m: 1,
-                              ml: "auto",
-                            }}
-                          >
-                            Delete product
-                          </Button> */}
-                        </Box>
                       </TableCell>
                     </TableRow>
                   )}
@@ -359,7 +326,7 @@ export const CategoriesListTable = (props) => {
   );
 };
 
-CategoriesListTable.propTypes = {
+CityListTable.propTypes = {
   products: PropTypes.array.isRequired,
   productsCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,

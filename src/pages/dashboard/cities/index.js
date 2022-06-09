@@ -14,6 +14,7 @@ import { Plus as PlusIcon } from "../../../icons/plus";
 import axios from "axios";
 import config from "../../../config";
 import { CategoriesListTable } from "../../../components/dashboard/product/servicelistTable";
+import { CityListTable } from "../../../components/dashboard/city/citylisttable";
 const applyFilters = (products, filters) =>
   products.filter((product) => {
     if (filters.name) {
@@ -110,7 +111,7 @@ const Categories = ({ data }) => {
                 <Typography variant="h4">Cities</Typography>
               </Grid>
               <Grid item>
-                <NextLink href="/dashboard/category/new" passHref>
+                <NextLink href="/dashboard/cities/new" passHref>
                   <Button
                     component="a"
                     startIcon={<PlusIcon fontSize="small" />}
@@ -124,7 +125,7 @@ const Categories = ({ data }) => {
           </Box>
           <Card>
             <ProjectListFilters onChange={handleFiltersChange} />
-            <CategoriesListTable
+            <CityListTable
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}

@@ -30,6 +30,8 @@ import { DotsHorizontal as DotsHorizontalIcon } from "../../../icons/dots-horizo
 import { Image as ImageIcon } from "../../../icons/image";
 import { Scrollbar } from "../../scrollbar";
 import { SeverityPill } from "../../severity-pill";
+import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
+import Link from "next/link";
 
 const categoryOptions = [
   {
@@ -96,7 +98,7 @@ export const CategoriesListTable = (props) => {
               <TableCell />
               <TableCell>Name</TableCell>
               <TableCell>Ar Name</TableCell>
-              <TableCell></TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -188,11 +190,13 @@ export const CategoriesListTable = (props) => {
                     <TableCell width="25%">{product.arName}</TableCell>
                     {/* <TableCell width="25%">{product.status}</TableCell> */}
 
-                    {/* <TableCell align="right">
+                    <TableCell>
                       <IconButton>
-                        <DotsHorizontalIcon fontSize="small" />
+                        <Link href={`/dashboard/category/${product.id}`}>
+                          <PencilAltIcon fontSize="small" />
+                        </Link>
                       </IconButton>
-                    </TableCell> */}
+                    </TableCell>
                   </TableRow>
                   {open && (
                     <TableRow>
@@ -222,6 +226,7 @@ export const CategoriesListTable = (props) => {
                               <Grid container spacing={3}>
                                 <Grid item md={6} xs={12}>
                                   <TextField
+                                    disabled
                                     defaultValue={product.name}
                                     fullWidth
                                     label="Product name"
@@ -232,7 +237,7 @@ export const CategoriesListTable = (props) => {
                                 <Grid item md={6} xs={12}>
                                   <TextField
                                     defaultValue={product.arName}
-                                    // disabled
+                                    disabled
                                     fullWidth
                                     label="Ar Name"
                                     name="arName"
@@ -241,7 +246,7 @@ export const CategoriesListTable = (props) => {
                                 <Grid item md={6} xs={12}>
                                   <TextField
                                     defaultValue={product.description}
-                                    // disabled
+                                    disabled
                                     fullWidth
                                     label="Description"
                                     name="description"
@@ -250,7 +255,7 @@ export const CategoriesListTable = (props) => {
                                 <Grid item md={6} xs={12}>
                                   <TextField
                                     defaultValue={product.arDescription}
-                                    // disabled
+                                    disabled
                                     fullWidth
                                     label="Ar Description"
                                     name="arDescription"
@@ -276,6 +281,7 @@ export const CategoriesListTable = (props) => {
                                   <FormControlLabel
                                     control={
                                       <Checkbox
+                                        disabled
                                         checked={product.status}
                                         // onChange={formik.handleChange}
                                       />
@@ -311,7 +317,7 @@ export const CategoriesListTable = (props) => {
                             py: 1,
                           }}
                         >
-                          <Button
+                          {/* <Button
                             onClick={handleUpdateProduct}
                             sx={{ m: 1 }}
                             type="submit"
@@ -325,7 +331,7 @@ export const CategoriesListTable = (props) => {
                             variant="outlined"
                           >
                             Cancel
-                          </Button>
+                          </Button> */}
                           {/* <Button
                             onClick={handleDeleteProduct}
                             color="error"

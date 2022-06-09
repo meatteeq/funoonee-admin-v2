@@ -8,6 +8,7 @@ import { gtm } from "../../../lib/gtm";
 import axios from "axios";
 import config from "../../../config";
 import { CategoryCreateForm } from "../../../components/dashboard/product/create-cat-form";
+import { CreateNewCityForm } from "../../../components/dashboard/city/create-city-form";
 const CategoryCreate = ({ data }) => {
   useEffect(() => {
     gtm.push({ event: "page_view" });
@@ -42,7 +43,7 @@ const CategoryCreate = ({ data }) => {
               </Typography>
             </Breadcrumbs>
           </Box>
-          <CategoryCreateForm />
+          <CreateNewCityForm />
         </Container>
       </Box>
     </>
