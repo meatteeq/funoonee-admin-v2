@@ -82,6 +82,7 @@ const OrderPreview = (props) => {
       );
       console.log(res);
       toast.success("Order Confirmed Successfully");
+      props.onclose();
       router.push("/dashboard/orders").catch(console.error);
     } catch (error) {
       // toast.error(error.);
@@ -421,6 +422,7 @@ export const OrderDrawer = (props) => {
             onEdit={handleEdit}
             onReject={onClose}
             order={order}
+            onclose={onClose}
             lgUp={lgUp}
           />
         ) : (
