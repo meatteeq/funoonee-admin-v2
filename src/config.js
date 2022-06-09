@@ -29,7 +29,7 @@ const config = {
   token:
     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhNGZjOWUyMC1iMzU1LTQ5MDYtOTM5MS1lMzA1MWI5ODBjM2UiLCJlbWFpbCI6IndhbGVlZC51bWFyQGNvZGVuaW5qYWNvbnN1bHRpbmcuY29tIiwic2NvcGUiOlsiQURNSU4iXSwiaWF0IjoxNjU0MDA1MjAyLCJleHAiOjE2NTY1OTcyMDJ9.oYry7UjAlZSIYm8LhT0f-wAVIoFugb8uP0IpA4q8OG0",
 
-  apiRoute: "https://apifannoune.ninjasdemo.com/",
+  apiRoute: "https://api.funoonee.com/",
   CLOUDINARY_URL:
     "https://api.cloudinary.com/v1_1/sherrycodeninjas/image/upload",
   CLOUDINARY_UPLOAD_PRESET: "c84iijwi",
