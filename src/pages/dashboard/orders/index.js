@@ -216,7 +216,7 @@ const OrderList = ({ data }) => {
         <title>Dashboard: Order List</title>
       </Head>
       <Box
-        component="main"
+        component='main'
         ref={rootRef}
         sx={{
           backgroundColor: "background.paper",
@@ -227,9 +227,9 @@ const OrderList = ({ data }) => {
       >
         <OrderListInner open={drawer.isOpen}>
           <Box sx={{ px: 3 }}>
-            <Grid container justifyContent="space-between" spacing={3}>
+            <Grid container justifyContent='space-between' spacing={3}>
               <Grid item>
-                <Typography variant="h4">Orders</Typography>
+                <Typography variant='h4'>Orders</Typography>
               </Grid>
               {/* <Grid item>
                 <Button
@@ -265,7 +265,7 @@ const OrderList = ({ data }) => {
             }}
           >
             <Box
-              component="form"
+              component='form'
               onSubmit={handleQueryChange}
               sx={{
                 flexGrow: 1,
@@ -273,22 +273,22 @@ const OrderList = ({ data }) => {
               }}
             >
               <TextField
-                defaultValue=""
+                defaultValue=''
                 fullWidth
                 inputProps={{ ref: queryRef }}
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon fontSize="small" />
+                    <InputAdornment position='start'>
+                      <SearchIcon fontSize='small' />
                     </InputAdornment>
                   ),
                 }}
-                placeholder="Search by order number"
+                placeholder='Search by order number'
               />
             </Box>
             <TextField
-              label="Sort By"
-              name="order"
+              label='Sort By'
+              name='order'
               onChange={handleSortChange}
               select
               SelectProps={{ native: true }}
@@ -324,11 +324,7 @@ const OrderList = ({ data }) => {
   );
 };
 
-OrderList.getLayout = (page) => (
-  <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
-);
+OrderList.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 export async function getServerSideProps() {
   const res = await axios.get(`${config.apiRoute}order/list`, {
     headers: {

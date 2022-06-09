@@ -25,9 +25,9 @@ const Overview = () => {
     setDisplayBanner(false);
   };
 
-  useEffect(() => {
-    Router.push("/dashboard/customers");
-  }, []);
+  // useEffect(() => {
+  //   Router.push("/dashboard/customers");
+  // }, []);
 
   return <></>;
 };
