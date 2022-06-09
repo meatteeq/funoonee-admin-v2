@@ -8,12 +8,13 @@ import { useRouter } from "next/router";
 import { AuthGuard } from "../../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../../components/dashboard/dashboard-layout";
 import VendorAddForm from "../../../components/vendors/vendorAddForm";
+import CustomerAddForm from "../../../components/dashboard/customer/customeraddform";
 
-const AddVendors = ({ data }) => {
+const AddCustomer = ({ data }) => {
   return (
     <>
       <Head>
-        <title>Dashboard: Vendor Create</title>
+        <title>Dashboard: Customer Create</title>
       </Head>
       <Box
         component="main"
@@ -24,63 +25,31 @@ const AddVendors = ({ data }) => {
       >
         <Container maxWidth="md">
           <Box sx={{ mb: 3 }}>
-            <Typography variant="h4">Create a new Vendor</Typography>
+            <Typography variant="h4">Create a new Customer</Typography>
             <Breadcrumbs separator="/" sx={{ mt: 1 }}>
               <NextLink href="/dashboard" passHref>
                 <Link variant="subtitle2">Dashboard</Link>
               </NextLink>
-              <NextLink href="/dashboard/vendors" passHref>
+              <NextLink href="/dashboard/customers" passHref>
                 <Link color="primary" variant="subtitle2">
-                  All Vendors
+                  All Customers
                 </Link>
               </NextLink>
               <Typography color="textSecondary" variant="subtitle2">
-                Vendors
+                Customers
               </Typography>
             </Breadcrumbs>
           </Box>
-          <VendorAddForm cityAndCategory={data} />{" "}
+          <CustomerAddForm />
         </Container>
       </Box>
     </>
   );
 };
-AddVendors.getLayout = (page) => (
+AddCustomer.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>{page}</DashboardLayout>
   </AuthGuard>
 );
 
-export async function getServerSideProps() {
-  const cityAndCategory = await Promise.all([
-    axios.get(`${config.apiRoute}/category/list`, {
-      headers: {
-        Authorization: config.token,
-      },
-    }),
-    axios.get(`${config.apiRoute}/city/list`, {
-      headers: {
-        Authorization: config.token,
-      },
-    }),
-  ])
-    .then((resArray) => {
-      const [categoryList, cityList] = resArray;
-      const data = {
-        categoryData: categoryList?.data,
-        cityData: cityList?.data,
-      };
-      console.log(data);
-      return data;
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-  return {
-    props: {
-      data: cityAndCategory,
-    },
-  };
-}
-
-export default AddVendors;
+export default AddCustomer;

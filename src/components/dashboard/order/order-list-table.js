@@ -16,8 +16,8 @@ import { SeverityPill } from "../../severity-pill";
 const severityMap = {
   CONFIRMED: "success",
   NEW: "info",
-  canceled: "warning",
-  REJECT: "error",
+  CANCELLED: "error",
+  PROCESSNG: "error",
 };
 
 export const OrderListTable = (props) => {

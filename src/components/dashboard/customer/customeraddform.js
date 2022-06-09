@@ -4,8 +4,9 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import axios from "axios";
-import config from "../../config";
+import config from "../../../config";
 import {
+  RadioGroup,
   Box,
   Button,
   Card,
@@ -18,62 +19,24 @@ import {
   TextField,
   InputLabel,
   Typography,
+  Radio,
+  FormLabel,
 } from "@mui/material";
 import Select from "react-select";
-
-import { FileDropzone } from "../file-dropzone";
-import { QuillEditor } from "../quill-editor";
+import { FileDropzone } from "../../file-dropzone";
 import React from "react";
 
-export const VendorAddForm = ({ cityAndCategory }) => {
-  const { categoryData, cityData } = cityAndCategory;
-  const [serviceData, setServicesData] = useState();
-  const [service, setService] = useState();
-
-  const [city, selectCity] = useState([]);
-  const [cat, setCat] = useState("");
-  console.log(cat);
-  console.log(city);
-  const router = useRouter();
+export const CustomerAddForm = () => {
   const [files, setFiles] = useState([]);
-  const catOptions =
-    categoryData &&
-    categoryData?.map(function (ser) {
-      return { value: ser.id, label: ser.name };
-    });
-  const cityOptions =
-    cityData &&
-    cityData?.map(function (ser) {
-      return { value: ser.id, label: ser.name };
-    });
-  let serviceOptions =
-    serviceData &&
-    serviceData?.products?.map(function (ser) {
-      return { value: ser.id, label: ser.name };
-    });
-  useEffect(async () => {
-    if (city && cat) {
-      try {
-        const res = await axios.get(
-          `${config.apiRoute}/category/products/${cat.value}&${city.value}`
-        );
-        setServicesData(res.data);
-        console.log(res.data);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }, [city, cat]);
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       name: "",
       email: "",
       phoneNumber: "",
-      document: ["dd", "ds"],
-      street: "",
-      postalCode: "",
-      country: "",
-      street: "",
+      image: "imag.jpg",
+      gender: "",
+      role: "3",
     },
 
     validationSchema: Yup.object({
@@ -82,25 +45,16 @@ export const VendorAddForm = ({ cityAndCategory }) => {
         .max(255)
         .required("Email is required"),
       name: Yup.string().max(255).required("Name is required"),
+      gender: Yup.string().max(255).required("gender is required"),
+
       phoneNumber: Yup.string().required("Number is required"),
-      postalCode: Yup.string().required("postalCode is required"),
-      country: Yup.string().required("country is required"),
-      street: Yup.string().required("street is required"),
     }),
     onSubmit: async (values, helpers) => {
-      console.log("submit run");
-      const payload = {
-        ...values,
-        category: [cat.value],
-        city: city.value,
-        service: service.map((e) => e.value),
-      };
-
       try {
         // NOTE: Make API request
         const res = await axios.post(
-          `${config.apiRoute}/customer/registration`,
-          payload,
+          `${config.apiRoute}/admin/user/add`,
+          values,
           {
             headers: {
               Authorization: config.token,
@@ -109,7 +63,7 @@ export const VendorAddForm = ({ cityAndCategory }) => {
         );
 
         console.log(res.data);
-        toast.success("Vendor created!");
+        toast.success("Customer created!");
         router.push("/dashboard/customers").catch(console.error);
       } catch (err) {
         console.error(err);
@@ -147,7 +101,7 @@ export const VendorAddForm = ({ cityAndCategory }) => {
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label="Vendor Name"
+                label="Customer Name"
                 name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -161,7 +115,7 @@ export const VendorAddForm = ({ cityAndCategory }) => {
                 error={Boolean(formik.touched.email && formik.errors.email)}
                 fullWidth
                 helperText={formik.touched.email && formik.errors.email}
-                label="Vendor Email"
+                label="Customer Email"
                 name="email"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -180,38 +134,38 @@ export const VendorAddForm = ({ cityAndCategory }) => {
                 sx={{ mt: 2 }}
                 value={formik.values.phoneNumber}
               />
-              <TextField
-                error={Boolean(formik.touched.country && formik.errors.country)}
+              <RadioGroup
+                error={Boolean(formik.touched.gender && formik.errors.gender)}
                 fullWidth
-                label="country"
-                name="country"
-                onBlur={formik.handleBlur}
+                helperText={formik.touched.gender && formik.errors.gender}
+                label="Gender"
+                margin="normal"
+                name="gender"
+                value={formik.values.gender}
                 onChange={formik.handleChange}
-                sx={{ mt: 2 }}
-                value={formik.values.country}
-              />
-              <TextField
-                error={Boolean(
-                  formik.touched.postalCode && formik.errors.postalCode
-                )}
-                fullWidth
-                label="postalCode"
-                name="postalCode"
                 onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                sx={{ mt: 2 }}
-                value={formik.values.postalCode}
-              />
-              <TextField
-                error={Boolean(formik.touched.street && formik.errors.street)}
-                fullWidth
-                label="street"
-                name="street"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                sx={{ mt: 2 }}
-                value={formik.values.street}
-              />
+              >
+                <FormLabel
+                  id="demo-controlled-radio-buttons-group"
+                  sx={{
+                    // mb: 1,
+                    mt: 3,
+                  }}
+                >
+                  Gender
+                </FormLabel>
+
+                <FormControlLabel
+                  value="Female"
+                  control={<Radio />}
+                  label="Female"
+                />
+                <FormControlLabel
+                  value="Male"
+                  control={<Radio />}
+                  label="Male"
+                />
+              </RadioGroup>
             </Grid>
           </Grid>
         </CardContent>
@@ -225,7 +179,7 @@ export const VendorAddForm = ({ cityAndCategory }) => {
                 Images will appear in the store front of your website.
               </Typography>
             </Grid>
-            <Grid item md={8} xs={12}>
+            {/* <Grid item md={8} xs={12}>
               <FileDropzone
                 accept={{
                   "image/*": [],
@@ -235,7 +189,7 @@ export const VendorAddForm = ({ cityAndCategory }) => {
                 onRemove={handleRemove}
                 onRemoveAll={handleRemoveAll}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
         </CardContent>
       </Card>
@@ -253,18 +207,6 @@ export const VendorAddForm = ({ cityAndCategory }) => {
           mt: 3,
         }}
       >
-        {/* <Button
-          color="error"
-          sx={{
-            m: 1,
-            mr: "auto",
-          }}
-        >
-          Delete
-        </Button> */}
-        {/* <Button sx={{ m: 1 }} variant="outlined">
-          Cancel
-        </Button> */}
         <Button
           sx={{ m: 1 }}
           type="submit"
@@ -277,4 +219,4 @@ export const VendorAddForm = ({ cityAndCategory }) => {
     </form>
   );
 };
-export default VendorAddForm;
+export default CustomerAddForm;

@@ -198,13 +198,13 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
       <Card sx={{ mt: 3 }}>
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item md={4} xs={12}>
+            {/* <Grid item md={4} xs={12}>
               <Typography variant="h6">Images</Typography>
               <Typography color="textSecondary" variant="body2" sx={{ mt: 1 }}>
                 Images will appear in the store front of your website.
               </Typography>
-            </Grid>
-            <Grid item md={8} xs={12}>
+            </Grid> */}
+            {/* <Grid item md={8} xs={12}>
               <FileDropzone
                 accept={{
                   "image/*": [],
@@ -214,7 +214,7 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
                 onRemove={handleRemove}
                 onRemoveAll={handleRemoveAll}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
         </CardContent>
       </Card>
