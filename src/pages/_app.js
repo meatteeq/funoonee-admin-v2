@@ -39,13 +39,13 @@ const App = (props) => {
     gtm.initialize(gtmConfig);
   }, []);
 
-  useEffect(() => {
-    if (localStorage.getItem("JWT_TOKEN")) {
-      Router.push("/dashboard");
-    } else {
-      Router.push("/authentication/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (localStorage.getItem("accessToken")) {
+  //     Router.push("/dashboard");
+  //   } else {
+  //     Router.push("/authentication/login");
+  //   }
+  // }, []);
 
   return (
     <CacheProvider value={emotionCache}>

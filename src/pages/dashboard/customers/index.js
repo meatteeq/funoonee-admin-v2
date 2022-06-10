@@ -230,23 +230,23 @@ const CustomerList = ({ data }) => {
         <title>Dashboard: Customer List </title>
       </Head>
       <Box
-        component="main"
+        component='main'
         sx={{
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth="xl">
+        <Container maxWidth='xl'>
           <Box sx={{ mb: 4 }}>
-            <Grid container justifyContent="space-between" spacing={3}>
+            <Grid container justifyContent='space-between' spacing={3}>
               <Grid item>
-                <Typography variant="h4">Customers</Typography>
+                <Typography variant='h4'>Customers</Typography>
               </Grid>
               <Grid item>
                 <Link href={`/dashboard/customers/new`}>
                   <Button
-                    startIcon={<PlusIcon fontSize="small" />}
-                    variant="contained"
+                    startIcon={<PlusIcon fontSize='small' />}
+                    variant='contained'
                   >
                     Add
                   </Button>
@@ -299,7 +299,7 @@ const CustomerList = ({ data }) => {
               }}
             >
               <Box
-                component="form"
+                component='form'
                 onSubmit={handleQueryChange}
                 sx={{
                   flexGrow: 1,
@@ -307,22 +307,22 @@ const CustomerList = ({ data }) => {
                 }}
               >
                 <TextField
-                  defaultValue=""
+                  defaultValue=''
                   fullWidth
                   inputProps={{ ref: queryRef }}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon fontSize="small" />
+                      <InputAdornment position='start'>
+                        <SearchIcon fontSize='small' />
                       </InputAdornment>
                     ),
                   }}
-                  placeholder="Search customers"
+                  placeholder='Search customers'
                 />
               </Box>
               <TextField
-                label="Sort By"
-                name="sort"
+                label='Sort By'
+                name='sort'
                 onChange={handleSortChange}
                 select
                 SelectProps={{ native: true }}
@@ -351,11 +351,7 @@ const CustomerList = ({ data }) => {
   );
 };
 
-CustomerList.getLayout = (page) => (
-  <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
-);
+CustomerList.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 export async function getServerSideProps() {
   const res = await axios.get(`${config.apiRoute}admin/customers/list`, {
     headers: {
