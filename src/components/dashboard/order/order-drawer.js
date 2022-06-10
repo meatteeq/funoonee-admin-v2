@@ -53,7 +53,7 @@ const OrderPreview = (props) => {
     vendorsData?.map(function (ser) {
       return { value: ser.id, label: ser.name };
     });
-  console.log(vendorOptions);
+  // console.log(vendorOptions);
   const handleSubmit = () => {
     const data = {
       status: statuss.label,
@@ -81,7 +81,7 @@ const OrderPreview = (props) => {
     }
   };
   const handleAssignToVendor = async () => {
-    console.log("handle run");
+    // console.log("handle run");
 
     try {
       const res = NetworkClient.put(
@@ -118,7 +118,7 @@ const OrderPreview = (props) => {
         },
       });
       const data = await res.data;
-      console.log(data);
+      // console.log(data);
       setVendorsData(data);
     } catch (error) {
       console.log(error);
@@ -129,8 +129,8 @@ const OrderPreview = (props) => {
       getVendors();
     }
   }, [order, statuss]);
-  console.log("vendor", vendor?.value);
-  console.log("order id", order.id);
+  // console.log("vendor", vendor?.value);
+  // console.log("order id", order.id);
   return (
     <>
       <Box
@@ -146,7 +146,7 @@ const OrderPreview = (props) => {
           py: 2.5,
         }}
       >
-        <Typography color="textSecondary" sx={{ mr: 2 }} variant="overline">
+        <Typography color='textSecondary' sx={{ mr: 2 }} variant='overline'>
           Actions
         </Typography>
         <Box
@@ -161,18 +161,18 @@ const OrderPreview = (props) => {
           }}
         >
           <Select
-            labelId="statusDropdown"
+            labelId='statusDropdown'
             options={filterdStatus}
-            name="category"
+            name='category'
             value={statuss}
-            label="Select Category"
+            label='Select Category'
             onChange={(selectdStatus) => setStatuss(selectdStatus)}
           />
 
           <Button
             onClick={handleSubmit}
-            size="small"
-            startIcon={<EditIcon fontSize="small" />}
+            size='small'
+            startIcon={<EditIcon fontSize='small' />}
           >
             Status
           </Button>
@@ -193,7 +193,7 @@ const OrderPreview = (props) => {
             py: 2.5,
           }}
         >
-          <Typography color="textSecondary" sx={{ mr: 2 }} variant="overline">
+          <Typography color='textSecondary' sx={{ mr: 2 }} variant='overline'>
             Assign to Vendor
           </Typography>
           <Box
@@ -208,54 +208,54 @@ const OrderPreview = (props) => {
             }}
           >
             <Select
-              labelId="statusDropdown"
+              labelId='statusDropdown'
               options={vendorOptions}
-              name="category"
+              name='category'
               value={vendor}
-              label="Select Category"
+              label='Select Category'
               onChange={(selectdStatus) => setVendor(selectdStatus)}
             />
 
             <Button
               onClick={handleAssignToVendor}
-              size="small"
-              startIcon={<EditIcon fontSize="small" />}
+              size='small'
+              startIcon={<EditIcon fontSize='small' />}
             >
               Assign
             </Button>
           </Box>
         </Box>
       ) : null}
-      <Typography sx={{ my: 3 }} variant="h6">
+      <Typography sx={{ my: 3 }} variant='h6'>
         Details
       </Typography>
       <PropertyList>
         <PropertyListItem
           align={align}
           disableGutters
-          label="ID"
+          label='ID'
           value={order.id}
         />
         <PropertyListItem
           align={align}
           disableGutters
-          label="Number"
+          label='Number'
           value={order.cPhone}
         />
-        <PropertyListItem align={align} disableGutters label="Customer">
-          <Typography color="primary" variant="body2">
+        <PropertyListItem align={align} disableGutters label='Customer'>
+          <Typography color='primary' variant='body2'>
             {order.cName}
           </Typography>
-          <Typography color="textSecondary" variant="body2">
+          <Typography color='textSecondary' variant='body2'>
             {order.cMail}
           </Typography>
-          <Typography color="textSecondary" variant="body2">
+          <Typography color='textSecondary' variant='body2'>
             {order.city}
           </Typography>
-          <Typography color="textSecondary" variant="body2">
+          <Typography color='textSecondary' variant='body2'>
             {order.area}
           </Typography>
-          <Typography color="textSecondary" variant="body2">
+          <Typography color='textSecondary' variant='body2'>
             {order.street}
           </Typography>
         </PropertyListItem>
@@ -263,18 +263,18 @@ const OrderPreview = (props) => {
         <PropertyListItem
           align={align}
           disableGutters
-          label="Total Amount"
+          label='Total Amount'
           value={`${order.grandTotal}`}
         />
         <PropertyListItem
           align={align}
           disableGutters
-          label="Status"
+          label='Status'
           value={order.orderStatus}
         />
       </PropertyList>
       <Divider sx={{ my: 3 }} />
-      <Typography sx={{ my: 3 }} variant="h6">
+      <Typography sx={{ my: 3 }} variant='h6'>
         Line items
       </Typography>
       <Scrollbar>
@@ -323,7 +323,7 @@ const OrderForm = (props) => {
           py: 2.5,
         }}
       >
-        <Typography variant="overline" sx={{ mr: 2 }} color="textSecondary">
+        <Typography variant='overline' sx={{ mr: 2 }} color='textSecondary'>
           Order
         </Typography>
         <Box
@@ -337,91 +337,91 @@ const OrderForm = (props) => {
           }}
         >
           <Button
-            color="primary"
+            color='primary'
             onClick={onSave}
-            size="small"
-            variant="contained"
+            size='small'
+            variant='contained'
           >
             Save changes
           </Button>
-          <Button onClick={onCancel} size="small" variant="outlined">
+          <Button onClick={onCancel} size='small' variant='outlined'>
             Cancel
           </Button>
         </Box>
       </Box>
-      <Typography sx={{ my: 3 }} variant="h6">
+      <Typography sx={{ my: 3 }} variant='h6'>
         Details
       </Typography>
       <TextField
         disabled
         fullWidth
-        label="ID"
-        margin="normal"
-        name="id"
+        label='ID'
+        margin='normal'
+        name='id'
         value={order.id}
       />
       <TextField
         disabled
         fullWidth
-        label="Number"
-        margin="normal"
-        name="number"
+        label='Number'
+        margin='normal'
+        name='number'
         value={order.number}
       />
       <TextField
         disabled
         fullWidth
-        label="Customer name"
-        margin="normal"
-        name="customer_name"
+        label='Customer name'
+        margin='normal'
+        name='customer_name'
         value={order.customer.name}
       />
       <TextField
         disabled
         fullWidth
-        label="Date"
-        margin="normal"
-        name="date"
+        label='Date'
+        margin='normal'
+        name='date'
         value={format(order.createdAt, "dd/MM/yyyy HH:mm")}
       />
       <TextField
         fullWidth
-        label="Address"
-        margin="normal"
-        name="address"
+        label='Address'
+        margin='normal'
+        name='address'
         value={order.customer.address1}
       />
       <TextField
         fullWidth
-        label="Country"
-        margin="normal"
-        name="country"
+        label='Country'
+        margin='normal'
+        name='country'
         value={order.customer.country}
       />
       <TextField
         fullWidth
-        label="State/Region"
-        margin="normal"
-        name="state_region"
+        label='State/Region'
+        margin='normal'
+        name='state_region'
         value={order.customer.city}
       />
       <TextField
         fullWidth
-        label="Total Amount"
-        margin="normal"
-        name="amount"
+        label='Total Amount'
+        margin='normal'
+        name='amount'
         value={order.totalAmount}
       />
       <TextField
         fullWidth
-        label="Status"
-        margin="normal"
-        name="status"
+        label='Status'
+        margin='normal'
+        name='status'
         select
         SelectProps={{ native: true }}
         value={order.status}
       ></TextField>
-      <Button color="error" sx={{ mt: 3 }}>
+      <Button color='error' sx={{ mt: 3 }}>
         Delete order
       </Button>
     </>
@@ -478,11 +478,11 @@ export const OrderDrawer = (props) => {
           py: 2,
         }}
       >
-        <Typography color="inherit" variant="h6">
+        <Typography color='inherit' variant='h6'>
           {order.number}
         </Typography>
-        <IconButton color="inherit" onClick={onClose}>
-          <XIcon fontSize="small" />
+        <IconButton color='inherit' onClick={onClose}>
+          <XIcon fontSize='small' />
         </IconButton>
       </Box>
       <Box
@@ -514,10 +514,10 @@ export const OrderDrawer = (props) => {
   if (lgUp) {
     return (
       <OrderDrawerDesktop
-        anchor="right"
+        anchor='right'
         open={open}
         SlideProps={{ container: containerRef?.current }}
-        variant="persistent"
+        variant='persistent'
         {...other}
       >
         {content}
@@ -527,12 +527,12 @@ export const OrderDrawer = (props) => {
 
   return (
     <OrderDrawerMobile
-      anchor="right"
+      anchor='right'
       ModalProps={{ container: containerRef?.current }}
       onClose={onClose}
       open={open}
       SlideProps={{ container: containerRef?.current }}
-      variant="temporary"
+      variant='temporary'
       {...other}
     >
       {content}

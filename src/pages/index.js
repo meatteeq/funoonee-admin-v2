@@ -6,6 +6,7 @@ import Router from "next/router";
 import { useFormik } from "formik";
 import axios from "axios";
 import config from "../config";
+import Cookies from "js-cookie";
 import * as Yup from "yup";
 import {
   Box,
@@ -31,13 +32,33 @@ const Login = () => {
     validationSchema: Yup.object({
       phoneNumber: Yup.string().max(15).required("Number is required"),
     }),
-    onSubmit: (value) => {
-      const { phoneNumber } = value;
-      dispatch(login(phoneNumber))
-        .then((status) => {})
-        .catch((error) => {
-          console.log(error);
+    onSubmit: async ({ phoneNumber }) => {
+      // console.log(phoneNumber);
+      try {
+        const { data } = await axios.post(config.apiRoute + "admin/signin", {
+          phoneNumber,
         });
+        // console.log(data, "data");
+
+        const { challengeChannel, authSessionToken } = data;
+        const getToken = await axios.post(config.apiRoute + "admin/signin", {
+          challenge: challengeChannel.toString(),
+          authSessionToken: authSessionToken,
+        });
+        Cookies.set("accessToken", `Bearer ${getToken.data.accessToken}`);
+        // console.log(Cookies.get("accessToken"));
+        localStorage.setItem("accessToken", getToken.data.accessToken);
+        Router.push("/dashboard/customers");
+
+        return getToken.data;
+      } catch (error) {
+        console.log(error);
+        if (error.response.status >= 400 && error.response.status < 500) {
+          setError(true);
+        } else if (error.response.status >= 500) {
+          setNetworkError(true);
+        }
+      }
     },
   });
 
@@ -46,16 +67,17 @@ const Login = () => {
       const { data } = await axios.post(config.apiRoute + "admin/signin", {
         phoneNumber,
       });
-      console.log(data, "data");
+      // console.log(data, "data");
 
       const { challengeChannel, authSessionToken } = data;
       const getToken = await axios.post(config.apiRoute + "admin/signin", {
         challenge: challengeChannel.toString(),
         authSessionToken: authSessionToken,
       });
-
+      // console.log(getToken.data.accessToken, "token data");
+      Cookies.set("accessToken", getToken.data.accessToken);
       localStorage.setItem("accessToken", getToken.data.accessToken);
-      Router.push("/dashboard/customers");
+      // Router.push("/dashboard/customers");
 
       return getToken.data;
     } catch (error) {
@@ -137,7 +159,7 @@ const Login = () => {
                 Sign In Now
               </Button>
             </Box>
-            <Typography color='textSecondary' variant='body2'>
+            {/* <Typography color='textSecondary' variant='body2'>
               Don&apos;t have an account?{" "}
               <NextLink href='/register'>
                 <Link
@@ -151,7 +173,7 @@ const Login = () => {
                   Sign Up
                 </Link>
               </NextLink>
-            </Typography>
+            </Typography> */}
           </form>
         </Container>
       </Box>

@@ -46,7 +46,7 @@ const Login = () => {
       const { data } = await axios.post(config.apiRoute + "admin/signin", {
         phoneNumber,
       });
-      console.log(data, "data");
+      // console.log(data, "data");
 
       const { challengeChannel, authSessionToken } = data;
       const getToken = await axios.post(config.apiRoute + "admin/signin", {

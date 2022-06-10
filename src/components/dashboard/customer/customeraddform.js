@@ -63,7 +63,7 @@ export const CustomerAddForm = () => {
           }
         );
 
-        console.log(res.data);
+        // console.log(res.data);
         toast.success("Customer created!");
         router.push("/dashboard/customers").catch(console.error);
       } catch (err) {
@@ -90,10 +90,10 @@ export const CustomerAddForm = () => {
   };
   const uploadFile = async (id) => {
     const fileToUpload = document.getElementById("upload-image");
-    console.log("fileToUpload", fileToUpload?.files[0]);
+    // console.log("fileToUpload", fileToUpload?.files[0]);
     const file = fileToUpload.files[0];
     const upload = fileToUpload.value;
-    console.log("upload", upload);
+    // console.log("upload", upload);
 
     const reader = new FileReader();
 
@@ -102,7 +102,7 @@ export const CustomerAddForm = () => {
     if (file) {
       reader.readAsDataURL(file);
       const result = await uploadToServer(file);
-      console.log("result", result);
+      // console.log("result", result);
       if (result) {
         setFiles({ ...imageSrc, image: result });
       }
@@ -114,15 +114,15 @@ export const CustomerAddForm = () => {
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
-              <Typography variant="h6">Basic details</Typography>
+              <Typography variant='h6'>Basic details</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label="Customer Name"
-                name="name"
+                label='Customer Name'
+                name='name'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.name}
@@ -135,8 +135,8 @@ export const CustomerAddForm = () => {
                 error={Boolean(formik.touched.email && formik.errors.email)}
                 fullWidth
                 helperText={formik.touched.email && formik.errors.email}
-                label="Customer Email"
-                name="email"
+                label='Customer Email'
+                name='email'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.email}
@@ -147,8 +147,8 @@ export const CustomerAddForm = () => {
                   formik.touched.phoneNumber && formik.errors.phoneNumber
                 )}
                 fullWidth
-                label="phoneNumber"
-                name="phoneNumber"
+                label='phoneNumber'
+                name='phoneNumber'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 sx={{ mt: 2 }}
@@ -158,15 +158,15 @@ export const CustomerAddForm = () => {
                 error={Boolean(formik.touched.gender && formik.errors.gender)}
                 fullWidth
                 helperText={formik.touched.gender && formik.errors.gender}
-                label="Gender"
-                margin="normal"
-                name="gender"
+                label='Gender'
+                margin='normal'
+                name='gender'
                 value={formik.values.gender}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
                 <FormLabel
-                  id="demo-controlled-radio-buttons-group"
+                  id='demo-controlled-radio-buttons-group'
                   sx={{
                     // mb: 1,
                     mt: 3,
@@ -176,14 +176,14 @@ export const CustomerAddForm = () => {
                 </FormLabel>
 
                 <FormControlLabel
-                  value="Female"
+                  value='Female'
                   control={<Radio />}
-                  label="Female"
+                  label='Female'
                 />
                 <FormControlLabel
-                  value="Male"
+                  value='Male'
                   control={<Radio />}
-                  label="Male"
+                  label='Male'
                 />
               </RadioGroup>
             </Grid>
@@ -230,8 +230,8 @@ export const CustomerAddForm = () => {
       >
         <Button
           sx={{ m: 1 }}
-          type="submit"
-          variant="contained"
+          type='submit'
+          variant='contained'
           disabled={formik.isSubmitting}
         >
           Create

@@ -111,22 +111,22 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
   const handleRemoveAll = () => {
     setFiles([]);
   };
-  console.log(formik.values);
+  // console.log(formik.values);
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
-              <Typography variant="h6">Basic details</Typography>
+              <Typography variant='h6'>Basic details</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label="Category Name"
-                name="name"
+                label='Category Name'
+                name='name'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.name}
@@ -139,20 +139,20 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
                 error={Boolean(formik.touched.ar_name && formik.errors.ar_name)}
                 fullWidth
                 helperText={formik.touched.ar_name && formik.errors.ar_name}
-                label="Ar Name"
-                name="ar_name"
+                label='Ar Name'
+                name='ar_name'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.ar_name}
               />
 
               <Typography
-                color="textSecondary"
+                color='textSecondary'
                 sx={{
                   mb: 2,
                   mt: 3,
                 }}
-                variant="subtitle2"
+                variant='subtitle2'
               >
                 Description
               </Typography>
@@ -160,17 +160,17 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
                 onChange={(value) => {
                   formik.setFieldValue("description", value);
                 }}
-                placeholder="Write something"
+                placeholder='Write something'
                 sx={{ height: 200 }}
                 value={formik.values.description}
               />
               <Typography
-                color="textSecondary"
+                color='textSecondary'
                 sx={{
                   mb: 2,
                   mt: 3,
                 }}
-                variant="subtitle2"
+                variant='subtitle2'
               >
                 Ar Description
               </Typography>
@@ -178,7 +178,7 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
                 onChange={(value) => {
                   formik.setFieldValue("ar_description", value);
                 }}
-                placeholder="Write something"
+                placeholder='Write something'
                 sx={{ height: 200 }}
                 value={formik.values.ar_description}
               />
@@ -233,8 +233,8 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
       >
         <Button
           sx={{ m: 1 }}
-          type="submit"
-          variant="contained"
+          type='submit'
+          variant='contained'
           disabled={formik.isSubmitting}
         >
           Create

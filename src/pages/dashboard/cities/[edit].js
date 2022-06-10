@@ -13,10 +13,12 @@ import { getInitials } from "../../../utils/get-initials";
 import axios from "axios";
 import { CityEditForm } from "../../../components/dashboard/city/cityEditForm";
 import config from "../../../config";
+import Cookies from "js-cookie";
+import { redirectFromServerSideTo } from "../../../../helper";
 const CityEdit = ({ data }) => {
   const city = data;
 
-  if (!city) {  
+  if (!city) {
     return null;
   }
 
@@ -26,26 +28,26 @@ const CityEdit = ({ data }) => {
         <title>Dashboard: City Edit </title>
       </Head>
       <Box
-        component="main"
+        component='main'
         sx={{
           backgroundColor: "background.default",
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth="md">
+        <Container maxWidth='md'>
           <Box sx={{ mb: 4 }}>
-            <NextLink href="/dashboard/cities" passHref>
+            <NextLink href='/dashboard/cities' passHref>
               <Link
-                color="textPrimary"
-                component="a"
+                color='textPrimary'
+                component='a'
                 sx={{
                   alignItems: "center",
                   display: "flex",
                 }}
               >
-                <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
-                <Typography variant="subtitle2">City</Typography>
+                <ArrowBackIcon fontSize='small' sx={{ mr: 1 }} />
+                <Typography variant='subtitle2'>City</Typography>
               </Link>
             </NextLink>
           </Box>
@@ -70,8 +72,8 @@ const CityEdit = ({ data }) => {
                   whiteSpace: "nowrap",
                 }}
               >
-                <Typography variant="subtitle2">user_id:</Typography>
-                <Chip label={city.id} size="small" sx={{ ml: 1 }} />
+                <Typography variant='subtitle2'>user_id:</Typography>
+                <Chip label={city.id} size='small' sx={{ ml: 1 }} />
               </Box>
             </div>
           </Box>
@@ -84,12 +86,11 @@ const CityEdit = ({ data }) => {
   );
 };
 
-CityEdit.getLayout = (page) => (
-  
-    <DashboardLayout>{page}</DashboardLayout>
-  
-);
-export async function getServerSideProps({ params: { edit } }) {
+CityEdit.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+export async function getServerSideProps({ params: { edit }, ...ctx }) {
+  if (!ctx.req.cookies?.accessToken) {
+    redirectFromServerSideTo(ctx, "/");
+  }
   const res = await axios.get(`${config.apiRoute}/city/${edit}`, {
     headers: {
       Authorization: config.token,

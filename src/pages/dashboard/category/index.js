@@ -13,6 +13,8 @@ import { Upload as UploadIcon } from "../../../icons/upload";
 import { Plus as PlusIcon } from "../../../icons/plus";
 import axios from "axios";
 import config from "../../../config";
+import Cookies from "js-cookie";
+import { redirectFromServerSideTo } from "../../../../helper";
 import { CategoriesListTable } from "../../../components/dashboard/product/servicelistTable";
 const applyFilters = (products, filters) =>
   products.filter((product) => {
@@ -97,24 +99,24 @@ const Categories = ({ data }) => {
         <title>Dashboard: Categories List </title>
       </Head>
       <Box
-        component="main"
+        component='main'
         sx={{
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth="xl">
+        <Container maxWidth='xl'>
           <Box sx={{ mb: 4 }}>
-            <Grid container justifyContent="space-between" spacing={3}>
+            <Grid container justifyContent='space-between' spacing={3}>
               <Grid item>
-                <Typography variant="h4">Categories</Typography>
+                <Typography variant='h4'>Categories</Typography>
               </Grid>
               <Grid item>
-                <NextLink href="/dashboard/category/new" passHref>
+                <NextLink href='/dashboard/category/new' passHref>
                   <Button
-                    component="a"
-                    startIcon={<PlusIcon fontSize="small" />}
-                    variant="contained"
+                    component='a'
+                    startIcon={<PlusIcon fontSize='small' />}
+                    variant='contained'
                   >
                     Add
                   </Button>
@@ -144,13 +146,16 @@ Categories.getLayout = (page) => (
   <DashboardLayout>{page}</DashboardLayout>
   //   </AuthGuard>
 );
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx) {
+  if (!ctx.req.cookies?.accessToken) {
+    redirectFromServerSideTo(ctx, "/");
+  }
   const res = await axios.get(`${config.apiRoute}/category/list`, {
     headers: {
       Authorization: config.token,
     },
   });
-  console.log(res.data);
+  // console.log(res.data);
   return {
     props: { data: res.data },
   };

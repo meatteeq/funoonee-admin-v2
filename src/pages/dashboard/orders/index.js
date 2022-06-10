@@ -23,6 +23,8 @@ import { Search as SearchIcon } from "../../../icons/search";
 import { gtm } from "../../../lib/gtm";
 import axios from "axios";
 import config from "../../../config";
+import Cookies from "js-cookie";
+import { redirectFromServerSideTo } from "../../../../helper";
 const tabs = [
   {
     label: "All",
@@ -119,7 +121,7 @@ const OrderListInner = styled("div", {
 }));
 
 const OrderList = ({ data }) => {
-  console.log(data);
+  // console.log(data);
   const orders = data;
   const isMounted = useMounted();
   const rootRef = useRef(null);
@@ -325,13 +327,16 @@ const OrderList = ({ data }) => {
 };
 
 OrderList.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx) {
+  if (!ctx.req.cookies?.accessToken) {
+    redirectFromServerSideTo(ctx, "/");
+  }
   const res = await axios.get(`${config.apiRoute}order/list`, {
     headers: {
       Authorization: config.token,
     },
   });
-  console.log("data respone", res.data);
+  // console.log("data respone", res.data);
   return {
     props: { data: res.data },
   };

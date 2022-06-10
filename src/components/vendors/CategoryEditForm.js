@@ -54,7 +54,7 @@ export const CategoryEditForm = ({ category }) => {
           values
         );
 
-        console.log(res.data);
+        // console.log(res.data);
         toast.success("Category Updated!");
         router.push("/dashboard/category").catch(console.error);
       } catch (err) {
@@ -70,7 +70,7 @@ export const CategoryEditForm = ({ category }) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader title="Edit Category" />
+        <CardHeader title='Edit Category' />
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
@@ -79,8 +79,8 @@ export const CategoryEditForm = ({ category }) => {
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label="Full name"
-                name="name"
+                label='Full name'
+                name='name'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 required
@@ -92,8 +92,8 @@ export const CategoryEditForm = ({ category }) => {
                 error={Boolean(formik.touched.ar_name && formik.errors.ar_name)}
                 fullWidth
                 helperText={formik.touched.ar_name && formik.errors.ar_name}
-                label="ar_name "
-                name="ar_name"
+                label='ar_name '
+                name='ar_name'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 required
@@ -103,12 +103,12 @@ export const CategoryEditForm = ({ category }) => {
 
             <Grid item md={6} xs={12}>
               <Typography
-                color="textSecondary"
+                color='textSecondary'
                 sx={{
                   mb: 2,
                   mt: 3,
                 }}
-                variant="subtitle2"
+                variant='subtitle2'
               >
                 Description
               </Typography>
@@ -116,19 +116,19 @@ export const CategoryEditForm = ({ category }) => {
                 onChange={(value) => {
                   formik.setFieldValue("description", value);
                 }}
-                placeholder="Write something"
+                placeholder='Write something'
                 sx={{ height: 200 }}
                 value={formik.values.description}
               />
             </Grid>
             <Grid item md={6} xs={12}>
               <Typography
-                color="textSecondary"
+                color='textSecondary'
                 sx={{
                   mb: 2,
                   mt: 3,
                 }}
-                variant="subtitle2"
+                variant='subtitle2'
               >
                 Ar Description
               </Typography>
@@ -136,7 +136,7 @@ export const CategoryEditForm = ({ category }) => {
                 onChange={(value) => {
                   formik.setFieldValue("ar_description", value);
                 }}
-                placeholder="Write something"
+                placeholder='Write something'
                 sx={{ height: 200 }}
                 value={formik.values.ar_description}
               />
@@ -169,21 +169,21 @@ export const CategoryEditForm = ({ category }) => {
         >
           <Button
             disabled={formik.isSubmitting}
-            type="submit"
+            type='submit'
             sx={{ m: 1 }}
-            variant="contained"
+            variant='contained'
           >
             Update
           </Button>
-          <NextLink href="/dashboard/category" passHref>
+          <NextLink href='/dashboard/category' passHref>
             <Button
-              component="a"
+              component='a'
               disabled={formik.isSubmitting}
               sx={{
                 m: 1,
                 mr: "auto",
               }}
-              variant="outlined"
+              variant='outlined'
             >
               Cancel
             </Button>
