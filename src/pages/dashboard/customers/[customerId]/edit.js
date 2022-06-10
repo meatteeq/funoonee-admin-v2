@@ -12,6 +12,8 @@ import { gtm } from "../../../../lib/gtm";
 import { getInitials } from "../../../../utils/get-initials";
 import axios from "axios";
 import config from "../../../../config";
+import Cookies from "js-cookie";
+import { redirectFromServerSideTo } from "../../../../../helper";
 
 const CustomerEdit = ({ data }) => {
   const customer = data;
@@ -51,26 +53,26 @@ const CustomerEdit = ({ data }) => {
         <title>Dashboard: Customer Edit </title>
       </Head>
       <Box
-        component="main"
+        component='main'
         sx={{
           backgroundColor: "background.default",
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth="md">
+        <Container maxWidth='md'>
           <Box sx={{ mb: 4 }}>
-            <NextLink href="/dashboard/customers" passHref>
+            <NextLink href='/dashboard/customers' passHref>
               <Link
-                color="textPrimary"
-                component="a"
+                color='textPrimary'
+                component='a'
                 sx={{
                   alignItems: "center",
                   display: "flex",
                 }}
               >
-                <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
-                <Typography variant="subtitle2">Customers</Typography>
+                <ArrowBackIcon fontSize='small' sx={{ mr: 1 }} />
+                <Typography variant='subtitle2'>Customers</Typography>
               </Link>
             </NextLink>
           </Box>
@@ -92,7 +94,7 @@ const CustomerEdit = ({ data }) => {
               {getInitials(customer.name)}
             </Avatar>
             <div>
-              <Typography noWrap variant="h4">
+              <Typography noWrap variant='h4'>
                 {customer.email}
               </Typography>
               <Box
@@ -104,8 +106,8 @@ const CustomerEdit = ({ data }) => {
                   whiteSpace: "nowrap",
                 }}
               >
-                <Typography variant="subtitle2">user_id:</Typography>
-                <Chip label={customer.id} size="small" sx={{ ml: 1 }} />
+                <Typography variant='subtitle2'>user_id:</Typography>
+                <Chip label={customer.id} size='small' sx={{ ml: 1 }} />
               </Box>
             </div>
           </Box>
@@ -120,12 +122,15 @@ const CustomerEdit = ({ data }) => {
 
 CustomerEdit.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 export async function getServerSideProps() {
+  if (!ctx.req.cookies?.accessToken) {
+    redirectFromServerSideTo(ctx, "/");
+  }
   const res = await axios.get(`${config.apiRoute}/customer/profile`, {
     headers: {
       Authorization: config.token,
     },
   });
-  console.log("single customer id", res.data);
+  // console.log("single customer id", res.data);
   return {
     props: { data: res.data },
   };

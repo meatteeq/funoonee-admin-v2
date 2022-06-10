@@ -44,7 +44,7 @@ export const CreateNewCityForm = ({ cityAndCategory }) => {
           },
         });
 
-        console.log(res.data);
+        // console.log(res.data);
         toast.success("City created!");
         router.push("/dashboard/cities").catch(console.error);
       } catch (err) {
@@ -70,22 +70,22 @@ export const CreateNewCityForm = ({ cityAndCategory }) => {
   const handleRemoveAll = () => {
     setFiles([]);
   };
-  console.log(formik.values);
+  // console.log(formik.values);
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
-              <Typography variant="h6">Basic details</Typography>
+              <Typography variant='h6'>Basic details</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label="City Name"
-                name="name"
+                label='City Name'
+                name='name'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.name}
@@ -122,8 +122,8 @@ export const CreateNewCityForm = ({ cityAndCategory }) => {
         </Button> */}
         <Button
           sx={{ m: 1 }}
-          type="submit"
-          variant="contained"
+          type='submit'
+          variant='contained'
           disabled={formik.isSubmitting}
         >
           Create

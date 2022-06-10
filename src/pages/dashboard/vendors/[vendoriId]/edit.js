@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import { redirectFromServerSideTo } from "../../../../../helper";
 
 import Head from "next/head";
 import { Avatar, Box, Chip, Container, Link, Typography } from "@mui/material";
@@ -54,26 +56,26 @@ const VendorEdit = ({ data }) => {
         <title>Dashboard: Vendor Edit </title>
       </Head>
       <Box
-        component="main"
+        component='main'
         sx={{
           backgroundColor: "background.default",
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth="md">
+        <Container maxWidth='md'>
           <Box sx={{ mb: 4 }}>
-            <NextLink href="/dashboard/vendors" passHref>
+            <NextLink href='/dashboard/vendors' passHref>
               <Link
-                color="textPrimary"
-                component="a"
+                color='textPrimary'
+                component='a'
                 sx={{
                   alignItems: "center",
                   display: "flex",
                 }}
               >
-                <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
-                <Typography variant="subtitle2">Vendors</Typography>
+                <ArrowBackIcon fontSize='small' sx={{ mr: 1 }} />
+                <Typography variant='subtitle2'>Vendors</Typography>
               </Link>
             </NextLink>
           </Box>
@@ -95,7 +97,7 @@ const VendorEdit = ({ data }) => {
               {getInitials(vendor.name)}
             </Avatar>
             <div>
-              <Typography noWrap variant="h4">
+              <Typography noWrap variant='h4'>
                 {vendor.email}
               </Typography>
               <Box
@@ -107,8 +109,8 @@ const VendorEdit = ({ data }) => {
                   whiteSpace: "nowrap",
                 }}
               >
-                <Typography variant="subtitle2">user_id:</Typography>
-                <Chip label={vendor.id} size="small" sx={{ ml: 1 }} />
+                <Typography variant='subtitle2'>user_id:</Typography>
+                <Chip label={vendor.id} size='small' sx={{ ml: 1 }} />
               </Box>
             </div>
           </Box>
@@ -122,13 +124,16 @@ const VendorEdit = ({ data }) => {
 };
 
 VendorEdit.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-export async function getServerSideProps({ params: { vendoriId } }) {
+export async function getServerSideProps({ params: { vendoriId }, ...ctx }) {
+  if (!ctx.req.cookies?.accessToken) {
+    redirectFromServerSideTo(ctx, "/");
+  }
   const res = await axios.get(`${config.apiRoute}/vendor/${vendoriId}`, {
     headers: {
       Authorization: config.token,
     },
   });
-  console.log("single customer id", res.data);
+  // console.log("single customer id", res.data);
   return {
     props: { data: res.data },
   };

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Head from "next/head";
+import { redirectFromServerSideTo } from "../../../../helper";
 import {
   Box,
   Button,
@@ -27,6 +28,8 @@ import { Search as SearchIcon } from "../../../icons/search";
 import { Upload as UploadIcon } from "../../../icons/upload";
 import { gtm } from "../../../lib/gtm";
 import Link from "next/link";
+import Router from "next/router";
+import Cookies from "js-cookie";
 
 const tabs = [
   {
@@ -296,13 +299,17 @@ const VendorList = ({ data }) => {
 };
 
 VendorList.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx) {
+  // console.log(Cookies.get("accessToken"), "cookies");
+  if (!ctx.req.cookies?.accessToken) {
+    redirectFromServerSideTo(ctx, "/");
+  }
   const res = await axios.get(`${config.apiRoute}vendor/list`, {
     headers: {
       Authorization: config.token,
     },
   });
-  console.log(res.data);
+  // console.log(res.data);
   return {
     props: { data: res.data },
   };

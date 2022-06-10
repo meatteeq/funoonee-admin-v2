@@ -8,6 +8,8 @@ import { ProductCreateForm } from "../../../components/dashboard/product/product
 import { gtm } from "../../../lib/gtm";
 import axios from "axios";
 import config from "../../../config";
+import Cookies from "js-cookie";
+import { redirectFromServerSideTo } from "../../../../helper";
 const ProductCreate = ({ data }) => {
   useEffect(() => {
     gtm.push({ event: "page_view" });
@@ -50,7 +52,10 @@ const ProductCreate = ({ data }) => {
 };
 
 ProductCreate.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx) {
+  if (!ctx.req.cookies?.accessToken) {
+    redirectFromServerSideTo(ctx, "/");
+  }
   const cityAndCategory = await Promise.all([
     axios.get(`${config.apiRoute}/category/list`, {
       headers: {

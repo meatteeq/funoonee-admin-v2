@@ -1,7 +1,7 @@
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import fireBaseApp from "../../Firebase";
 const uploadToServer = async (image) => {
-  console.log("image", image);
+  // console.log("image", image);
 
   const storage = getStorage(fireBaseApp);
 
@@ -11,8 +11,8 @@ const uploadToServer = async (image) => {
 
   uploadBytes(storageRef, image)
     .then((snapshot) => {
-      console.log("Uploaded a blob or file!", snapshot.ref.fullPath);
-      console.log(snapshot.ref.fullPath);
+      // console.log("Uploaded a blob or file!", snapshot.ref.fullPath);
+      // console.log(snapshot.ref.fullPath);
     })
     .catch((err) => {});
 

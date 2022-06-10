@@ -26,6 +26,8 @@ import { Search as SearchIcon } from "../../../icons/search";
 import { Upload as UploadIcon } from "../../../icons/upload";
 import { gtm } from "../../../lib/gtm";
 import Link from "next/link";
+import Cookies from "js-cookie";
+import { redirectFromServerSideTo } from "../../../../helper";
 
 const tabs = [
   {
@@ -352,13 +354,18 @@ const CustomerList = ({ data }) => {
 };
 
 CustomerList.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx) {
+  // console.log(ctx.req.cookies?.accessToken);
+  // console.log(Cookies.get("accessToken"), "cookiesstatus");
+  if (!ctx.req.cookies?.accessToken) {
+    redirectFromServerSideTo(ctx, "/");
+  }
   const res = await axios.get(`${config.apiRoute}admin/customers/list`, {
     headers: {
       Authorization: config.token,
     },
   });
-  console.log(res.data);
+  // console.log(res.data);
   return {
     props: { data: res.data },
   };

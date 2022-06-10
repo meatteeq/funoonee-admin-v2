@@ -14,6 +14,8 @@ import { Plus as PlusIcon } from "../../../icons/plus";
 import { gtm } from "../../../lib/gtm";
 import axios from "axios";
 import config from "../../../config";
+import Cookies from "js-cookie";
+import { redirectFromServerSideTo } from "../../../../helper";
 const applyFilters = (products, filters) =>
   products.filter((product) => {
     if (filters.name) {
@@ -156,13 +158,16 @@ const ProductList = ({ data }) => {
 };
 
 ProductList.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx) {
+  if (!ctx.req.cookies?.accessToken) {
+    redirectFromServerSideTo(ctx, "/");
+  }
   const res = await axios.get(`${config.apiRoute}product/list`, {
     headers: {
       Authorization: config.token,
     },
   });
-  console.log(res.data);
+  // console.log(res.data);
   return {
     props: { data: res.data },
   };

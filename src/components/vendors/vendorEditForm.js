@@ -77,14 +77,14 @@ export const VendorEditForm = ({ vendor }) => {
 
   useEffect(() => {
     const datas = venodrStatus.filter((item) => item.label === vendor?.status);
-    console.log();
+    // console.log();
     setStatus(datas[0]);
   }, [vendor]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader title="Edit Vendor" />
+        <CardHeader title='Edit Vendor' />
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
@@ -94,8 +94,8 @@ export const VendorEditForm = ({ vendor }) => {
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label="Full name"
-                name="name"
+                label='Full name'
+                name='name'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 required
@@ -108,8 +108,8 @@ export const VendorEditForm = ({ vendor }) => {
                 error={Boolean(formik.touched.email && formik.errors.email)}
                 fullWidth
                 helperText={formik.touched.email && formik.errors.email}
-                label="Email address"
-                name="email"
+                label='Email address'
+                name='email'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 required
@@ -126,8 +126,8 @@ export const VendorEditForm = ({ vendor }) => {
                 helperText={
                   formik.touched.phoneNumber && formik.errors.phoneNumber
                 }
-                label="phoneNumber "
-                name="phoneNumber"
+                label='phoneNumber '
+                name='phoneNumber'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 required
@@ -140,8 +140,8 @@ export const VendorEditForm = ({ vendor }) => {
                 error={Boolean(formik.touched.country && formik.errors.country)}
                 fullWidth
                 helperText={formik.touched.country && formik.errors.country}
-                label="Country"
-                name="country"
+                label='Country'
+                name='country'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.country}
@@ -153,8 +153,8 @@ export const VendorEditForm = ({ vendor }) => {
                 error={Boolean(formik.touched.city && formik.errors.city)}
                 fullWidth
                 helperText={formik.touched.city && formik.errors.city}
-                label="city/Region"
-                name="city"
+                label='city/Region'
+                name='city'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.state}
@@ -170,8 +170,8 @@ export const VendorEditForm = ({ vendor }) => {
                 helperText={
                   formik.touched.postalCode && formik.errors.postalCode
                 }
-                label="Postal Code"
-                name="postalCode"
+                label='Postal Code'
+                name='postalCode'
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.postalCode}
@@ -195,11 +195,11 @@ export const VendorEditForm = ({ vendor }) => {
                 isDisabled={
                   vendor.value == "APPROVED" || "REJECT" ? true : false
                 }
-                labelId="demo-simple-select-label"
+                labelId='demo-simple-select-label'
                 options={venodrStatus}
-                name="status"
+                name='status'
                 value={venodrEditStatus}
-                label="Select Status"
+                label='Select Status'
                 onChange={(selectCat) => setStatus(selectCat)}
               />
             </Grid>
@@ -222,21 +222,21 @@ export const VendorEditForm = ({ vendor }) => {
         >
           <Button
             disabled={vendor?.value == "APPROVED" || "REJECT" ? true : false}
-            type="submit"
+            type='submit'
             sx={{ m: 1 }}
-            variant="contained"
+            variant='contained'
           >
             Update
           </Button>
-          <NextLink href="/dashboard/vendors" passHref>
+          <NextLink href='/dashboard/vendors' passHref>
             <Button
-              component="a"
+              component='a'
               disabled={formik.isSubmitting}
               sx={{
                 m: 1,
                 mr: "auto",
               }}
-              variant="outlined"
+              variant='outlined'
             >
               Cancel
             </Button>
