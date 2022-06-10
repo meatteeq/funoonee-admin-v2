@@ -50,9 +50,9 @@ const CategoryCreate = ({ data }) => {
 };
 
 CategoryCreate.getLayout = (page) => (
-  <AuthGuard>
+
     <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
+ 
 );
 export async function getServerSideProps() {
   return {

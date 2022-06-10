@@ -78,7 +78,8 @@ export const ProductEditForm = ({ product }) => {
       special_price: productData.specialPrice,
       status: productData.status,
       sku: productData.sku,
-      isFeatured: productData.isFeatured,
+      isFeatured:
+        productData.isFeatured == null ? false : productData.isFeatured,
     },
     onSubmit: async (values, helpers) => {
       const payload = {

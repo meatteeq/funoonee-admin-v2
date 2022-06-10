@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import axios from "axios";
 import * as Yup from "yup";
-import config from "../../config";
+import config, { NetworkClient } from "../../config";
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import { QuillEditor } from "../quill-editor";
@@ -47,17 +47,11 @@ export const CategoryEditForm = ({ category }) => {
       ar_description: Yup.string().required("ar_description is Required"),
     }),
     onSubmit: async (values, helpers) => {
-  
       try {
         // NOTE: Make API request
-        const res = await axios.put(
+        const res = await NetworkClient.put(
           `${config.apiRoute}/category/${category.id}`,
-          values,
-          {
-            headers: {
-              Authorization: config.token,
-            },
-          }
+          values
         );
 
         console.log(res.data);

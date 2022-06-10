@@ -1,185 +1,162 @@
-import { useEffect } from 'react';
-import Head from 'next/head';
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import { Box, Card, Container, Divider, Link, Typography } from '@mui/material';
-import { GuestGuard } from '../../components/authentication/guest-guard';
-import { AuthBanner } from '../../components/authentication/auth-banner';
-import { AmplifyLogin } from '../../components/authentication/amplify-login';
-import { Auth0Login } from '../../components/authentication/auth0-login';
-import { FirebaseLogin } from '../../components/authentication/firebase-login';
-import { JWTLogin } from '../../components/authentication/jwt-login';
-import { Logo } from '../../components/logo';
-import { useAuth } from '../../hooks/use-auth';
-import { gtm } from '../../lib/gtm';
-
-const platformIcons = {
-  Amplify: '/static/icons/amplify.svg',
-  Auth0: '/static/icons/auth0.svg',
-  Firebase: '/static/icons/firebase.svg',
-  JWT: '/static/icons/jwt.svg'
-};
+import { useState } from "react";
+import Head from "next/head";
+import NextLink from "next/link";
+// import { useRouter } from "next/router";
+import Router from "next/router";
+import { useFormik } from "formik";
+import axios from "axios";
+import config from "../../config";
+import * as Yup from "yup";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
-  const router = useRouter();
-  const { platform } = useAuth();
-  const { disableGuard } = router.query;
+  const [error, setError] = useState(false);
+  const [networkError, setNetworkError] = useState(false);
+  // const router = useRouter();
+  const dispatch = useDispatch();
+  const formik = useFormik({
+    initialValues: {
+      phoneNumber: "",
+    },
+    validationSchema: Yup.object({
+      phoneNumber: Yup.string().max(15).required("Number is required"),
+    }),
+    onSubmit: (value) => {
+      const { phoneNumber } = value;
+      dispatch(login(phoneNumber))
+        .then((status) => {})
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  });
 
-  useEffect(() => {
-    gtm.push({ event: 'page_view' });
-  }, []);
+  const login = async (phoneNumber) => {
+    try {
+      const { data } = await axios.post(config.apiRoute + "admin/signin", {
+        phoneNumber,
+      });
+      console.log(data, "data");
+
+      const { challengeChannel, authSessionToken } = data;
+      const getToken = await axios.post(config.apiRoute + "admin/signin", {
+        challenge: challengeChannel.toString(),
+        authSessionToken: authSessionToken,
+      });
+
+      localStorage.setItem("accessToken", getToken.data.accessToken);
+      Router.push("/dashboard/customers");
+
+      return getToken.data;
+    } catch (error) {
+      console.log(error);
+      if (error.response.status >= 400 && error.response.status < 500) {
+        setError(true);
+      } else if (error.response.status >= 500) {
+        setNetworkError(true);
+      }
+    }
+  };
 
   return (
     <>
       <Head>
-        <title>
-          Login | Material Kit Pro
-        </title>
+        <title>Login | Material Kit</title>
       </Head>
       <Box
-        component="main"
+        component='main'
         sx={{
-          backgroundColor: 'background.default',
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: '100vh'
+          alignItems: "center",
+          display: "flex",
+          flexGrow: 1,
+          minHeight: "100%",
         }}
       >
-        <AuthBanner />
-        <Container
-          maxWidth="sm"
-          sx={{
-            py: {
-              xs: '60px',
-              md: '120px'
-            }
-          }}
-        >
-          <Box
-            sx={{
-              alignItems: 'center',
-              backgroundColor: (theme) => theme.palette.mode === 'dark'
-                ? 'neutral.900'
-                : 'neutral.100',
-              borderColor: 'divider',
-              borderRadius: 1,
-              borderStyle: 'solid',
-              borderWidth: 1,
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              mb: 4,
-              p: 2,
-              '& > img': {
-                height: 32,
-                width: 'auto',
-                flexGrow: 0,
-                flexShrink: 0
+        <Container maxWidth='sm'>
+          <form onSubmit={formik.handleSubmit}>
+            <Box sx={{ my: 3 }}>
+              <Typography color='textPrimary' variant='h4'>
+                Sign in
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                pb: 1,
+                pt: 3,
+              }}
+            >
+              <Typography align='center' color='textSecondary' variant='body1'>
+                login with number
+              </Typography>
+            </Box>
+            <TextField
+              error={Boolean(
+                formik.touched.phoneNumber && formik.errors.phoneNumber
+              )}
+              fullWidth
+              helperText={
+                formik.touched.phoneNumber && formik.errors.phoneNumber
               }
-            }}
-          >
-            <Typography
-              color="textSecondary"
-              variant="caption"
-            >
-              The app authenticates via {platform}
-            </Typography>
-            <img
-              alt="Auth platform"
-              src={platformIcons[platform]}
+              label='phoneNumber '
+              margin='normal'
+              name='phoneNumber'
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              type='phoneNumber'
+              value={formik.values.phoneNumber}
+              variant='outlined'
+              onFocus={() => {
+                setError(false);
+                setNetworkError(false);
+              }}
             />
-          </Box>
-          <Card
-            elevation={16}
-            sx={{ p: 4 }}
-          >
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center'
-              }}
-            >
-              <NextLink
-                href="/"
-                passHref
+            {error
+              ? "Please enter a valied number"
+              : networkError && "Network Error. Please try again later"}
+
+            <Box sx={{ py: 2 }}>
+              <Button
+                color='primary'
+                disabled={formik.isSubmitting}
+                fullWidth
+                size='large'
+                type='submit'
+                variant='contained'
               >
-                <a>
-                  <Logo
-                    sx={{
-                      height: 40,
-                      width: 40
-                    }}
-                  />
-                </a>
-              </NextLink>
-              <Typography variant="h4">
-                Log in
-              </Typography>
-              <Typography
-                color="textSecondary"
-                sx={{ mt: 2 }}
-                variant="body2"
-              >
-                Sign in on the internal platform
-              </Typography>
+                Sign In Now
+              </Button>
             </Box>
-            <Box
-              sx={{
-                flexGrow: 1,
-                mt: 3
-              }}
-            >
-              {platform === 'Amplify' && <AmplifyLogin />}
-              {platform === 'Auth0' && <Auth0Login />}
-              {platform === 'Firebase' && <FirebaseLogin />}
-              {platform === 'JWT' && <JWTLogin />}
-            </Box>
-            <Divider sx={{ my: 3 }} />
-            <div>
-              <NextLink
-                href={disableGuard
-                  ? `/authentication/register?disableGuard=${disableGuard}`
-                  : '/authentication/register'}
-                passHref
-              >
+            <Typography color='textSecondary' variant='body2'>
+              Don&apos;t have an account?{" "}
+              <NextLink href='/register'>
                 <Link
-                  color="textSecondary"
-                  variant="body2"
+                  to='/register'
+                  variant='subtitle2'
+                  underline='hover'
+                  sx={{
+                    cursor: "pointer",
+                  }}
                 >
-                  Create new account
+                  Sign Up
                 </Link>
               </NextLink>
-            </div>
-            {platform === 'Amplify' && (
-              <Box sx={{ mt: 1 }}>
-                <NextLink
-                  href={disableGuard
-                    ? `/authentication/password-recovery?disableGuard=${disableGuard}`
-                    : '/authentication/password-recovery'}
-                  passHref
-                >
-                  <Link
-                    color="textSecondary"
-                    variant="body2"
-                  >
-                    Forgot password
-                  </Link>
-                </NextLink>
-              </Box>
-            )}
-          </Card>
+            </Typography>
+          </form>
         </Container>
       </Box>
     </>
   );
 };
-
-Login.getLayout = (page) => (
-  <GuestGuard>
-    {page}
-  </GuestGuard>
-);
 
 export default Login;

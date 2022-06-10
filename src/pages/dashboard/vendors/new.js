@@ -45,11 +45,7 @@ const AddVendors = ({ data }) => {
     </>
   );
 };
-AddVendors.getLayout = (page) => (
-  <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
-);
+AddVendors.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export async function getServerSideProps() {
   const cityAndCategory = await Promise.all([

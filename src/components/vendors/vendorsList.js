@@ -79,28 +79,28 @@ const VendorListTable = (props) => {
           py: 0.5,
         }}
       >
-        <Checkbox
+        {/* <Checkbox
           checked={selectedAllCustomers}
           indeterminate={selectedSomeCustomers}
           onChange={handleSelectAllCustomers}
-        />
-        <Button size="small" sx={{ ml: 2 }}>
+        /> */}
+        {/* <Button size="small" sx={{ ml: 2 }}>
           Delete
         </Button>
         <Button size="small" sx={{ ml: 2 }}>
           Edit
-        </Button>
+        </Button> */}
       </Box>
       <Scrollbar>
         <Table sx={{ minWidth: 700 }}>
           <TableHead>
             <TableRow>
               <TableCell padding="checkbox">
-                <Checkbox
+                {/* <Checkbox
                   checked={selectedAllCustomers}
                   indeterminate={selectedSomeCustomers}
                   onChange={handleSelectAllCustomers}
-                />
+                /> */}
               </TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Phone Number</TableCell>
@@ -116,13 +116,13 @@ const VendorListTable = (props) => {
               return (
                 <TableRow hover key={vendor.id} selected={isCustomerSelected}>
                   <TableCell padding="checkbox">
-                    <Checkbox
+                    {/* <Checkbox
                       checked={isCustomerSelected}
                       onChange={(event) =>
                         handleSelectOneCustomer(event, vendor.id)
                       }
                       value={isCustomerSelected}
-                    />
+                    /> */}
                   </TableCell>
                   <TableCell>
                     <Box
@@ -141,11 +141,7 @@ const VendorListTable = (props) => {
                         {getInitials(vendor.name)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
-                        <NextLink href="/dashboard/vendors/1" passHref>
-                          <Link color="inherit" variant="subtitle2">
-                            {vendor.name}
-                          </Link>
-                        </NextLink>
+                        {vendor.name}
                         <Typography color="textSecondary" variant="body2">
                           {vendor.email}
                         </Typography>
@@ -181,11 +177,11 @@ const VendorListTable = (props) => {
                         <PencilAltIcon fontSize="small" />
                       </IconButton>
                     </NextLink>
-                    <NextLink href={`/dashboard/vendors/${vendor.id}`} passHref>
+                    {/* <NextLink href={`/dashboard/vendors/${vendor.id}`} passHref>
                       <IconButton component="a">
                         <ArrowRightIcon fontSize="small" />
                       </IconButton>
-                    </NextLink>
+                    </NextLink> */}
                   </TableCell>
                 </TableRow>
               );

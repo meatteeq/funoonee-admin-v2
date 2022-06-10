@@ -121,11 +121,7 @@ const VendorEdit = ({ data }) => {
   );
 };
 
-VendorEdit.getLayout = (page) => (
-  <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
-);
+VendorEdit.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 export async function getServerSideProps({ params: { vendoriId } }) {
   const res = await axios.get(`${config.apiRoute}/vendor/${vendoriId}`, {
     headers: {

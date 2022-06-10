@@ -25,6 +25,7 @@ import {
 import Select from "react-select";
 import { FileDropzone } from "../../file-dropzone";
 import React from "react";
+import uploadToServer from "../../../utils/uploadImage";
 
 export const CustomerAddForm = () => {
   const [files, setFiles] = useState([]);
@@ -87,7 +88,26 @@ export const CustomerAddForm = () => {
   const handleRemoveAll = () => {
     setFiles([]);
   };
+  const uploadFile = async (id) => {
+    const fileToUpload = document.getElementById("upload-image");
+    console.log("fileToUpload", fileToUpload?.files[0]);
+    const file = fileToUpload.files[0];
+    const upload = fileToUpload.value;
+    console.log("upload", upload);
 
+    const reader = new FileReader();
+
+    // if(!file) return
+
+    if (file) {
+      reader.readAsDataURL(file);
+      const result = await uploadToServer(file);
+      console.log("result", result);
+      if (result) {
+        setFiles({ ...imageSrc, image: result });
+      }
+    }
+  };
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
@@ -170,7 +190,7 @@ export const CustomerAddForm = () => {
           </Grid>
         </CardContent>
       </Card>
-      <Card sx={{ mt: 3 }}>
+      {/* <Card sx={{ mt: 3 }}>
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
@@ -179,20 +199,21 @@ export const CustomerAddForm = () => {
                 Images will appear in the store front of your website.
               </Typography>
             </Grid>
-            {/* <Grid item md={8} xs={12}>
+            <Grid item md={8} xs={12}>
               <FileDropzone
                 accept={{
-                  "image/*": [],
+                  "image/*": "",
                 }}
+                id="upload-image"
                 files={files}
-                onDrop={handleDrop}
+                onDrop={uploadFile}
                 onRemove={handleRemove}
-                onRemoveAll={handleRemoveAll}
+                // onRemoveAll={handleRemoveAll}
               />
-            </Grid> */}
+            </Grid>
           </Grid>
         </CardContent>
-      </Card>
+      </Card> */}
 
       {/* <Card sx={{ mt: 4 }}> */}
 

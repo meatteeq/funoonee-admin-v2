@@ -71,8 +71,6 @@ const ProductList = ({ data }) => {
     inStock: undefined,
   });
 
- 
-
   const handleFiltersChange = (filters) => {
     setFilters(filters);
   };
@@ -99,24 +97,24 @@ const ProductList = ({ data }) => {
         <title>Dashboard: Product List | Material Kit Pro</title>
       </Head>
       <Box
-        component="main"
+        component='main'
         sx={{
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth="xl">
+        <Container maxWidth='xl'>
           <Box sx={{ mb: 4 }}>
-            <Grid container justifyContent="space-between" spacing={3}>
+            <Grid container justifyContent='space-between' spacing={3}>
               <Grid item>
-                <Typography variant="h4">Products</Typography>
+                <Typography variant='h4'>Products</Typography>
               </Grid>
               <Grid item>
-                <NextLink href="/dashboard/products/new" passHref>
+                <NextLink href='/dashboard/products/new' passHref>
                   <Button
-                    component="a"
-                    startIcon={<PlusIcon fontSize="small" />}
-                    variant="contained"
+                    component='a'
+                    startIcon={<PlusIcon fontSize='small' />}
+                    variant='contained'
                   >
                     Add
                   </Button>
@@ -157,11 +155,7 @@ const ProductList = ({ data }) => {
   );
 };
 
-ProductList.getLayout = (page) => (
-  <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
-);
+ProductList.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 export async function getServerSideProps() {
   const res = await axios.get(`${config.apiRoute}product/list`, {
     headers: {

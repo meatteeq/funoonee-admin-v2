@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import axios from "axios";
 import * as Yup from "yup";
-import config from "../../config";
+import config, { NetworkClient } from "../../config";
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import { useFormik } from "formik";
@@ -42,14 +42,9 @@ export const VendorEditForm = ({ vendor }) => {
         status: venodrEditStatus.value,
       };
       try {
-        const res = await axios.put(
+        const res = await NetworkClient.put(
           `${config.apiRoute}/vendor/change-status/${vendor.id}`,
-          payload,
-          {
-            headers: {
-              Authorization: config.token,
-            },
-          }
+          payload
         );
         await wait(500);
         helpers.setStatus({ success: true });
@@ -175,15 +170,15 @@ export const VendorEditForm = ({ vendor }) => {
                 helperText={
                   formik.touched.postalCode && formik.errors.postalCode
                 }
-                label="Address 1"
+                label="Postal Code"
                 name="postalCode"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.postalCode}
               />
             </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
+            {/* <Grid item md={6} xs={12}> */}
+            {/* <TextField
                 disabled
                 error={Boolean(formik.touched.country && formik.errors.country)}
                 fullWidth
@@ -194,9 +189,12 @@ export const VendorEditForm = ({ vendor }) => {
                 onChange={formik.handleChange}
                 value={formik.values.country}
               />
-            </Grid>
+            </Grid> */}
             <Grid item md={6} xs={12}>
               <Select
+                isDisabled={
+                  vendor.value == "APPROVED" || "REJECT" ? true : false
+                }
                 labelId="demo-simple-select-label"
                 options={venodrStatus}
                 name="status"
@@ -223,7 +221,7 @@ export const VendorEditForm = ({ vendor }) => {
           }}
         >
           <Button
-            disabled={formik.isSubmitting}
+            disabled={vendor?.value == "APPROVED" || "REJECT" ? true : false}
             type="submit"
             sx={{ m: 1 }}
             variant="contained"

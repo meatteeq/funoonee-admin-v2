@@ -92,9 +92,9 @@ const ProductEdit = ({ data }) => {
 };
 
 ProductEdit.getLayout = (page) => (
-  <AuthGuard>
+  
     <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
+ 
 );
 export async function getServerSideProps({ params: { edit } }) {
   const cityAndCategory = await Promise.all([

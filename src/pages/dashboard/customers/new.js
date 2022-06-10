@@ -46,10 +46,6 @@ const AddCustomer = ({ data }) => {
     </>
   );
 };
-AddCustomer.getLayout = (page) => (
-  <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
-);
+AddCustomer.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default AddCustomer;

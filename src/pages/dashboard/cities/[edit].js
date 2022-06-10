@@ -85,9 +85,9 @@ const CityEdit = ({ data }) => {
 };
 
 CityEdit.getLayout = (page) => (
-  <AuthGuard>
+  
     <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
+  
 );
 export async function getServerSideProps({ params: { edit } }) {
   const res = await axios.get(`${config.apiRoute}/city/${edit}`, {

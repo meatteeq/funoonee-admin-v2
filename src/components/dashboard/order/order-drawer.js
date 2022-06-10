@@ -30,40 +30,30 @@ import axios from "axios";
 import Select from "react-select";
 import config from "../../../config";
 import { useRouter } from "next/router";
-
-const statusOptions = [
-  {
-    label: "Canceled",
-    value: "canceled",
-  },
-  {
-    label: "Complete",
-    value: "complete",
-  },
-  {
-    label: "Pending",
-    value: "pending",
-  },
-  {
-    label: "Rejected",
-    value: "rejected",
-  },
-];
+import { NetworkClient } from "../../../config";
 
 const OrderPreview = (props) => {
   const [statuss, setStatuss] = useState({});
+  const [vendor, setVendor] = useState();
+  const [vendorsData, setVendorsData] = useState();
   const { lgUp, onApprove, onEdit, onReject, order } = props;
   const align = lgUp ? "horizontal" : "vertical";
   const router = useRouter();
   const status = [
     { label: "NEW", value: "NEW" },
     { label: "CONFIRMED", value: "CONFIRMED" },
-    // { label: "PROCESSING", value: "PROCESSING" },
-    // { label: "REPAIR", value: "REPAIR" },
-    // { label: "DONE", value: "DONE" },
+    { label: "PROCESSING", value: "PROCESSING" },
+    { label: "REPAIR", value: "REPAIR" },
+    { label: "DONE", value: "DONE" },
     { label: "CANCELLED", value: "CANCELLED" },
+    { label: "ASSIGNED", value: "ASSIGNED" },
   ];
-
+  const vendorOptions =
+    vendorsData &&
+    vendorsData?.map(function (ser) {
+      return { value: ser.id, label: ser.name };
+    });
+  console.log(vendorOptions);
   const handleSubmit = () => {
     const data = {
       status: statuss.label,
@@ -83,24 +73,64 @@ const OrderPreview = (props) => {
         )
         .then((res) => {
           toast.success(res.data.message);
-          props.onclose();
+          // props.onclose();
           router.push("/dashboard/orders").catch(console.error);
         });
-      // console.log(res.data.message);
     } catch (error) {
       // toast.error(error.);
     }
   };
+  const handleAssignToVendor = async () => {
+    console.log("handle run");
 
+    try {
+      const res = NetworkClient.put(
+        `order/assign-to-vendor/${order.id}&${vendor.value}`,
+        {
+          headers: {
+            Authorization: config.token,
+          },
+        }
+      ).then((res) => {
+        toast.success(res.data.message);
+        props.onclose();
+        router.push("/dashboard/orders").catch(console.error);
+      });
+    } catch (error) {
+      // toast.error(error.);
+    }
+  };
   useEffect(() => {
     const data = status.filter((item) => item.label === order.orderStatus);
     setStatuss(data[0]);
-  }, []);
+  }, [order]);
 
   const filterdStatus = useMemo(() => {
     const data = status.filter((item) => item.label !== order.orderStatus);
     return data;
   });
+
+  const getVendors = async () => {
+    try {
+      const res = await axios.get(`${config.apiRoute}/vendor/list`, {
+        headers: {
+          Authorization: config.token,
+        },
+      });
+      const data = await res.data;
+      console.log(data);
+      setVendorsData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (statuss?.value == "CONFIRMED") {
+      getVendors();
+    }
+  }, [order, statuss]);
+  console.log("vendor", vendor?.value);
+  console.log("order id", order.id);
   return (
     <>
       <Box
@@ -144,10 +174,58 @@ const OrderPreview = (props) => {
             size="small"
             startIcon={<EditIcon fontSize="small" />}
           >
-            Update
+            Status
           </Button>
         </Box>
       </Box>
+      {statuss?.value == "CONFIRMED" ? (
+        <Box
+          sx={{
+            alignItems: "center",
+            backgroundColor: (theme) =>
+              theme.palette.mode === "dark" ? "neutral.800" : "neutral.100",
+            borderRadius: 1,
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            px: 3,
+            mt: 2,
+            py: 2.5,
+          }}
+        >
+          <Typography color="textSecondary" sx={{ mr: 2 }} variant="overline">
+            Assign to Vendor
+          </Typography>
+          <Box
+            sx={{
+              alignItems: "center",
+              display: "flex",
+              flexWrap: "wrap",
+              m: -1,
+              "& > button": {
+                m: 1,
+              },
+            }}
+          >
+            <Select
+              labelId="statusDropdown"
+              options={vendorOptions}
+              name="category"
+              value={vendor}
+              label="Select Category"
+              onChange={(selectdStatus) => setVendor(selectdStatus)}
+            />
+
+            <Button
+              onClick={handleAssignToVendor}
+              size="small"
+              startIcon={<EditIcon fontSize="small" />}
+            >
+              Assign
+            </Button>
+          </Box>
+        </Box>
+      ) : null}
       <Typography sx={{ my: 3 }} variant="h6">
         Details
       </Typography>
@@ -342,13 +420,7 @@ const OrderForm = (props) => {
         select
         SelectProps={{ native: true }}
         value={order.status}
-      >
-        {statusOptions.map((statusOption) => (
-          <option key={statusOption.value} value={statusOption.value}>
-            {statusOption.label}
-          </option>
-        ))}
-      </TextField>
+      ></TextField>
       <Button color="error" sx={{ mt: 3 }}>
         Delete order
       </Button>

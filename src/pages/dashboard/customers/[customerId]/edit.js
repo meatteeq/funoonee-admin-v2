@@ -118,11 +118,7 @@ const CustomerEdit = ({ data }) => {
   );
 };
 
-CustomerEdit.getLayout = (page) => (
-  <AuthGuard>
-    <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
-);
+CustomerEdit.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 export async function getServerSideProps() {
   const res = await axios.get(`${config.apiRoute}/customer/profile`, {
     headers: {
