@@ -34,56 +34,63 @@ export const OrderListTable = (props) => {
 
   return (
     <div {...other}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Order No</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Phone Number</TableCell>
-            <TableCell>Total Amount</TableCell>
-            <TableCell>Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {orders?.map((order) => (
-            <TableRow
-              hover
-              key={order.id}
-              onClick={() => onOpenDrawer?.(order.id)}
-              sx={{ cursor: "pointer" }}
-            >
-              <TableCell
-                sx={{
-                  alignItems: "center",
-                  display: "flex",
-                }}
-              >
-                {order.orderNo}
-              </TableCell>
-              <TableCell>{order.cName}</TableCell>
-              <TableCell>{order.cPhone}</TableCell>
-              <TableCell>{order.grandTotal}</TableCell>
-
-              <TableCell>
-                <SeverityPill
-                  color={severityMap[order.orderStatus] || "warning"}
-                >
-                  {order.orderStatus}
-                </SeverityPill>
-              </TableCell>
+      <Box
+        sx={{
+          px: 3,
+          py: 1,
+        }}
+      >
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Order No</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Phone Number</TableCell>
+              <TableCell>Total Amount</TableCell>
+              <TableCell>Status</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <TablePagination
-        component="div"
-        count={ordersCount}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
-      />
+          </TableHead>
+          <TableBody>
+            {orders?.map((order) => (
+              <TableRow
+                hover
+                key={order.id}
+                onClick={() => onOpenDrawer?.(order.id)}
+                sx={{ cursor: "pointer" }}
+              >
+                <TableCell
+                  sx={{
+                    alignItems: "center",
+                    display: "flex",
+                  }}
+                >
+                  {order.orderNo}
+                </TableCell>
+                <TableCell>{order.cName}</TableCell>
+                <TableCell>{order.cPhone}</TableCell>
+                <TableCell>{order.grandTotal}</TableCell>
+
+                <TableCell>
+                  <SeverityPill
+                    color={severityMap[order.orderStatus] || "warning"}
+                  >
+                    {order.orderStatus}
+                  </SeverityPill>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <TablePagination
+          component="div"
+          count={ordersCount}
+          onPageChange={onPageChange}
+          onRowsPerPageChange={onRowsPerPageChange}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[5, 10, 25]}
+        />
+      </Box>
     </div>
   );
 };

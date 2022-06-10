@@ -58,9 +58,9 @@ const OrderPreview = (props) => {
   const status = [
     { label: "NEW", value: "NEW" },
     { label: "CONFIRMED", value: "CONFIRMED" },
-    // { label: "PROCESSING", value: "PROCESSING" },
-    // { label: "REPAIR", value: "REPAIR" },
-    // { label: "DONE", value: "DONE" },
+    { label: "PROCESSING", value: "PROCESSING" },
+    { label: "REPAIR", value: "REPAIR" },
+    { label: "DONE", value: "DONE" },
     { label: "CANCELLED", value: "CANCELLED" },
   ];
 
