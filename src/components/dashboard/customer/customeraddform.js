@@ -190,7 +190,7 @@ export const CustomerAddForm = () => {
           </Grid>
         </CardContent>
       </Card>
-      <Card sx={{ mt: 3 }}>
+      {/* <Card sx={{ mt: 3 }}>
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
@@ -213,7 +213,7 @@ export const CustomerAddForm = () => {
             </Grid>
           </Grid>
         </CardContent>
-      </Card>
+      </Card> */}
 
       {/* <Card sx={{ mt: 4 }}> */}
 

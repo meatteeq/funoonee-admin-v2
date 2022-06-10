@@ -94,9 +94,9 @@ const CategoryEdit = ({ data }) => {
 };
 
 CategoryEdit.getLayout = (page) => (
-  <AuthGuard>
+  
     <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
+  
 );
 export async function getServerSideProps({ params: { edit } }) {
   const res = await axios.get(`${config.apiRoute}/category/${edit}`, {

@@ -16,6 +16,7 @@ import { SeverityPill } from "../../severity-pill";
 const severityMap = {
   CONFIRMED: "success",
   NEW: "info",
+  ASSIGNED: "secondary",
   CANCELLED: "error",
   PROCESSNG: "error",
 };

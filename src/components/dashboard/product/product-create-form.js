@@ -236,7 +236,7 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
           </Grid>
         </CardContent>
       </Card>
-      <Card sx={{ mt: 3 }}>
+      {/* <Card sx={{ mt: 3 }}>
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
@@ -245,7 +245,7 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
                 Images will appear in the store front of your website.
               </Typography>
             </Grid>
-            {/* <Grid item md={8} xs={12}>
+            <Grid item md={8} xs={12}>
               <FileDropzone
                 accept={{
                   "image/*": [],
@@ -255,10 +255,10 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
                 onRemove={handleRemove}
                 onRemoveAll={handleRemoveAll}
               />
-            </Grid> */}
+            </Grid>
           </Grid>
         </CardContent>
-      </Card>
+      </Card> */}
       <Card sx={{ mt: 3 }}>
         <CardContent>
           <Grid container spacing={3}>

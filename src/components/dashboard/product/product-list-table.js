@@ -34,34 +34,11 @@ import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
 import { SeverityPill } from "../../severity-pill";
 import Link from "next/link";
 
-const categoryOptions = [
-  {
-    label: "Healthcare",
-    value: "healthcare",
-  },
-  {
-    label: "Makeup",
-    value: "makeup",
-  },
-  {
-    label: "Dress",
-    value: "dress",
-  },
-  {
-    label: "Skincare",
-    value: "skincare",
-  },
-  {
-    label: "Jewelry",
-    value: "jewelry",
-  },
-  {
-    label: "Blouse",
-    value: "blouse",
-  },
-];
-
 export const ProductListTable = (props) => {
+  const [getCitisAndCat, setGetCitisAndCat] = useState({
+    city: {},
+    cat: {},
+  });
   const {
     onPageChange,
     onRowsPerPageChange,
@@ -76,20 +53,6 @@ export const ProductListTable = (props) => {
   const handleOpenProduct = (productId) => {
     setOpenProduct((prevValue) => (prevValue === productId ? null : productId));
   };
-
-  const handleUpdateProduct = () => {
-    setOpenProduct(null);
-    toast.success("Product updated");
-  };
-
-  const handleCancelEdit = () => {
-    setOpenProduct(null);
-  };
-
-  const handleDeleteProduct = () => {
-    toast.error("Product cannot be deleted");
-  };
-
   return (
     <div {...other}>
       <Scrollbar>
@@ -97,8 +60,8 @@ export const ProductListTable = (props) => {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell width="25%">Name</TableCell>
-              <TableCell width="25%">Ar Name</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Ar Name</TableCell>
               <TableCell>Price</TableCell>
               <TableCell>sku</TableCell>
               <TableCell>Special Price</TableCell>
@@ -185,29 +148,10 @@ export const ProductListTable = (props) => {
                           <Typography variant="subtitle2">
                             {product.name}
                           </Typography>
-                          {/* <Typography color="textSecondary" variant="body2">
-                            in {product.category}
-                          </Typography> */}
                         </Box>
                       </Box>
                     </TableCell>
-                    <TableCell width="25%">
-                      {/* <LinearProgress
-                        value={product.quantity}
-                        variant="determinate"
-                        color={product.quantity >= 10 ? "success" : "error"}
-                        sx={{
-                          height: 8,
-                          width: 36,
-                        }}
-                      />
-                      <Typography color="textSecondary" variant="body2">
-                        {product.quantity} in stock
-                        {product.variants > 1 &&
-                          ` in ${product.variants} variants`}
-                      </Typography> */}
-                      {product.arName}
-                    </TableCell>
+                    <TableCell width="25%">{product.arName}</TableCell>
                     <TableCell>
                       {numeral(product.price).format(
                         `${product.currency}0,0.00`
@@ -215,11 +159,6 @@ export const ProductListTable = (props) => {
                     </TableCell>
                     <TableCell>{product.sku}</TableCell>
                     <TableCell>
-                      {/* <SeverityPill
-                        color={product.status === true ? "success" : "info"}
-                      >
-                        {product.status}
-                      </SeverityPill> */}
                       {product.specialPrice ? product.specialPrice : 0}
                     </TableCell>
                     <TableCell>

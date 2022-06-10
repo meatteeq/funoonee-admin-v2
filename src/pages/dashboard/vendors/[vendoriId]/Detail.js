@@ -5,9 +5,9 @@ export const VendorDetail = () => {
 };
 
 VendorDetail.getLayout = (page) => (
-  <AuthGuard>
+
     <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
+
 );
 
 export default VendorDetail;

@@ -141,11 +141,7 @@ const VendorListTable = (props) => {
                         {getInitials(vendor.name)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
-                        <NextLink href="/dashboard/vendors/1" passHref>
-                          <Link color="inherit" variant="subtitle2">
-                            {vendor.name}
-                          </Link>
-                        </NextLink>
+                        {vendor.name}
                         <Typography color="textSecondary" variant="body2">
                           {vendor.email}
                         </Typography>
@@ -181,11 +177,11 @@ const VendorListTable = (props) => {
                         <PencilAltIcon fontSize="small" />
                       </IconButton>
                     </NextLink>
-                    <NextLink href={`/dashboard/vendors/${vendor.id}`} passHref>
+                    {/* <NextLink href={`/dashboard/vendors/${vendor.id}`} passHref>
                       <IconButton component="a">
                         <ArrowRightIcon fontSize="small" />
                       </IconButton>
-                    </NextLink>
+                    </NextLink> */}
                   </TableCell>
                 </TableRow>
               );

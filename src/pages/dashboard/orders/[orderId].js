@@ -137,9 +137,9 @@ const OrderDetails = () => {
 };
 
 OrderDetails.getLayout = (page) => (
-  <AuthGuard>
+
     <DashboardLayout>{page}</DashboardLayout>
-  </AuthGuard>
+
 );
 
 export default OrderDetails;
