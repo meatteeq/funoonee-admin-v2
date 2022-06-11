@@ -54,6 +54,9 @@ export async function getServerSideProps(ctx) {
   if (!ctx.req.cookies?.accessToken) {
     redirectFromServerSideTo(ctx, "/");
   }
+  return {
+    props: {},
+  };
 }
 
 export default AddCustomer;

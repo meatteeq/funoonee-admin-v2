@@ -143,10 +143,11 @@ const Login = () => {
                 setNetworkError(false);
               }}
             />
-            {error
-              ? "Please enter a valied number"
-              : networkError && "Network Error. Please try again later"}
-
+            <p style={{ color: "red" }}>
+              {error
+                ? "Please enter a valied number"
+                : networkError && "Network Error. Please try again later"}
+            </p>
             <Box sx={{ py: 2 }}>
               <Button
                 color='primary'
