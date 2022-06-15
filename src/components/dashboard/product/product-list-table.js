@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import numeral from "numeral";
 import PropTypes from "prop-types";
 import { toast } from "react-hot-toast";
@@ -33,11 +33,14 @@ import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
 
 import { SeverityPill } from "../../severity-pill";
 import Link from "next/link";
-
+import Select from "react-select";
 export const ProductListTable = (props) => {
+  const [city, selectCity] = useState();
+
+  const [cat, selectCat] = useState();
   const [getCitisAndCat, setGetCitisAndCat] = useState({
-    city: {},
-    cat: {},
+    city: null,
+    cat: null,
   });
   const {
     onPageChange,
@@ -46,15 +49,38 @@ export const ProductListTable = (props) => {
     products,
     productsCount,
     rowsPerPage,
+    catData,
+    cityData,
     ...other
   } = props;
   const [openProduct, setOpenProduct] = useState(null);
+  useEffect(() => {
+    const filteredData = cityData.filter((e) =>
+      getCitisAndCat?.city?.includes(e.id)
+    );
+    const cityFiltered =
+      filteredData &&
+      filteredData?.map(function (ser) {
+        return { value: ser.id, label: ser.name };
+      });
+    const filteredDataCat = catData.filter((e) =>
+      getCitisAndCat?.cat?.includes(e.id)
+    );
+    const catFiltered =
+      filteredDataCat &&
+      filteredDataCat?.map(function (ser) {
+        return { value: ser.id, label: ser.name };
+      });
 
-  const handleOpenProduct = (productId) => {
+    selectCity(cityFiltered);
+    selectCat(catFiltered);
+  }, [city, cat]);
+  const handleOpenProduct = (productId, city, cat) => {
+    setGetCitisAndCat({ ...getCitisAndCat, city: city, cat: cat });
     setOpenProduct((prevValue) => (prevValue === productId ? null : productId));
   };
   return (
-    <div {...other}>
+    <div>
       <Scrollbar>
         <Table sx={{ minWidth: 1200 }}>
           <TableHead>
@@ -93,7 +119,15 @@ export const ProductListTable = (props) => {
                       }}
                       width="25%"
                     >
-                      <IconButton onClick={() => handleOpenProduct(product.id)}>
+                      <IconButton
+                        onClick={() =>
+                          handleOpenProduct(
+                            product.id,
+                            product.city,
+                            product.categoryId
+                          )
+                        }
+                      >
                         {open ? (
                           <ChevronDownIcon fontSize="small" />
                         ) : (
@@ -151,7 +185,7 @@ export const ProductListTable = (props) => {
                         </Box>
                       </Box>
                     </TableCell>
-                    <TableCell width="25%">{product.arName}</TableCell>
+                    <TableCell>{product.arName}</TableCell>
                     <TableCell>
                       {numeral(product.price).format(
                         `${product.currency}0,0.00`
@@ -191,7 +225,7 @@ export const ProductListTable = (props) => {
                           <Grid container spacing={3}>
                             <Grid item md={6} xs={12}>
                               <Typography variant="h6">
-                                Basic details
+                                Basic Details
                               </Typography>
                               <Divider sx={{ my: 2 }} />
                               <Grid container spacing={3}>
@@ -240,7 +274,6 @@ export const ProductListTable = (props) => {
                                     name="arDescription"
                                   />
                                 </Grid>
-
                                 <Grid item md={6} xs={12}>
                                   <TextField
                                     defaultValue={product.id}
@@ -291,40 +324,32 @@ export const ProductListTable = (props) => {
                                     type="number"
                                   />
                                 </Grid>
-                                {/* <Grid item md={6} xs={12}>
-                                  <TextField
-                                    defaultValue={product.category}
-                                    fullWidth
-                                    label="Category"
-                                    select
-                                  >
-                                    {categoryOptions.map((option) => (
-                                      <MenuItem
-                                        key={option.value}
-                                        value={option.value}
-                                      >
-                                        {option.label}
-                                      </MenuItem>
-                                    ))}
-                                  </TextField>
+                                <Grid item md={6} xs={12}>
+                                  <Typography variant="h7">Category</Typography>
+                                  <Select
+                                    labelId="demo-simple-select-label"
+                                    // options={catOptions}
+                                    name="category"
+                                    isDisabled
+                                    value={cat}
+                                    label=" Category"
+                                    // onChange={(selectCat) => setCat(selectCat)}
+                                  />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
-                                  <TextField
-                                    defaultValue={product.city}
-                                    fullWidth
-                                    label="City"
-                                    select
-                                  >
-                                    {categoryOptions.map((option) => (
-                                      <MenuItem
-                                        key={option.value}
-                                        value={option.value}
-                                      >
-                                        {option.label}
-                                      </MenuItem>
-                                    ))}
-                                  </TextField>
-                                </Grid> */}
+                                  <Typography variant="h7">City</Typography>
+
+                                  <Select
+                                    // labelId="demo-simple-select-label"
+                                    // options={catOptions}
+                                    name="category"
+                                    value={city}
+                                    isMulti
+                                    isDisabled
+                                    label=" Category"
+                                    // onChange={(selectCat) => setCat(selectCat)}
+                                  />
+                                </Grid>
                                 <Grid item md={6} xs={12}>
                                   <FormControlLabel
                                     control={
@@ -360,20 +385,6 @@ export const ProductListTable = (props) => {
                                     name="isFeatured"
                                   />
                                 </Grid>
-                                {/* <Grid
-                                  item
-                                  md={6}
-                                  xs={12}
-                                  sx={{
-                                    alignItems: "center",
-                                    display: "flex",
-                                  }}
-                                >
-                                  <Switch />
-                                  <Typography variant="subtitle2">
-                                    Keep selling when stock is empty
-                                  </Typography>
-                                </Grid> */}
                               </Grid>
                             </Grid>
                           </Grid>
