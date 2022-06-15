@@ -21,27 +21,27 @@ const CategoryCreate = ({ data }) => {
         <title>Dashboard: Category Create</title>
       </Head>
       <Box
-        component='main'
+        component="main"
         sx={{
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth='md'>
+        <Container maxWidth="md">
           <Box sx={{ mb: 3 }}>
-            <Typography variant='h4'>Create a new Category</Typography>
-            <Breadcrumbs separator='/' sx={{ mt: 1 }}>
-              <NextLink href='/dashboard' passHref>
-                <Link variant='subtitle2'>Dashboard</Link>
+            <Typography variant="h4">Create a new Category</Typography>
+            <Breadcrumbs separator="/" sx={{ mt: 1 }}>
+              <NextLink href="/dashboard" passHref>
+                <Link variant="subtitle2">Dashboard</Link>
               </NextLink>
-              <NextLink href='/dashboard' passHref>
-                <Link color='primary' variant='subtitle2'>
-                  Management
+              <NextLink href="/dashboard/category" passHref>
+                <Link color="primary" variant="subtitle2">
+                  All Category
                 </Link>
               </NextLink>
-              <Typography color='textSecondary' variant='subtitle2'>
+              {/* <Typography color="textSecondary" variant="subtitle2">
                 Categories
-              </Typography>
+              </Typography> */}
             </Breadcrumbs>
           </Box>
           <CategoryCreateForm />

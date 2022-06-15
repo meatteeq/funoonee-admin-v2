@@ -15,9 +15,7 @@ import config from "../../../config";
 import { CategoryEditForm } from "../../../components/vendors/CategoryEditForm";
 import Cookies from "js-cookie";
 import { redirectFromServerSideTo } from "../../../../helper";
-const CategoryEdit = ({ data }) => {
-  const category = data;
-
+const CategoryEdit = ({ data: category }) => {
   if (!category) {
     return null;
   }
@@ -28,26 +26,26 @@ const CategoryEdit = ({ data }) => {
         <title>Dashboard: Category Edit </title>
       </Head>
       <Box
-        component='main'
+        component="main"
         sx={{
           backgroundColor: "background.default",
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth='md'>
+        <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
-            <NextLink href='/dashboard/vendors' passHref>
+            <NextLink href="/dashboard/category" passHref>
               <Link
-                color='textPrimary'
-                component='a'
+                color="textPrimary"
+                component="a"
                 sx={{
                   alignItems: "center",
                   display: "flex",
                 }}
               >
-                <ArrowBackIcon fontSize='small' sx={{ mr: 1 }} />
-                <Typography variant='subtitle2'>Category</Typography>
+                <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
+                <Typography variant="subtitle2">Category</Typography>
               </Link>
             </NextLink>
           </Box>
@@ -81,8 +79,8 @@ const CategoryEdit = ({ data }) => {
                   whiteSpace: "nowrap",
                 }}
               >
-                <Typography variant='subtitle2'>user_id:</Typography>
-                <Chip label={category.id} size='small' sx={{ ml: 1 }} />
+                <Typography variant="subtitle2">user_id:</Typography>
+                <Chip label={category.id} size="small" sx={{ ml: 1 }} />
               </Box>
             </div>
           </Box>

@@ -62,7 +62,8 @@ const applyPagination = (products, page, rowsPerPage) =>
   products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
 const ProductList = ({ data }) => {
-  const products = data;
+  console.log(data);
+  const { products, cityData, categoryData } = data;
   const isMounted = useMounted();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -99,24 +100,24 @@ const ProductList = ({ data }) => {
         <title>Dashboard: Product List | Material Kit Pro</title>
       </Head>
       <Box
-        component='main'
+        component="main"
         sx={{
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth='xl'>
+        <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
-            <Grid container justifyContent='space-between' spacing={3}>
+            <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant='h4'>Products</Typography>
+                <Typography variant="h4">Products</Typography>
               </Grid>
               <Grid item>
-                <NextLink href='/dashboard/products/new' passHref>
+                <NextLink href="/dashboard/products/new" passHref>
                   <Button
-                    component='a'
-                    startIcon={<PlusIcon fontSize='small' />}
-                    variant='contained'
+                    component="a"
+                    startIcon={<PlusIcon fontSize="small" />}
+                    variant="contained"
                   >
                     Add
                   </Button>
@@ -149,6 +150,8 @@ const ProductList = ({ data }) => {
               products={paginatedProducts}
               productsCount={filteredProducts.length}
               rowsPerPage={rowsPerPage}
+              catData={categoryData}
+              cityData={cityData}
             />
           </Card>
         </Container>
@@ -162,14 +165,39 @@ export async function getServerSideProps(ctx) {
   if (!ctx.req.cookies?.accessToken) {
     redirectFromServerSideTo(ctx, "/");
   }
-  const res = await axios.get(`${config.apiRoute}product/list`, {
-    headers: {
-      Authorization: config.token,
-    },
-  });
+  const cityAndCategory = await Promise.all([
+    axios.get(`${config.apiRoute}/category/list`, {
+      headers: {
+        Authorization: config.token,
+      },
+    }),
+    axios.get(`${config.apiRoute}/city/list`, {
+      headers: {
+        Authorization: config.token,
+      },
+    }),
+    axios.get(`${config.apiRoute}product/list`, {
+      headers: {
+        Authorization: config.token,
+      },
+    }),
+  ])
+    .then((resArray) => {
+      const [categoryList, cityList, productList] = resArray;
+      const data = {
+        categoryData: categoryList?.data,
+        cityData: cityList?.data,
+        products: productList?.data,
+      };
+      return data;
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
   // console.log(res.data);
   return {
-    props: { data: res.data },
+    props: { data: cityAndCategory },
   };
 }
 
