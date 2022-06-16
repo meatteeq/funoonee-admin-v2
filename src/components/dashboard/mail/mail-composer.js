@@ -17,7 +17,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import MinimizeIcon from '@mui/icons-material/Minimize';
 import { ArrowsExpand as ArrowsExpandIcon } from '../../../icons/arrows-expand';
 import { X as XIcon } from '../../../icons/x';
-import { QuillEditor } from '../../quill-editor';
+// import { QuillEditor } from '../../quill-editor';
 
 export const MailComposer = (props) => {
   const { open, onClose } = props;
@@ -116,7 +116,7 @@ export const MailComposer = (props) => {
             borderColor: 'divider'
           }}
         />
-        <QuillEditor
+        {/* <QuillEditor
           onChange={handleChange}
           placeholder="Leave a message"
           sx={{
@@ -124,7 +124,7 @@ export const MailComposer = (props) => {
             flexGrow: 1
           }}
           value={messageBody}
-        />
+        /> */}
         <Divider />
         <Box
           sx={{

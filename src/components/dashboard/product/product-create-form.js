@@ -17,12 +17,13 @@ import {
   Switch,
   TextField,
   InputLabel,
+  Checkbox,
   Typography,
 } from "@mui/material";
 import Select from "react-select";
 
 import { FileDropzone } from "../../file-dropzone";
-import { QuillEditor } from "../../quill-editor";
+// import { QuillEditor } from "../../quill-editor";
 
 const categoryOptions = [
   {
@@ -149,15 +150,15 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
-              <Typography variant='h6'>Basic details</Typography>
+              <Typography variant="h6">Basic details</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label='Product Name'
-                name='name'
+                label="Product Name"
+                name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.name}
@@ -170,8 +171,8 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
                 error={Boolean(formik.touched.ar_name && formik.errors.ar_name)}
                 fullWidth
                 helperText={formik.touched.ar_name && formik.errors.ar_name}
-                label='Ar Name'
-                name='ar_name'
+                label="Ar Name"
+                name="ar_name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.ar_name}
@@ -180,48 +181,52 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
               <TextField
                 error={Boolean(formik.touched.sku && formik.errors.sku)}
                 fullWidth
-                label='SKU'
-                name='sku'
+                label="SKU"
+                name="sku"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 sx={{ mt: 2 }}
                 value={formik.values.sku}
               />
               <Typography
-                color='textSecondary'
+                color="textSecondary"
                 sx={{
                   mb: 2,
                   mt: 3,
                 }}
-                variant='subtitle2'
+                variant="subtitle2"
               >
                 Description
               </Typography>
-              <QuillEditor
-                onChange={(value) => {
-                  formik.setFieldValue("description", value);
-                }}
-                placeholder='Write something'
-                sx={{ height: 200 }}
+              <TextField
+                aria-label=" Description"
                 value={formik.values.description}
+                name="description"
+                rows={6}
+                onChange={formik.handleChange}
+                multiline
+                placeholder="Add  Description"
+                style={{ width: 590 }}
               />
               <Typography
-                color='textSecondary'
+                color="textSecondary"
                 sx={{
                   mb: 2,
                   mt: 3,
                 }}
-                variant='subtitle2'
+                variant="subtitle2"
               >
                 Ar Description
               </Typography>
-              <QuillEditor
-                onChange={(value) => {
-                  formik.setFieldValue("ar_description", value);
-                }}
-                placeholder='Write something'
-                sx={{ height: 200 }}
+              <TextField
+                aria-label="Ar Description"
                 value={formik.values.ar_description}
+                name="ar_description"
+                rows={6}
+                onChange={formik.handleChange}
+                multiline
+                placeholder="Add Ar Description"
+                style={{ width: 590 }}
               />
               {Boolean(
                 formik.touched.ar_description && formik.errors.ar_description
@@ -232,6 +237,38 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
                   </FormHelperText>
                 </Box>
               )}
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formik.values.is_multiple_allowed}
+                    onChange={formik.handleChange}
+                  />
+                }
+                label="Is Multipal Allowed"
+                name="is_multiple_allowed"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formik.values.status}
+                    onChange={formik.handleChange}
+                  />
+                }
+                label="Status"
+                name="status"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formik.values.isFeatured}
+                    onChange={formik.handleChange}
+                  />
+                }
+                label="Is Featured"
+                name="isFeatured"
+              />
             </Grid>
           </Grid>
         </CardContent>
@@ -263,17 +300,17 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
-              <Typography variant='h6'>Pricing</Typography>
+              <Typography variant="h6">Pricing</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField
                 error={Boolean(formik.touched.price && formik.errors.price)}
                 fullWidth
-                label='Price'
-                name='price'
+                label="Price"
+                name="price"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                type='number'
+                type="number"
                 value={formik.values.price}
               />
               <TextField
@@ -281,18 +318,18 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
                   formik.touched.special_price && formik.errors.special_price
                 )}
                 fullWidth
-                label='New Price'
-                name='special_price'
+                label="New Price"
+                name="special_price"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 sx={{ mt: 2, mb: 2 }}
-                type='number'
+                type="number"
                 value={formik.values.special_price}
               />
               <Box sx={{ mt: 2 }}>
                 <FormControlLabel
                   control={<Switch />}
-                  label='isMultipleAllowed'
+                  label="isMultipleAllowed"
                 />
               </Box>
             </Grid>
@@ -303,29 +340,29 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
       <CardContent>
         <Grid container spacing={5}>
           <Grid item md={4} xs={12}>
-            <Typography variant='h6'> Select Category</Typography>
+            <Typography variant="h6"> Select Category</Typography>
           </Grid>
           <Grid item md={8} xs={12}>
             <Select
-              labelId='demo-simple-select-label'
+              labelId="demo-simple-select-label"
               options={catOptions}
-              name='category'
+              name="category"
               value={cat}
-              label='Select Category'
+              label="Select Category"
               onChange={(selectCat) => setCat(selectCat)}
             />
           </Grid>
           <Grid item md={4} xs={12}>
-            <Typography variant='h6'> Select Cities </Typography>
+            <Typography variant="h6"> Select Cities </Typography>
           </Grid>
           <Grid item md={8} xs={12}>
             <Select
-              labelId='city_id'
-              name='city'
+              labelId="city_id"
+              name="city"
               options={cityOptions}
               error={Boolean(formik.touched.city && formik.errors.city)}
               value={city}
-              label='Select City'
+              label="Select City"
               onChange={(selectedOption) => selectCity(selectedOption)}
               isMulti
             />
@@ -352,13 +389,13 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
         >
           Delete
         </Button> */}
-        <Button sx={{ m: 1 }} variant='outlined'>
+        <Button sx={{ m: 1 }} variant="outlined">
           Cancel
         </Button>
         <Button
           sx={{ m: 1 }}
-          type='submit'
-          variant='contained'
+          type="submit"
+          variant="contained"
           disabled={formik.isSubmitting}
         >
           Create

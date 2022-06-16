@@ -118,15 +118,15 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
-              <Typography variant='h6'>Basic details</Typography>
+              <Typography variant="h6">Basic details</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label='Category Name'
-                name='name'
+                label="Category Name"
+                name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.name}
@@ -139,48 +139,52 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
                 error={Boolean(formik.touched.ar_name && formik.errors.ar_name)}
                 fullWidth
                 helperText={formik.touched.ar_name && formik.errors.ar_name}
-                label='Ar Name'
-                name='ar_name'
+                label="Ar Name"
+                name="ar_name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.ar_name}
               />
 
               <Typography
-                color='textSecondary'
+                color="textSecondary"
                 sx={{
                   mb: 2,
                   mt: 3,
                 }}
-                variant='subtitle2'
+                variant="subtitle2"
               >
                 Description
               </Typography>
-              <QuillEditor
-                onChange={(value) => {
-                  formik.setFieldValue("description", value);
-                }}
-                placeholder='Write something'
-                sx={{ height: 200 }}
+              <TextField
+                aria-label="Description"
+                rows={6}
+                multiline
+                name="description"
+                onChange={formik.handleChange}
                 value={formik.values.description}
+                placeholder="Add Description"
+                style={{ width: 590 }}
               />
               <Typography
-                color='textSecondary'
+                color="textSecondary"
                 sx={{
                   mb: 2,
                   mt: 3,
                 }}
-                variant='subtitle2'
+                variant="subtitle2"
               >
                 Ar Description
               </Typography>
-              <QuillEditor
-                onChange={(value) => {
-                  formik.setFieldValue("ar_description", value);
-                }}
-                placeholder='Write something'
-                sx={{ height: 200 }}
+              <TextField
+                aria-label="Ar Description"
                 value={formik.values.ar_description}
+                name="ar_description"
+                rows={6}
+                onChange={formik.handleChange}
+                multiline
+                placeholder="Add Ar Description"
+                style={{ width: 590 }}
               />
               {Boolean(
                 formik.touched.ar_description && formik.errors.ar_description
@@ -233,8 +237,8 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
       >
         <Button
           sx={{ m: 1 }}
-          type='submit'
-          variant='contained'
+          type="submit"
+          variant="contained"
           disabled={formik.isSubmitting}
         >
           Create

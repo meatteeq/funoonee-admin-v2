@@ -8,7 +8,7 @@ import config, { NetworkClient } from "../../../config";
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import { useFormik } from "formik";
-import { QuillEditor } from "../../quill-editor";
+// import { QuillEditor } from "../../quill-editor";
 import {
   Box,
   Button,
@@ -174,23 +174,27 @@ export const ProductEditForm = ({ product }) => {
             </Grid>
 
             <Grid item md={6} xs={12}>
-              <QuillEditor
-                onChange={(value) => {
-                  formik.setFieldValue("description", value);
-                }}
-                placeholder="Write Description"
-                sx={{ height: 200 }}
+              <TextField
+                aria-label="Description"
+                rows={6}
+                multiline
+                name="description"
+                onChange={formik.handleChange}
                 value={formik.values.description}
+                placeholder="Add Description"
+                style={{ width: 400 }}
               />
             </Grid>
             <Grid item md={6} xs={12}>
-              <QuillEditor
-                onChange={(value) => {
-                  formik.setFieldValue("ar_description", value);
-                }}
-                placeholder="Write Ar Descripton"
-                sx={{ height: 200 }}
+              <TextField
+                aria-label="Ar Description"
                 value={formik.values.ar_description}
+                name="ar_description"
+                rows={6}
+                onChange={formik.handleChange}
+                multiline
+                placeholder="Add Ar Description"
+                style={{ width: 400 }}
               />
             </Grid>
 
