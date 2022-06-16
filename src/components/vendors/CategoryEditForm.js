@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import config, { NetworkClient } from "../../config";
 import { useState, useEffect } from "react";
 import Select from "react-select";
-import { QuillEditor } from "../quill-editor";
+// import { QuillEditor } from "../quill-editor";
 import { useFormik } from "formik";
 import {
   Box,
@@ -23,6 +23,7 @@ import {
   Typography,
 } from "@mui/material";
 import { wait } from "../../utils/wait";
+import TextareaAutosize from "@mui/material/TextareaAutosize";
 
 export const CategoryEditForm = ({ category }) => {
   const router = useRouter();
@@ -66,11 +67,11 @@ export const CategoryEditForm = ({ category }) => {
       }
     },
   });
-
+  console.log(formik.values);
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader title='Edit Category' />
+        <CardHeader title="Edit Category" />
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
@@ -79,8 +80,8 @@ export const CategoryEditForm = ({ category }) => {
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label='Full name'
-                name='name'
+                label="Full name"
+                name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 required
@@ -92,8 +93,8 @@ export const CategoryEditForm = ({ category }) => {
                 error={Boolean(formik.touched.ar_name && formik.errors.ar_name)}
                 fullWidth
                 helperText={formik.touched.ar_name && formik.errors.ar_name}
-                label='ar_name '
-                name='ar_name'
+                label="ar_name "
+                name="ar_name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 required
@@ -103,42 +104,46 @@ export const CategoryEditForm = ({ category }) => {
 
             <Grid item md={6} xs={12}>
               <Typography
-                color='textSecondary'
+                color="textSecondary"
                 sx={{
                   mb: 2,
                   mt: 3,
                 }}
-                variant='subtitle2'
+                variant="subtitle2"
               >
                 Description
               </Typography>
-              <QuillEditor
-                onChange={(value) => {
-                  formik.setFieldValue("description", value);
-                }}
-                placeholder='Write something'
-                sx={{ height: 200 }}
+              <TextField
+                aria-label="Description"
+                rows={6}
+                multiline
+                name="description"
+                onChange={formik.handleChange}
                 value={formik.values.description}
+                placeholder="Add Description"
+                style={{ width: 430 }}
               />
             </Grid>
             <Grid item md={6} xs={12}>
               <Typography
-                color='textSecondary'
+                color="textSecondary"
                 sx={{
                   mb: 2,
                   mt: 3,
                 }}
-                variant='subtitle2'
+                variant="subtitle2"
               >
                 Ar Description
               </Typography>
-              <QuillEditor
-                onChange={(value) => {
-                  formik.setFieldValue("ar_description", value);
-                }}
-                placeholder='Write something'
-                sx={{ height: 200 }}
+              <TextField
+                aria-label="Ar Description"
                 value={formik.values.ar_description}
+                name="ar_description"
+                rows={6}
+                onChange={formik.handleChange}
+                multiline
+                placeholder="Add Ar Description"
+                style={{ width: 430 }}
               />
               {Boolean(
                 formik.touched.ar_description && formik.errors.ar_description
@@ -169,21 +174,21 @@ export const CategoryEditForm = ({ category }) => {
         >
           <Button
             disabled={formik.isSubmitting}
-            type='submit'
+            type="submit"
             sx={{ m: 1 }}
-            variant='contained'
+            variant="contained"
           >
             Update
           </Button>
-          <NextLink href='/dashboard/category' passHref>
+          <NextLink href="/dashboard/category" passHref>
             <Button
-              component='a'
+              component="a"
               disabled={formik.isSubmitting}
               sx={{
                 m: 1,
                 mr: "auto",
               }}
-              variant='outlined'
+              variant="outlined"
             >
               Cancel
             </Button>

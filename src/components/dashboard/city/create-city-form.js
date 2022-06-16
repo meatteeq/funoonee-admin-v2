@@ -22,7 +22,7 @@ import {
 import Select from "react-select";
 
 import { FileDropzone } from "../../file-dropzone";
-import { QuillEditor } from "../../quill-editor";
+// import { QuillEditor } from "../../quill-editor";
 
 export const CreateNewCityForm = ({ cityAndCategory }) => {
   const router = useRouter();

@@ -22,7 +22,7 @@ import {
 import Select from "react-select";
 
 import { FileDropzone } from "../file-dropzone";
-import { QuillEditor } from "../quill-editor";
+// import { QuillEditor } from "../quill-editor";
 import React from "react";
 
 export const VendorAddForm = ({ cityAndCategory }) => {
@@ -140,15 +140,15 @@ export const VendorAddForm = ({ cityAndCategory }) => {
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
-              <Typography variant='h6'>Basic details</Typography>
+              <Typography variant="h6">Basic details</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label='Vendor Name'
-                name='name'
+                label="Vendor Name"
+                name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.name}
@@ -161,8 +161,8 @@ export const VendorAddForm = ({ cityAndCategory }) => {
                 error={Boolean(formik.touched.email && formik.errors.email)}
                 fullWidth
                 helperText={formik.touched.email && formik.errors.email}
-                label='Vendor Email'
-                name='email'
+                label="Vendor Email"
+                name="email"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.email}
@@ -173,8 +173,8 @@ export const VendorAddForm = ({ cityAndCategory }) => {
                   formik.touched.phoneNumber && formik.errors.phoneNumber
                 )}
                 fullWidth
-                label='phoneNumber'
-                name='phoneNumber'
+                label="phoneNumber"
+                name="phoneNumber"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 sx={{ mt: 2 }}
@@ -183,8 +183,8 @@ export const VendorAddForm = ({ cityAndCategory }) => {
               <TextField
                 error={Boolean(formik.touched.country && formik.errors.country)}
                 fullWidth
-                label='country'
-                name='country'
+                label="country"
+                name="country"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 sx={{ mt: 2 }}
@@ -195,8 +195,8 @@ export const VendorAddForm = ({ cityAndCategory }) => {
                   formik.touched.postalCode && formik.errors.postalCode
                 )}
                 fullWidth
-                label='postalCode'
-                name='postalCode'
+                label="postalCode"
+                name="postalCode"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 sx={{ mt: 2 }}
@@ -205,8 +205,8 @@ export const VendorAddForm = ({ cityAndCategory }) => {
               <TextField
                 error={Boolean(formik.touched.street && formik.errors.street)}
                 fullWidth
-                label='street'
-                name='street'
+                label="street"
+                name="street"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 sx={{ mt: 2 }}
@@ -244,43 +244,43 @@ export const VendorAddForm = ({ cityAndCategory }) => {
       <CardContent>
         <Grid container spacing={5}>
           <Grid item md={4} xs={12}>
-            <Typography variant='h6'> Select Category</Typography>
+            <Typography variant="h6"> Select Category</Typography>
           </Grid>
           <Grid item md={8} xs={12}>
             <Select
               options={catOptions}
-              name='category'
+              name="category"
               value={cat}
-              label='Select Category'
+              label="Select Category"
               onChange={(selectCat) => setCat(selectCat)}
             />
           </Grid>
           <Grid item md={4} xs={12}>
-            <Typography variant='h6'> Select Cities </Typography>
+            <Typography variant="h6"> Select Cities </Typography>
           </Grid>
           <Grid item md={8} xs={12}>
             <Select
-              labelId='city_id'
-              name='city'
+              labelId="city_id"
+              name="city"
               options={cityOptions}
               error={Boolean(formik.touched.city && formik.errors.city)}
               value={city}
-              label='Select City'
+              label="Select City"
               onChange={(selectedOption) => selectCity(selectedOption)}
             />
           </Grid>
           <Grid item md={4} xs={12}>
-            <Typography variant='h6'> Select Services </Typography>
+            <Typography variant="h6"> Select Services </Typography>
           </Grid>
           <Grid item md={8} xs={12}>
             <Select
-              labelId='serviceID'
-              name='city'
+              labelId="serviceID"
+              name="city"
               isMulti
               options={serviceOptions}
               error={Boolean(formik.touched.service && formik.errors.service)}
               value={service}
-              label='Select City'
+              label="Select City"
               onChange={(selectedOption) => setService(selectedOption)}
             />
           </Grid>
@@ -311,8 +311,8 @@ export const VendorAddForm = ({ cityAndCategory }) => {
         </Button> */}
         <Button
           sx={{ m: 1 }}
-          type='submit'
-          variant='contained'
+          type="submit"
+          variant="contained"
           disabled={formik.isSubmitting}
         >
           Create
