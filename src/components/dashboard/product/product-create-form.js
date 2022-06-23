@@ -1,65 +1,52 @@
-import { useState } from "react";
+/** @format */
+
+import { useState, createRef, useCallback, useRef } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import * as Yup from "yup";
 import { useFormik } from "formik";
 import axios from "axios";
 import config from "../../../config";
 import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import firebase from "../../../../firebase";
+import {
   Box,
   Button,
   Card,
-  CardContent,
   FormControlLabel,
   FormHelperText,
   Grid,
-  MenuItem,
   Switch,
   TextField,
-  InputLabel,
   Checkbox,
   Typography,
+  CardContent,
 } from "@mui/material";
 import Select from "react-select";
-
 import { FileDropzone } from "../../file-dropzone";
-// import { QuillEditor } from "../../quill-editor";
 
-const categoryOptions = [
-  {
-    label: "Healthcare",
-    value: "healthcare",
+const style = {
+  percentageCard: {
+    maxWidth: "158px",
+    width: "100%",
+    padding: "8px",
+    fontSize: "18px",
+    color: "#6B50E5",
   },
-  {
-    label: "Makeup",
-    value: "makeup",
-  },
-  {
-    label: "Dress",
-    value: "dress",
-  },
-  {
-    label: "Skincare",
-    value: "skincare",
-  },
-  {
-    label: "Jewelry",
-    value: "jewelry",
-  },
-  {
-    label: "Blouse",
-    value: "blouse",
-  },
-];
+};
 
 export const ProductCreateForm = ({ cityAndCategory }) => {
   const { categoryData, cityData } = cityAndCategory;
   const [city, selectCity] = useState([]);
   const [cat, setCat] = useState("");
-  // console.log(cat);
-  // console.log(city);
+  const [file, setFile] = useState(null);
+  const [percent, setPercent] = useState(0);
+  const [imageUrl, setImageUrl] = useState();
   const router = useRouter();
-  const [files, setFiles] = useState([]);
   const catOptions =
     categoryData &&
     categoryData?.map(function (ser) {
@@ -71,40 +58,67 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
       return { value: ser.id, label: ser.name };
     });
 
-  const formik = useFormik({
+  // upload image to firebase
+  const firebaseApp = firebase.getApp();
+  const storage = getStorage(firebaseApp);
+
+  // get the image from dropzone
+  const handleDropSingleFile = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    if (file) {
+      const fileObj = {
+        ...file,
+        preview: URL.createObjectURL(file),
+        fileData: file,
+      };
+      setFile(fileObj);
+    }
+
+    const storageRef = ref(storage, `/files/${file.path}`);
+    const uploadProcess = uploadBytesResumable(storageRef, file);
+
+    uploadProcess.on(
+      "state_changed",
+      (snapshot) => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+
+        // update progress
+        setPercent(percent);
+      },
+      (err) => console.log(err),
+      () => {
+        // download url
+        getDownloadURL(uploadProcess.snapshot.ref).then((url) => {
+          setImageUrl(url);
+        });
+      }
+    );
+  };
+
+  console.log(imageUrl);
+
+  let formik = useFormik({
     initialValues: {
       name: "",
       ar_name: "",
       description: "",
       ar_description: "",
-      image: "imag.jpg",
       is_multiple_allowed: true,
       price: 0,
       special_price: 0,
       status: true,
       isFeatured: false,
     },
-    // validationSchema: Yup.object({
-    //   ar_name: Yup.string().required("Email is required"),
-    //   name: Yup.string().max(255).required("Name is required"),
-    //   price: Yup.number().required("Price  is required"),
-    //   image: Yup.string().required("Image is required"),
-    //   special_price: Yup.string().required("special is required"),
-    //   sku: Yup.string().required("sku is required"),
-    //   description: Yup.string().required("description is required"),
-    //   ar_description: Yup.string().required("ar_description is Required"),
-    //   category: Yup.string().required("cities are required"),
-    //   city: Yup.array().required("cities are required"),
-    // }),
+
     onSubmit: async (values, helpers) => {
-      // console.log("submit run");
       const payload = {
         ...values,
+        image: imageUrl,
         city: city.map((e) => e.value),
         category_id: cat.value,
       };
-      // console.log(payload);
-
       try {
         // NOTE: Make API request
         const res = await axios.post(
@@ -130,25 +144,32 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
     },
   });
 
-  const handleDrop = (newFiles) => {
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-  };
-
-  const handleRemove = (file) => {
-    setFiles((prevFiles) =>
-      prevFiles.filter((_file) => _file.path !== file.path)
-    );
-  };
-
-  const handleRemoveAll = () => {
-    setFiles([]);
-  };
-  // console.log(formik.values);
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
         <CardContent>
           <Grid container spacing={3}>
+            <Grid item md={12} xs={12}>
+              <Card>
+                <CardContent>
+                  <FileDropzone
+                    file={file}
+                    maxFiles={1}
+                    accept="image/*"
+                    onDrop={handleDropSingleFile}
+                  />
+                  <Card style={style.percentageCard}>{percent}%</Card>
+
+                  {/* <DropzoneArea
+                    file={file}
+                    onDrop={handleDropSingleFile}
+                    name="image"
+                    accept="image/*"
+                    value={formik.values.file}
+                  /> */}
+                </CardContent>
+              </Card>
+            </Grid>
             <Grid item md={4} xs={12}>
               <Typography variant="h6">Basic details</Typography>
             </Grid>
@@ -273,29 +294,7 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
           </Grid>
         </CardContent>
       </Card>
-      {/* <Card sx={{ mt: 3 }}>
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item md={4} xs={12}>
-              <Typography variant="h6">Images</Typography>
-              <Typography color="textSecondary" variant="body2" sx={{ mt: 1 }}>
-                Images will appear in the store front of your website.
-              </Typography>
-            </Grid>
-            <Grid item md={8} xs={12}>
-              <FileDropzone
-                accept={{
-                  "image/*": [],
-                }}
-                files={files}
-                onDrop={handleDrop}
-                onRemove={handleRemove}
-                onRemoveAll={handleRemoveAll}
-              />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card> */}
+
       <Card sx={{ mt: 3 }}>
         <CardContent>
           <Grid container spacing={3}>

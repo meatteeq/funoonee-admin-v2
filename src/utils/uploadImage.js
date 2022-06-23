@@ -1,7 +1,9 @@
+/** @format */
+
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import fireBaseApp from "../../Firebase";
 const uploadToServer = async (image) => {
-  // console.log("image", image);
+  console.log("image", image);
 
   const storage = getStorage(fireBaseApp);
 
