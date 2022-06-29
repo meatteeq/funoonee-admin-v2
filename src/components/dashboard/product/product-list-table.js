@@ -1,3 +1,5 @@
+/** @format */
+
 import { Fragment, useState, useEffect } from "react";
 import numeral from "numeral";
 import PropTypes from "prop-types";
@@ -79,6 +81,7 @@ export const ProductListTable = (props) => {
     setGetCitisAndCat({ ...getCitisAndCat, city: city, cat: cat });
     setOpenProduct((prevValue) => (prevValue === productId ? null : productId));
   };
+
   return (
     <div>
       <Scrollbar>

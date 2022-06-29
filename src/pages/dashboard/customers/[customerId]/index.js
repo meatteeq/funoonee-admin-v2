@@ -85,30 +85,30 @@ const CustomerDetails = (props) => {
         <title>Dashboard: Customer Details</title>
       </Head>
       <Box
-        component='main'
+        component="main"
         sx={{
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth='md'>
+        <Container maxWidth="md">
           <div>
             <Box sx={{ mb: 4 }}>
-              <NextLink href='/dashboard/customers' passHref>
+              <NextLink href="/dashboard/customers" passHref>
                 <Link
-                  color='textPrimary'
-                  component='a'
+                  color="textPrimary"
+                  component="a"
                   sx={{
                     alignItems: "center",
                     display: "flex",
                   }}
                 >
-                  <ArrowBackIcon fontSize='small' sx={{ mr: 1 }} />
-                  <Typography variant='subtitle2'>Customers</Typography>
+                  <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
+                  <Typography variant="subtitle2">Customers</Typography>
                 </Link>
               </NextLink>
             </Box>
-            <Grid container justifyContent='space-between' spacing={3}>
+            <Grid container justifyContent="space-between" spacing={3}>
               <Grid
                 item
                 sx={{
@@ -118,7 +118,7 @@ const CustomerDetails = (props) => {
                 }}
               >
                 <Avatar
-                  src={customer.avatar}
+                  src={customer.image}
                   sx={{
                     height: 64,
                     mr: 2,
@@ -128,15 +128,15 @@ const CustomerDetails = (props) => {
                   {getInitials(customer.name)}
                 </Avatar>
                 <div>
-                  <Typography variant='h4'>{props?.data?.email}</Typography>
+                  <Typography variant="h4">{props?.data?.email}</Typography>
                   <Box
                     sx={{
                       display: "flex",
                       alignItems: "center",
                     }}
                   >
-                    <Typography variant='subtitle2'>user_id:</Typography>
-                    <Chip label={props?.data?.id} size='small' sx={{ ml: 1 }} />
+                    <Typography variant="subtitle2">user_id:</Typography>
+                    <Chip label={props?.data?.id} size="small" sx={{ ml: 1 }} />
                   </Box>
                 </div>
               </Grid>
@@ -161,13 +161,13 @@ const CustomerDetails = (props) => {
               </Grid>
             </Grid>
             <Tabs
-              indicatorColor='primary'
+              indicatorColor="primary"
               onChange={handleTabsChange}
-              scrollButtons='auto'
+              scrollButtons="auto"
               sx={{ mt: 3 }}
-              textColor='primary'
+              textColor="primary"
               value={currentTab}
-              variant='scrollable'
+              variant="scrollable"
             >
               {tabs.map((tab) => (
                 <Tab key={tab.value} label={tab.label} value={tab.value} />

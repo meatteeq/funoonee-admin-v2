@@ -53,26 +53,26 @@ const CustomerEdit = ({ data }) => {
         <title>Dashboard: Customer Edit </title>
       </Head>
       <Box
-        component='main'
+        component="main"
         sx={{
           backgroundColor: "background.default",
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth='md'>
+        <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
-            <NextLink href='/dashboard/customers' passHref>
+            <NextLink href="/dashboard/customers" passHref>
               <Link
-                color='textPrimary'
-                component='a'
+                color="textPrimary"
+                component="a"
                 sx={{
                   alignItems: "center",
                   display: "flex",
                 }}
               >
-                <ArrowBackIcon fontSize='small' sx={{ mr: 1 }} />
-                <Typography variant='subtitle2'>Customers</Typography>
+                <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
+                <Typography variant="subtitle2">Customers</Typography>
               </Link>
             </NextLink>
           </Box>
@@ -84,7 +84,7 @@ const CustomerEdit = ({ data }) => {
             }}
           >
             <Avatar
-              src={customer.avatar}
+              src={customer.image}
               sx={{
                 height: 64,
                 mr: 2,
@@ -94,7 +94,7 @@ const CustomerEdit = ({ data }) => {
               {getInitials(customer.name)}
             </Avatar>
             <div>
-              <Typography noWrap variant='h4'>
+              <Typography noWrap variant="h4">
                 {customer.email}
               </Typography>
               <Box
@@ -106,8 +106,8 @@ const CustomerEdit = ({ data }) => {
                   whiteSpace: "nowrap",
                 }}
               >
-                <Typography variant='subtitle2'>user_id:</Typography>
-                <Chip label={customer.id} size='small' sx={{ ml: 1 }} />
+                <Typography variant="subtitle2">user_id:</Typography>
+                <Chip label={customer.id} size="small" sx={{ ml: 1 }} />
               </Box>
             </div>
           </Box>

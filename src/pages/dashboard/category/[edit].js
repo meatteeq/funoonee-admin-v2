@@ -57,7 +57,7 @@ const CategoryEdit = ({ data: category }) => {
             }}
           >
             <Avatar
-              src={category.avatar}
+              src={category.image}
               sx={{
                 height: 64,
                 mr: 2,

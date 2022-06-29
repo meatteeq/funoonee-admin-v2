@@ -6,6 +6,15 @@ import axios from "axios";
 import * as Yup from "yup";
 import config, { NetworkClient } from "../../config";
 import { useState, useEffect } from "react";
+import firebase from "../../../Firebase";
+import { FileDropzone } from "../file-dropzone";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+
 import Select from "react-select";
 // import { QuillEditor } from "../quill-editor";
 import { useFormik } from "formik";
@@ -27,6 +36,20 @@ import TextareaAutosize from "@mui/material/TextareaAutosize";
 
 export const CategoryEditForm = ({ category }) => {
   const router = useRouter();
+  const [file, setFile] = useState(null);
+  const [percent, setPercent] = useState(0);
+  const [imageUrl, setImageUrl] = useState();
+  const firebaseApp = firebase.getApp();
+  const storage = getStorage(firebaseApp);
+  const style = {
+    percentageCard: {
+      maxWidth: "158px",
+      width: "100%",
+      padding: "8px",
+      fontSize: "18px",
+      color: "#6B50E5",
+    },
+  };
   const formik = useFormik({
     initialValues: {
       name: category.name,
@@ -48,11 +71,15 @@ export const CategoryEditForm = ({ category }) => {
       ar_description: Yup.string().required("ar_description is Required"),
     }),
     onSubmit: async (values, helpers) => {
+      const payload = {
+        ...values,
+        image: imageUrl,
+      };
       try {
         // NOTE: Make API request
         const res = await NetworkClient.put(
           `${config.apiRoute}/category/${category.id}`,
-          values
+          payload
         );
 
         // console.log(res.data);
@@ -67,13 +94,52 @@ export const CategoryEditForm = ({ category }) => {
       }
     },
   });
-  console.log(formik.values);
+  const handleDropSingleFile = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    if (file) {
+      const fileObj = {
+        ...file,
+        preview: URL.createObjectURL(file),
+        fileData: file,
+      };
+      setFile(fileObj);
+    }
+
+    const storageRef = ref(storage, `/files/${file.path}`);
+    const uploadProcess = uploadBytesResumable(storageRef, file);
+
+    uploadProcess.on(
+      "state_changed",
+      (snapshot) => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+
+        // update progress
+        setPercent(percent);
+      },
+      (err) => console.log(err),
+      () => {
+        // download url
+        getDownloadURL(uploadProcess.snapshot.ref).then((url) => {
+          setImageUrl(url);
+        });
+      }
+    );
+  };
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
         <CardHeader title="Edit Category" />
         <Divider />
         <CardContent>
+          <FileDropzone
+            file={file}
+            maxFiles={1}
+            accept="image/*"
+            onDrop={handleDropSingleFile}
+          />
+          <Card style={style.percentageCard}>{percent}%</Card>
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
               <TextField
