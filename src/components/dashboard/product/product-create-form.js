@@ -12,7 +12,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import firebase from "../../../../firebase";
+import firebase from "../../../../Firebase";
 import {
   Box,
   Button,
@@ -27,6 +27,7 @@ import {
   CardContent,
 } from "@mui/material";
 import Select from "react-select";
+
 import { FileDropzone } from "../../file-dropzone";
 
 const style = {
@@ -171,7 +172,7 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
               </Card>
             </Grid>
             <Grid item md={4} xs={12}>
-              <Typography variant="h6">Basic details</Typography>
+              <Typography variant="h6">Basic detssails</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField

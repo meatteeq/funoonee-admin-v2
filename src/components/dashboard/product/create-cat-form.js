@@ -20,9 +20,14 @@ import {
   Typography,
 } from "@mui/material";
 import Select from "react-select";
-
 import { FileDropzone } from "../../file-dropzone";
-import { QuillEditor } from "../../quill-editor";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import firebase from "../../../../Firebase";
 
 const categoryOptions = [
   {
@@ -52,8 +57,21 @@ const categoryOptions = [
 ];
 
 export const CategoryCreateForm = ({ cityAndCategory }) => {
-  const [files, setFiles] = useState([]);
   const router = useRouter();
+  const [file, setFile] = useState(null);
+  const [percent, setPercent] = useState(0);
+  const [imageUrl, setImageUrl] = useState();
+  const firebaseApp = firebase.getApp();
+  const storage = getStorage(firebaseApp);
+  const style = {
+    percentageCard: {
+      maxWidth: "158px",
+      width: "100%",
+      padding: "8px",
+      fontSize: "18px",
+      color: "#6B50E5",
+    },
+  };
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -75,11 +93,15 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
       ar_description: Yup.string().required("ar_description is Required"),
     }),
     onSubmit: async (values, helpers) => {
+      const payload = {
+        ...values,
+        image: imageUrl,
+      };
       try {
         // NOTE: Make API request
         const res = await axios.post(
           `${config.apiRoute}/category/add`,
-          values,
+          payload,
           {
             headers: {
               Authorization: config.token,
@@ -97,6 +119,39 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
       }
     },
   });
+  const handleDropSingleFile = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    if (file) {
+      const fileObj = {
+        ...file,
+        preview: URL.createObjectURL(file),
+        fileData: file,
+      };
+      setFile(fileObj);
+    }
+
+    const storageRef = ref(storage, `/files/${file.path}`);
+    const uploadProcess = uploadBytesResumable(storageRef, file);
+
+    uploadProcess.on(
+      "state_changed",
+      (snapshot) => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+
+        // update progress
+        setPercent(percent);
+      },
+      (err) => console.log(err),
+      () => {
+        // download url
+        getDownloadURL(uploadProcess.snapshot.ref).then((url) => {
+          setImageUrl(url);
+        });
+      }
+    );
+  };
 
   const handleDrop = (newFiles) => {
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
@@ -116,6 +171,14 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
     <form onSubmit={formik.handleSubmit}>
       <Card>
         <CardContent>
+          <FileDropzone
+            file={file}
+            maxFiles={1}
+            accept="image/*"
+            onDrop={handleDropSingleFile}
+          />
+          <Card style={style.percentageCard}>{percent}%</Card>
+
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
               <Typography variant="h6">Basic details</Typography>

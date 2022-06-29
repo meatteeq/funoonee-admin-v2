@@ -23,19 +23,36 @@ import {
   FormLabel,
 } from "@mui/material";
 import Select from "react-select";
-import { FileDropzone } from "../../file-dropzone";
 import React from "react";
-import uploadToServer from "../../../utils/uploadImage";
-
+import firebase from "../../../../Firebase";
+import { FileDropzone } from "../../file-dropzone";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 export const CustomerAddForm = () => {
-  const [files, setFiles] = useState([]);
+  const [file, setFile] = useState(null);
+  const [percent, setPercent] = useState(0);
+  const [imageUrl, setImageUrl] = useState();
+  const firebaseApp = firebase.getApp();
+  const storage = getStorage(firebaseApp);
+  const style = {
+    percentageCard: {
+      maxWidth: "158px",
+      width: "100%",
+      padding: "8px",
+      fontSize: "18px",
+      color: "#6B50E5",
+    },
+  };
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
       name: "",
       email: "",
       phoneNumber: "",
-      image: "imag.jpg",
       gender: "",
       role: "3",
     },
@@ -51,11 +68,15 @@ export const CustomerAddForm = () => {
       phoneNumber: Yup.string().required("Number is required"),
     }),
     onSubmit: async (values, helpers) => {
+      const payload = {
+        ...values,
+        image: imageUrl,
+      };
       try {
         // NOTE: Make API request
         const res = await axios.post(
           `${config.apiRoute}/admin/user/add`,
-          values,
+          payload,
           {
             headers: {
               Authorization: config.token,
@@ -75,54 +96,61 @@ export const CustomerAddForm = () => {
       }
     },
   });
-  const handleDrop = (newFiles) => {
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-  };
-
-  const handleRemove = (file) => {
-    setFiles((prevFiles) =>
-      prevFiles.filter((_file) => _file.path !== file.path)
-    );
-  };
-
-  const handleRemoveAll = () => {
-    setFiles([]);
-  };
-  const uploadFile = async (id) => {
-    const fileToUpload = document.getElementById("upload-image");
-    // console.log("fileToUpload", fileToUpload?.files[0]);
-    const file = fileToUpload.files[0];
-    const upload = fileToUpload.value;
-    // console.log("upload", upload);
-
-    const reader = new FileReader();
-
-    // if(!file) return
-
+  const handleDropSingleFile = (acceptedFiles) => {
+    const file = acceptedFiles[0];
     if (file) {
-      reader.readAsDataURL(file);
-      const result = await uploadToServer(file);
-      // console.log("result", result);
-      if (result) {
-        setFiles({ ...imageSrc, image: result });
-      }
+      const fileObj = {
+        ...file,
+        preview: URL.createObjectURL(file),
+        fileData: file,
+      };
+      setFile(fileObj);
     }
+
+    const storageRef = ref(storage, `/files/${file.path}`);
+    const uploadProcess = uploadBytesResumable(storageRef, file);
+
+    uploadProcess.on(
+      "state_changed",
+      (snapshot) => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+
+        // update progress
+        setPercent(percent);
+      },
+      (err) => console.log(err),
+      () => {
+        // download url
+        getDownloadURL(uploadProcess.snapshot.ref).then((url) => {
+          setImageUrl(url);
+        });
+      }
+    );
   };
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
         <CardContent>
+          <FileDropzone
+            file={file}
+            maxFiles={1}
+            accept="image/*"
+            onDrop={handleDropSingleFile}
+          />
+          <Card style={style.percentageCard}>{percent}%</Card>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
-              <Typography variant='h6'>Basic details</Typography>
+              <Typography variant="h6">Basic details</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label='Customer Name'
-                name='name'
+                label="Customer Name"
+                name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.name}
@@ -135,8 +163,8 @@ export const CustomerAddForm = () => {
                 error={Boolean(formik.touched.email && formik.errors.email)}
                 fullWidth
                 helperText={formik.touched.email && formik.errors.email}
-                label='Customer Email'
-                name='email'
+                label="Customer Email"
+                name="email"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.email}
@@ -147,8 +175,8 @@ export const CustomerAddForm = () => {
                   formik.touched.phoneNumber && formik.errors.phoneNumber
                 )}
                 fullWidth
-                label='phoneNumber'
-                name='phoneNumber'
+                label="phoneNumber"
+                name="phoneNumber"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 sx={{ mt: 2 }}
@@ -158,15 +186,15 @@ export const CustomerAddForm = () => {
                 error={Boolean(formik.touched.gender && formik.errors.gender)}
                 fullWidth
                 helperText={formik.touched.gender && formik.errors.gender}
-                label='Gender'
-                margin='normal'
-                name='gender'
+                label="Gender"
+                margin="normal"
+                name="gender"
                 value={formik.values.gender}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
                 <FormLabel
-                  id='demo-controlled-radio-buttons-group'
+                  id="demo-controlled-radio-buttons-group"
                   sx={{
                     // mb: 1,
                     mt: 3,
@@ -176,14 +204,14 @@ export const CustomerAddForm = () => {
                 </FormLabel>
 
                 <FormControlLabel
-                  value='Female'
+                  value="Female"
                   control={<Radio />}
-                  label='Female'
+                  label="Female"
                 />
                 <FormControlLabel
-                  value='Male'
+                  value="Male"
                   control={<Radio />}
-                  label='Male'
+                  label="Male"
                 />
               </RadioGroup>
             </Grid>
@@ -230,8 +258,8 @@ export const CustomerAddForm = () => {
       >
         <Button
           sx={{ m: 1 }}
-          type='submit'
-          variant='contained'
+          type="submit"
+          variant="contained"
           disabled={formik.isSubmitting}
         >
           Create

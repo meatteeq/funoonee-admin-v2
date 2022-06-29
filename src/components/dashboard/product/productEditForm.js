@@ -8,6 +8,15 @@ import config, { NetworkClient } from "../../../config";
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import { useFormik } from "formik";
+import { FileDropzone } from "../../file-dropzone";
+
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import firebase from "../../../../Firebase";
 // import { QuillEditor } from "../../quill-editor";
 import {
   Box,
@@ -25,14 +34,28 @@ import {
   Checkbox,
 } from "@mui/material";
 import { wait } from "../../../utils/wait";
+import firebase from "../../../../Firebase";
 export const ProductEditForm = ({ product }) => {
   const { categoryData, cityData, productData } = product;
   const [city, selectCity] = useState([]);
   const [cat, setCat] = useState("");
+  const [file, setFile] = useState(null);
+  const [percent, setPercent] = useState(0);
+  const [imageUrl, setImageUrl] = useState();
+  const firebaseApp = firebase.getApp();
+  const storage = getStorage(firebaseApp);
+  const style = {
+    percentageCard: {
+      maxWidth: "158px",
+      width: "100%",
+      padding: "8px",
+      fontSize: "18px",
+      color: "#6B50E5",
+    },
+  };
   // console.log(cat);
   // console.log(city);
   const router = useRouter();
-  const [files, setFiles] = useState([]);
   const catOptions =
     categoryData &&
     categoryData?.map(function (ser) {
@@ -66,6 +89,39 @@ export const ProductEditForm = ({ product }) => {
       });
     setCat(catFiltered);
   }, []);
+  const handleDropSingleFile = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    if (file) {
+      const fileObj = {
+        ...file,
+        preview: URL.createObjectURL(file),
+        fileData: file,
+      };
+      setFile(fileObj);
+    }
+
+    const storageRef = ref(storage, `/files/${file.path}`);
+    const uploadProcess = uploadBytesResumable(storageRef, file);
+
+    uploadProcess.on(
+      "state_changed",
+      (snapshot) => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+
+        // update progress
+        setPercent(percent);
+      },
+      (err) => console.log(err),
+      () => {
+        // download url
+        getDownloadURL(uploadProcess.snapshot.ref).then((url) => {
+          setImageUrl(url);
+        });
+      }
+    );
+  };
   const formik = useFormik({
     initialValues: {
       name: productData.name,
@@ -81,9 +137,12 @@ export const ProductEditForm = ({ product }) => {
       isFeatured:
         productData.isFeatured == null ? false : productData.isFeatured,
     },
+
     onSubmit: async (values, helpers) => {
       const payload = {
         ...values,
+        image: imageUrl,
+
         city: city.map((e) => e.value),
         category_id: cat[0].value,
       };
@@ -114,6 +173,13 @@ export const ProductEditForm = ({ product }) => {
         <CardHeader title="Edit Product" />
         <Divider />
         <CardContent>
+          <FileDropzone
+            file={file}
+            maxFiles={1}
+            accept="image/*"
+            onDrop={handleDropSingleFile}
+          />
+          <Card style={style.percentageCard}>{percent}%</Card>
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
               <TextField
