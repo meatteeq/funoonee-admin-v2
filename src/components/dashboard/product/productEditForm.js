@@ -16,7 +16,6 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import firebase from "../../../../Firebase";
 // import { QuillEditor } from "../../quill-editor";
 import {
   Box,
