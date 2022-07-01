@@ -12,11 +12,14 @@ import { Download as DownloadIcon } from "../../../icons/download";
 import { Upload as UploadIcon } from "../../../icons/upload";
 import { Plus as PlusIcon } from "../../../icons/plus";
 import axios from "axios";
-import config from "../../../config";
+import config, { NetworkClient } from "../../../config";
 import { CategoriesListTable } from "../../../components/dashboard/product/servicelistTable";
 import { CityListTable } from "../../../components/dashboard/city/citylisttable";
 import Cookies from "js-cookie";
-import { redirectFromServerSideTo } from "../../../../helper";
+import {
+  isUserAuthenticated,
+  redirectFromServerSideTo,
+} from "../../../../helper";
 const applyFilters = (products, filters) =>
   products.filter((product) => {
     if (filters.name) {
@@ -100,24 +103,24 @@ const Categories = ({ data }) => {
         <title>Dashboard: Cities List </title>
       </Head>
       <Box
-        component='main'
+        component="main"
         sx={{
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth='xl'>
+        <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
-            <Grid container justifyContent='space-between' spacing={3}>
+            <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant='h4'>Cities</Typography>
+                <Typography variant="h4">Cities</Typography>
               </Grid>
               <Grid item>
-                <NextLink href='/dashboard/cities/new' passHref>
+                <NextLink href="/dashboard/cities/new" passHref>
                   <Button
-                    component='a'
-                    startIcon={<PlusIcon fontSize='small' />}
-                    variant='contained'
+                    component="a"
+                    startIcon={<PlusIcon fontSize="small" />}
+                    variant="contained"
                   >
                     Add
                   </Button>
@@ -151,11 +154,8 @@ export async function getServerSideProps(ctx) {
   if (!ctx.req.cookies?.accessToken) {
     redirectFromServerSideTo(ctx, "/");
   }
-  const res = await axios.get(`${config.apiRoute}/city/list`, {
-    headers: {
-      Authorization: config.token,
-    },
-  });
+  isUserAuthenticated(ctx);
+  const res = await axios.get(`${config.apiRoute}city/list`);
   // console.log(res.data);
   return {
     props: { data: res.data },

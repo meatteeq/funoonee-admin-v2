@@ -98,11 +98,7 @@ const OrderPreview = (props) => {
 
   const getVendors = async () => {
     try {
-      const res = await axios.get(`${config.apiRoute}/vendor/list`, {
-        headers: {
-          Authorization: config.token,
-        },
-      });
+      const res = await NetworkClient.get(`vendor/list`);
       const data = await res.data;
       // console.log(data);
       setVendorsData(data);

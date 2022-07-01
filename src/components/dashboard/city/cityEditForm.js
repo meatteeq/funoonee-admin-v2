@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import axios from "axios";
-import config from "../../../config";
+import config, { NetworkClient } from "../../../config";
 import * as Yup from "yup";
 import { useState, useEffect } from "react";
 import Select from "react-select";
@@ -21,6 +21,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { isUserAuthenticated } from "../../../../helper";
 
 export const CityEditForm = ({ city }) => {
   const router = useRouter();
@@ -35,17 +36,9 @@ export const CityEditForm = ({ city }) => {
       name: Yup.string().max(255).required("Name is required"),
     }),
     onSubmit: async (values, helpers) => {
+      
       try {
-        // NOTE: Make API request
-        const res = await axios.put(
-          `${config.apiRoute}/city/${city.id}`,
-          values,
-          {
-            headers: {
-              Authorization: config.token,
-            },
-          }
-        );
+        const res = await NetworkClient.put(`city/${city.id}`, values);
 
         toast.success("Category Updated!");
         router.push("/dashboard/cities").catch(console.error);

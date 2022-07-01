@@ -11,9 +11,12 @@ import { useMounted } from "../../../../hooks/use-mounted";
 import { gtm } from "../../../../lib/gtm";
 import { getInitials } from "../../../../utils/get-initials";
 import axios from "axios";
-import config from "../../../../config";
+import config, { NetworkClient } from "../../../../config";
 import Cookies from "js-cookie";
-import { redirectFromServerSideTo } from "../../../../../helper";
+import {
+  isUserAuthenticated,
+  redirectFromServerSideTo,
+} from "../../../../../helper";
 
 const CustomerEdit = ({ data }) => {
   const customer = data;
@@ -125,11 +128,8 @@ export async function getServerSideProps() {
   if (!ctx.req.cookies?.accessToken) {
     redirectFromServerSideTo(ctx, "/");
   }
-  const res = await axios.get(`${config.apiRoute}/customer/profile`, {
-    headers: {
-      Authorization: config.token,
-    },
-  });
+  isUserAuthenticated(ctx);
+  const res = await axios.get(`${config.apiRoute}customer/profile`);
   // console.log("single customer id", res.data);
   return {
     props: { data: res.data },

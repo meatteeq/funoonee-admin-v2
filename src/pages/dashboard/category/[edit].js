@@ -11,10 +11,13 @@ import { DashboardLayout } from "../../../components/dashboard/dashboard-layout"
 
 import { getInitials } from "../../../utils/get-initials";
 import axios from "axios";
-import config from "../../../config";
+import config, { NetworkClient } from "../../../config";
 import { CategoryEditForm } from "../../../components/vendors/CategoryEditForm";
 import Cookies from "js-cookie";
-import { redirectFromServerSideTo } from "../../../../helper";
+import {
+  isUserAuthenticated,
+  redirectFromServerSideTo,
+} from "../../../../helper";
 const CategoryEdit = ({ data: category }) => {
   if (!category) {
     return null;
@@ -98,11 +101,8 @@ export async function getServerSideProps({ params: { edit }, ...ctx }) {
   if (!ctx.req.cookies?.accessToken) {
     redirectFromServerSideTo(ctx, "/");
   }
-  const res = await axios.get(`${config.apiRoute}/category/${edit}`, {
-    headers: {
-      Authorization: config.token,
-    },
-  });
+  isUserAuthenticated(ctx);
+  const res = await axios.get(`${config.apiRoute}category/${edit}`);
   return {
     props: { data: res.data },
   };

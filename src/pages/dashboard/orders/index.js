@@ -22,9 +22,13 @@ import { Plus as PlusIcon } from "../../../icons/plus";
 import { Search as SearchIcon } from "../../../icons/search";
 import { gtm } from "../../../lib/gtm";
 import axios from "axios";
-import config from "../../../config";
+import config, { NetworkClient } from "../../../config";
 import Cookies from "js-cookie";
-import { redirectFromServerSideTo } from "../../../../helper";
+import {
+  isUserAuthenticated,
+  redirectFromServerSideTo,
+} from "../../../../helper";
+import { store } from "../../../store";
 const tabs = [
   {
     label: "All",
@@ -307,17 +311,19 @@ const OrderList = ({ data }) => {
 
 OrderList.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 export async function getServerSideProps(ctx) {
+  console.log("ctx", ctx.req.cookies?.accessToken);
+
   if (!ctx.req.cookies?.accessToken) {
     redirectFromServerSideTo(ctx, "/");
   }
-  const res = await axios.get(`${config.apiRoute}order/list`, {
-    headers: {
-      Authorization: config.token,
-    },
-  });
-  // console.log("data respone", res.data);
+  isUserAuthenticated(ctx);
+  try {
+    var { data } = await axios.get(`${config.apiRoute}order/list`);
+  } catch (error) {
+    console.log(error);
+  }
   return {
-    props: { data: res.data },
+    props: { data: data },
   };
 }
 

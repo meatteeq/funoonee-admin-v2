@@ -400,33 +400,7 @@ export const ProductListTable = (props) => {
                             px: 2,
                             py: 1,
                           }}
-                        >
-                          {/* <Button
-                            onClick={handleUpdateProduct}
-                            sx={{ m: 1 }}
-                            type="submit"
-                            variant="contained"
-                          >
-                            Update
-                          </Button>
-                          <Button
-                            onClick={handleCancelEdit}
-                            sx={{ m: 1 }}
-                            variant="outlined"
-                          >
-                            Cancel
-                          </Button> */}
-                          {/* <Button
-                            onClick={handleDeleteProduct}
-                            color="error"
-                            sx={{
-                              m: 1,
-                              ml: "auto",
-                            }}
-                          >
-                            Delete product
-                          </Button> */}
-                        </Box>
+                        ></Box>
                       </TableCell>
                     </TableRow>
                   )}

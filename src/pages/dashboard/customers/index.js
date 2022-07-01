@@ -13,6 +13,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import cookies from "next-cookies";
+
 import config from "../../../config";
 import axios from "axios";
 import { customerApi } from "../../../__fake-api__/customer-api";
@@ -27,7 +29,11 @@ import { Upload as UploadIcon } from "../../../icons/upload";
 import { gtm } from "../../../lib/gtm";
 import Link from "next/link";
 import Cookies from "js-cookie";
-import { redirectFromServerSideTo } from "../../../../helper";
+import {
+  isUserAuthenticated,
+  redirectFromServerSideTo,
+} from "../../../../helper";
+import { store } from "../../../store";
 
 const tabs = [
   {
@@ -158,29 +164,6 @@ const CustomerList = ({ data }) => {
     isReturning: undefined,
   });
 
-  // useEffect(() => {
-  //   gtm.push({ event: "page_view" });
-  // }, []);
-
-  // const getCustomers = useCallback(async () => {
-  //   try {
-  //     const data = await customerApi.getCustomers();
-
-  //     if (isMounted()) {
-  //       setCustomers(data);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }, [isMounted]);
-
-  // useEffect(
-  //   () => {
-  //     getCustomers();
-  //   },
-  //   []
-  // );
-
   const handleTabsChange = (event, value) => {
     const updatedFilters = {
       ...filters,
@@ -232,64 +215,31 @@ const CustomerList = ({ data }) => {
         <title>Dashboard: Customer List </title>
       </Head>
       <Box
-        component='main'
+        component="main"
         sx={{
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth='xl'>
+        <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
-            <Grid container justifyContent='space-between' spacing={3}>
+            <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant='h4'>Customers</Typography>
+                <Typography variant="h4">Customers</Typography>
               </Grid>
               <Grid item>
                 <Link href={`/dashboard/customers/new`}>
                   <Button
-                    startIcon={<PlusIcon fontSize='small' />}
-                    variant='contained'
+                    startIcon={<PlusIcon fontSize="small" />}
+                    variant="contained"
                   >
                     Add
                   </Button>
                 </Link>
               </Grid>
             </Grid>
-            {/* <Box
-              sx={{
-                m: -1,
-                mt: 3,
-              }}
-            >
-              <Button startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }}>
-                Import
-              </Button>
-              <Button
-                startIcon={<DownloadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
-                Export
-              </Button>
-            </Box> */}
           </Box>
           <Card>
-            {/* <Tabs
-              indicatorColor="primary"
-              onChange={handleTabsChange}
-              scrollButtons="auto"
-              sx={{ px: 3 }}
-              textColor="primary"
-              value={currentTab}
-              variant="scrollable"
-            >
-              {tabs.map((tab) => (
-                <Tab
-                  key={tab.value}
-                  label={tab.label}
-                  value={tab.value}
-                />
-              ))}
-            </Tabs> */}
             <Divider />
             <Box
               sx={{
@@ -301,7 +251,7 @@ const CustomerList = ({ data }) => {
               }}
             >
               <Box
-                component='form'
+                component="form"
                 onSubmit={handleQueryChange}
                 sx={{
                   flexGrow: 1,
@@ -309,22 +259,22 @@ const CustomerList = ({ data }) => {
                 }}
               >
                 <TextField
-                  defaultValue=''
+                  defaultValue=""
                   fullWidth
                   inputProps={{ ref: queryRef }}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position='start'>
-                        <SearchIcon fontSize='small' />
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
                       </InputAdornment>
                     ),
                   }}
-                  placeholder='Search customers'
+                  placeholder="Search customers"
                 />
               </Box>
               <TextField
-                label='Sort By'
-                name='sort'
+                label="Sort By"
+                name="sort"
                 onChange={handleSortChange}
                 select
                 SelectProps={{ native: true }}
@@ -355,19 +305,19 @@ const CustomerList = ({ data }) => {
 
 CustomerList.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 export async function getServerSideProps(ctx) {
-  // console.log(ctx.req.cookies?.accessToken);
-  // console.log(Cookies.get("accessToken"), "cookiesstatus");
   if (!ctx.req.cookies?.accessToken) {
     redirectFromServerSideTo(ctx, "/");
   }
-  const res = await axios.get(`${config.apiRoute}admin/customers/list`, {
-    headers: {
-      Authorization: config.token,
-    },
-  });
+  console.log("ctx", ctx.req.cookies?.accessToken);
+  isUserAuthenticated(ctx);
+  try {
+    var { data } = await axios.get(`${config.apiRoute}admin/customers/list`);
+  } catch (error) {
+    console.log("error if tge", error);
+  }
   // console.log(res.data);
   return {
-    props: { data: res.data },
+    props: { data: data },
   };
 }
 

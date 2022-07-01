@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import axios from "axios";
-import config from "../../../config";
+import config, { NetworkClient } from "../../../config";
 import {
   Box,
   Button,
@@ -38,11 +38,7 @@ export const CreateNewCityForm = ({ cityAndCategory }) => {
     onSubmit: async (values, helpers) => {
       try {
         // NOTE: Make API request
-        const res = await axios.post(`${config.apiRoute}/city/add`, values, {
-          headers: {
-            Authorization: config.token,
-          },
-        });
+        const res = await NetworkClient.post(`city/add`, values);
 
         // console.log(res.data);
         toast.success("City created!");
@@ -77,15 +73,15 @@ export const CreateNewCityForm = ({ cityAndCategory }) => {
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
-              <Typography variant='h6'>Basic details</Typography>
+              <Typography variant="h6">Basic details</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
-                label='City Name'
-                name='name'
+                label="City Name"
+                name="name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.name}
@@ -122,8 +118,8 @@ export const CreateNewCityForm = ({ cityAndCategory }) => {
         </Button> */}
         <Button
           sx={{ m: 1 }}
-          type='submit'
-          variant='contained'
+          type="submit"
+          variant="contained"
           disabled={formik.isSubmitting}
         >
           Create

@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import axios from "axios";
-import config from "../../../config";
+import config, { NetworkClient } from "../../../config";
 import {
   Box,
   Button,
@@ -99,15 +99,7 @@ export const CategoryCreateForm = ({ cityAndCategory }) => {
       };
       try {
         // NOTE: Make API request
-        const res = await axios.post(
-          `${config.apiRoute}/category/add`,
-          payload,
-          {
-            headers: {
-              Authorization: config.token,
-            },
-          }
-        );
+        const res = await NetworkClient.post(`category/add`, payload);
 
         toast.success("Category created!");
         router.push("/dashboard/category").catch(console.error);

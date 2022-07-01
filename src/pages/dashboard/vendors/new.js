@@ -1,5 +1,5 @@
 import axios from "axios";
-import config from "../../../config";
+import config, { NetworkClient } from "../../../config";
 import Head from "next/head";
 import { useFormik } from "formik";
 import { Box, Breadcrumbs, Container, Link, Typography } from "@mui/material";
@@ -9,7 +9,10 @@ import { AuthGuard } from "../../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../../components/dashboard/dashboard-layout";
 import VendorAddForm from "../../../components/vendors/vendorAddForm";
 import Cookies from "js-cookie";
-import { redirectFromServerSideTo } from "../../../../helper";
+import {
+  isUserAuthenticated,
+  redirectFromServerSideTo,
+} from "../../../../helper";
 
 const AddVendors = ({ data }) => {
   return (
@@ -53,17 +56,10 @@ export async function getServerSideProps(ctx) {
   if (!ctx.req.cookies?.accessToken) {
     redirectFromServerSideTo(ctx, "/");
   }
+  isUserAuthenticated(ctx);
   const cityAndCategory = await Promise.all([
-    axios.get(`${config.apiRoute}/category/list`, {
-      headers: {
-        Authorization: config.token,
-      },
-    }),
-    axios.get(`${config.apiRoute}/city/list`, {
-      headers: {
-        Authorization: config.token,
-      },
-    }),
+    axios.get(`${config.apiRoute}category/list`),
+    axios.get(`${config.apiRoute}city/list`),
   ])
     .then((resArray) => {
       const [categoryList, cityList] = resArray;

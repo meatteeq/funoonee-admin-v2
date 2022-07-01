@@ -13,9 +13,12 @@ import { Upload as UploadIcon } from "../../../icons/upload";
 import { Plus as PlusIcon } from "../../../icons/plus";
 import { gtm } from "../../../lib/gtm";
 import axios from "axios";
-import config from "../../../config";
+import config, { NetworkClient } from "../../../config";
 import Cookies from "js-cookie";
-import { redirectFromServerSideTo } from "../../../../helper";
+import {
+  isUserAuthenticated,
+  redirectFromServerSideTo,
+} from "../../../../helper";
 const applyFilters = (products, filters) =>
   products.filter((product) => {
     if (filters.name) {
@@ -165,22 +168,11 @@ export async function getServerSideProps(ctx) {
   if (!ctx.req.cookies?.accessToken) {
     redirectFromServerSideTo(ctx, "/");
   }
+  isUserAuthenticated(ctx);
   const cityAndCategory = await Promise.all([
-    axios.get(`${config.apiRoute}/category/list`, {
-      headers: {
-        Authorization: config.token,
-      },
-    }),
-    axios.get(`${config.apiRoute}/city/list`, {
-      headers: {
-        Authorization: config.token,
-      },
-    }),
-    axios.get(`${config.apiRoute}product/list`, {
-      headers: {
-        Authorization: config.token,
-      },
-    }),
+    axios.get(`${config.apiRoute}category/list`),
+    axios.get(`${config.apiRoute}city/list`),
+    axios.get(`${config.apiRoute}product/list`),
   ])
     .then((resArray) => {
       const [categoryList, cityList, productList] = resArray;

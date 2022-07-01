@@ -50,8 +50,8 @@ const App = (props) => {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>Material Kit Pro</title>
-        <meta name='viewport' content='initial-scale=1, width=device-width' />
+        <title>Funnone</title>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ReduxProvider store={store}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -68,7 +68,7 @@ const App = (props) => {
                   >
                     <RTL direction={settings.direction}>
                       <CssBaseline />
-                      <Toaster position='top-center' />
+                      <Toaster position="top-center" />
                       <SettingsButton />
                       <AuthConsumer>
                         {(auth) =>

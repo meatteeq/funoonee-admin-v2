@@ -1,4 +1,6 @@
 import axios from "axios";
+import Cookies from "js-cookie";
+import cookies from "next-cookies";
 
 export const amplifyConfig = {
   aws_project_region: process.env.NEXT_PUBLIC_AWS_PROJECT_REGION,
@@ -27,16 +29,9 @@ export const firebaseConfig = {
 export const gtmConfig = {
   containerId: process.env.NEXT_PUBLIC_GTM_CONTAINER_ID,
 };
-const token =
-  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhNGZjOWUyMC1iMzU1LTQ5MDYtOTM5MS1lMzA1MWI5ODBjM2UiLCJlbWFpbCI6IndhbGVlZC51bWFyQGNvZGVuaW5qYWNvbnN1bHRpbmcuY29tIiwic2NvcGUiOlsiQURNSU4iXSwiaWF0IjoxNjU0MDA1MjAyLCJleHAiOjE2NTY1OTcyMDJ9.oYry7UjAlZSIYm8LhT0f-wAVIoFugb8uP0IpA4q8OG0";
 
 const config = {
-  token: token,
-
   apiRoute: "https://api.funoonee.com/",
-  CLOUDINARY_URL:
-    "https://api.cloudinary.com/v1_1/sherrycodeninjas/image/upload",
-  CLOUDINARY_UPLOAD_PRESET: "c84iijwi",
 };
 
 export default config;
@@ -44,8 +39,8 @@ export default config;
 export const NetworkClient = axios.create({
   baseURL: "https://api.funoonee.com/",
 });
-
+console.log(Cookies.get("accessToken"));
 NetworkClient.interceptors.request.use((config) => {
-  config.headers.Authorization = token;
+  config.headers.Authorization = Cookies.get("accessToken");
   return config;
 });
