@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Head from "next/head";
-import { redirectFromServerSideTo } from "../../../../helper";
+import {
+  isUserAuthenticated,
+  redirectFromServerSideTo,
+} from "../../../../helper";
 import {
   Box,
   Button,
@@ -15,7 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import VendorListTable from "../../../components/vendors/vendorsList";
-import config from "../../../config";
+import config, { NetworkClient } from "../../../config";
 import axios from "axios";
 import { customerApi } from "../../../__fake-api__/customer-api";
 import { AuthGuard } from "../../../components/authentication/auth-guard";
@@ -210,23 +213,23 @@ const VendorList = ({ data }) => {
         <title>Dashboard: Vendors List </title>
       </Head>
       <Box
-        component='main'
+        component="main"
         sx={{
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth='xl'>
+        <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
-            <Grid container justifyContent='space-between' spacing={3}>
+            <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant='h4'>Vendors</Typography>
+                <Typography variant="h4">Vendors</Typography>
               </Grid>
               <Grid item>
-                <Link href='/dashboard/vendors/new'>
+                <Link href="/dashboard/vendors/new">
                   <Button
-                    startIcon={<PlusIcon fontSize='small' />}
-                    variant='contained'
+                    startIcon={<PlusIcon fontSize="small" />}
+                    variant="contained"
                   >
                     Add
                   </Button>
@@ -246,7 +249,7 @@ const VendorList = ({ data }) => {
               }}
             >
               <Box
-                component='form'
+                component="form"
                 onSubmit={handleQueryChange}
                 sx={{
                   flexGrow: 1,
@@ -254,22 +257,22 @@ const VendorList = ({ data }) => {
                 }}
               >
                 <TextField
-                  defaultValue=''
+                  defaultValue=""
                   fullWidth
                   inputProps={{ ref: queryRef }}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position='start'>
-                        <SearchIcon fontSize='small' />
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
                       </InputAdornment>
                     ),
                   }}
-                  placeholder='Search Vendors'
+                  placeholder="Search Vendors"
                 />
               </Box>
               <TextField
-                label='Sort By'
-                name='sort'
+                label="Sort By"
+                name="sort"
                 onChange={handleSortChange}
                 select
                 SelectProps={{ native: true }}
@@ -300,15 +303,11 @@ const VendorList = ({ data }) => {
 
 VendorList.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 export async function getServerSideProps(ctx) {
-  // console.log(Cookies.get("accessToken"), "cookies");
   if (!ctx.req.cookies?.accessToken) {
     redirectFromServerSideTo(ctx, "/");
   }
-  const res = await axios.get(`${config.apiRoute}vendor/list`, {
-    headers: {
-      Authorization: config.token,
-    },
-  });
+  isUserAuthenticated(ctx);
+  const res = await axios.get(`${config.apiRoute}vendor/list`);
   // console.log(res.data);
   return {
     props: { data: res.data },

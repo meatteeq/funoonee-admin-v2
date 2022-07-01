@@ -2,7 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import { redirectFromServerSideTo } from "../../../../../helper";
+import {
+  isUserAuthenticated,
+  redirectFromServerSideTo,
+} from "../../../../../helper";
 
 import Head from "next/head";
 import { Avatar, Box, Chip, Container, Link, Typography } from "@mui/material";
@@ -15,7 +18,7 @@ import { useMounted } from "../../../../hooks/use-mounted";
 import { gtm } from "../../../../lib/gtm";
 import { getInitials } from "../../../../utils/get-initials";
 import axios from "axios";
-import config from "../../../../config";
+import config, { NetworkClient } from "../../../../config";
 import { VendorEditForm } from "../../../../components/vendors/vendorEditForm";
 
 const VendorEdit = ({ data }) => {
@@ -128,11 +131,8 @@ export async function getServerSideProps({ params: { vendoriId }, ...ctx }) {
   if (!ctx.req.cookies?.accessToken) {
     redirectFromServerSideTo(ctx, "/");
   }
-  const res = await axios.get(`${config.apiRoute}/vendor/${vendoriId}`, {
-    headers: {
-      Authorization: config.token,
-    },
-  });
+  isUserAuthenticated(ctx);
+  const res = await axios.get(`${config.apiRoute}vendor/${vendoriId}`, {});
   // console.log("single customer id", res.data);
   return {
     props: { data: res.data },

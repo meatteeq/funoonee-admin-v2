@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import axios from "axios";
-import config from "../../../config";
+import config, { NetworkClient } from "../../../config";
 import {
   RadioGroup,
   Box,
@@ -74,15 +74,7 @@ export const CustomerAddForm = () => {
       };
       try {
         // NOTE: Make API request
-        const res = await axios.post(
-          `${config.apiRoute}/admin/user/add`,
-          payload,
-          {
-            headers: {
-              Authorization: config.token,
-            },
-          }
-        );
+        const res = await NetworkClient.post(`admin/user/add`, payload);
 
         // console.log(res.data);
         toast.success("Customer created!");

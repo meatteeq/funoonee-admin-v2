@@ -8,11 +8,14 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { AuthGuard } from "../../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../../components/dashboard/dashboard-layout";
 import axios from "axios";
-import config from "../../../config";
+import config, { NetworkClient } from "../../../config";
 import { ProductEditForm } from "../../../components/dashboard/product/productEditForm";
 import { getInitials } from "../../../utils/get-initials";
 import Cookies from "js-cookie";
-import { redirectFromServerSideTo } from "../../../../helper";
+import {
+  isUserAuthenticated,
+  redirectFromServerSideTo,
+} from "../../../../helper";
 const ProductEdit = ({ data }) => {
   const { productData } = data;
 
@@ -26,26 +29,26 @@ const ProductEdit = ({ data }) => {
         <title>Dashboard: product Edit </title>
       </Head>
       <Box
-        component='main'
+        component="main"
         sx={{
           backgroundColor: "background.default",
           flexGrow: 1,
           py: 8,
         }}
       >
-        <Container maxWidth='md'>
+        <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
-            <NextLink href='/dashboard/products' passHref>
+            <NextLink href="/dashboard/products" passHref>
               <Link
-                color='textPrimary'
-                component='a'
+                color="textPrimary"
+                component="a"
                 sx={{
                   alignItems: "center",
                   display: "flex",
                 }}
               >
-                <ArrowBackIcon fontSize='small' sx={{ mr: 1 }} />
-                <Typography variant='subtitle2'>Product</Typography>
+                <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
+                <Typography variant="subtitle2">Product</Typography>
               </Link>
             </NextLink>
           </Box>
@@ -67,7 +70,7 @@ const ProductEdit = ({ data }) => {
               {getInitials(productData.name)}
             </Avatar>
             <div>
-              <Typography noWrap variant='h4'>
+              <Typography noWrap variant="h4">
                 {productData.email}
               </Typography>
               <Box
@@ -79,8 +82,8 @@ const ProductEdit = ({ data }) => {
                   whiteSpace: "nowrap",
                 }}
               >
-                <Typography variant='subtitle2'>user_id:</Typography>
-                <Chip label={productData.id} size='small' sx={{ ml: 1 }} />
+                <Typography variant="subtitle2">user_id:</Typography>
+                <Chip label={productData.id} size="small" sx={{ ml: 1 }} />
               </Box>
             </div>
           </Box>
@@ -98,22 +101,11 @@ export async function getServerSideProps({ params: { edit }, ...ctx }) {
   if (!ctx.req.cookies?.accessToken) {
     redirectFromServerSideTo(ctx, "/");
   }
+  isUserAuthenticated(ctx);
   const cityAndCategory = await Promise.all([
-    axios.get(`${config.apiRoute}/category/list`, {
-      headers: {
-        Authorization: config.token,
-      },
-    }),
-    axios.get(`${config.apiRoute}/city/list`, {
-      headers: {
-        Authorization: config.token,
-      },
-    }),
-    axios.get(`${config.apiRoute}/product/${edit}`, {
-      headers: {
-        Authorization: config.token,
-      },
-    }),
+    axios.get(`${config.apiRoute}category/list`),
+    axios.get(`${config.apiRoute}city/list`),
+    axios.get(`${config.apiRoute}product/${edit}`),
   ])
     .then((resArray) => {
       const [categoryList, cityList, product] = resArray;

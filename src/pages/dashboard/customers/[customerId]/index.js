@@ -15,7 +15,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import config from "../../../../config";
+import config, { NetworkClient } from "../../../../config";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { customerApi } from "../../../../__fake-api__/customer-api";
@@ -217,12 +217,7 @@ export async function getServerSideProps(ctx) {
   }
   try {
     const data = await axios.get(
-      `${config.apiRoute}admin/customer/${ctx.query.customerId}`,
-      {
-        headers: {
-          Authorization: config.token,
-        },
-      }
+      `${config.apiRoute}admin/customer/${ctx.query.customerId}`
     );
     return {
       props: { data: data.data },

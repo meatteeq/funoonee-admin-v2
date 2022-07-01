@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useDispatch } from "react-redux";
+import { login } from "../slices/chat";
 
 const Login = () => {
   const [error, setError] = useState(false);
@@ -46,10 +47,7 @@ const Login = () => {
           authSessionToken: authSessionToken,
         });
         Cookies.set("accessToken", `Bearer ${getToken.data.accessToken}`);
-        // console.log(Cookies.get("accessToken"));
-        localStorage.setItem("accessToken", getToken.data.accessToken);
         Router.push("/dashboard/customers");
-
         return getToken.data;
       } catch (error) {
         console.log(error);
@@ -62,41 +60,13 @@ const Login = () => {
     },
   });
 
-  const login = async (phoneNumber) => {
-    try {
-      const { data } = await axios.post(config.apiRoute + "admin/signin", {
-        phoneNumber,
-      });
-      // console.log(data, "data");
-
-      const { challengeChannel, authSessionToken } = data;
-      const getToken = await axios.post(config.apiRoute + "admin/signin", {
-        challenge: challengeChannel.toString(),
-        authSessionToken: authSessionToken,
-      });
-      // console.log(getToken.data.accessToken, "token data");
-      Cookies.set("accessToken", getToken.data.accessToken);
-      localStorage.setItem("accessToken", getToken.data.accessToken);
-      // Router.push("/dashboard/customers");
-
-      return getToken.data;
-    } catch (error) {
-      console.log(error);
-      if (error.response.status >= 400 && error.response.status < 500) {
-        setError(true);
-      } else if (error.response.status >= 500) {
-        setNetworkError(true);
-      }
-    }
-  };
-
   return (
     <>
       <Head>
         <title>Login | Material Kit</title>
       </Head>
       <Box
-        component='main'
+        component="main"
         sx={{
           alignItems: "center",
           display: "flex",
@@ -104,10 +74,10 @@ const Login = () => {
           minHeight: "100%",
         }}
       >
-        <Container maxWidth='sm'>
+        <Container maxWidth="sm">
           <form onSubmit={formik.handleSubmit}>
             <Box sx={{ my: 3 }}>
-              <Typography color='textPrimary' variant='h4'>
+              <Typography color="textPrimary" variant="h4">
                 Sign in
               </Typography>
             </Box>
@@ -118,7 +88,7 @@ const Login = () => {
                 pt: 3,
               }}
             >
-              <Typography align='center' color='textSecondary' variant='body1'>
+              <Typography align="center" color="textSecondary" variant="body1">
                 login with number
               </Typography>
             </Box>
@@ -130,14 +100,14 @@ const Login = () => {
               helperText={
                 formik.touched.phoneNumber && formik.errors.phoneNumber
               }
-              label='phoneNumber '
-              margin='normal'
-              name='phoneNumber'
+              label="phoneNumber "
+              margin="normal"
+              name="phoneNumber"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
-              type='phoneNumber'
+              type="phoneNumber"
               value={formik.values.phoneNumber}
-              variant='outlined'
+              variant="outlined"
               onFocus={() => {
                 setError(false);
                 setNetworkError(false);
@@ -150,12 +120,12 @@ const Login = () => {
             </p>
             <Box sx={{ py: 2 }}>
               <Button
-                color='primary'
+                color="primary"
                 disabled={formik.isSubmitting}
                 fullWidth
-                size='large'
-                type='submit'
-                variant='contained'
+                size="large"
+                type="submit"
+                variant="contained"
               >
                 Sign In Now
               </Button>

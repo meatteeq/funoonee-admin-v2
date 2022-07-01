@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import axios from "axios";
-import config from "../../config";
+import config, { NetworkClient } from "../../config";
 import {
   Box,
   Button,
@@ -98,15 +98,7 @@ export const VendorAddForm = ({ cityAndCategory }) => {
 
       try {
         // NOTE: Make API request
-        const res = await axios.post(
-          `${config.apiRoute}/vendor/registration`,
-          payload,
-          {
-            headers: {
-              Authorization: config.token,
-            },
-          }
-        );
+        const res = await NetworkClient.post(`vendor/registration`, payload);
 
         // console.log(res.data);
         toast.success("Vendor created!");

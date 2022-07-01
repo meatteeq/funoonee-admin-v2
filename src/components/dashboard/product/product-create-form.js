@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import axios from "axios";
-import config from "../../../config";
+import config, { NetworkClient } from "../../../config";
 import {
   getStorage,
   ref,
@@ -122,15 +122,7 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
       };
       try {
         // NOTE: Make API request
-        const res = await axios.post(
-          `${config.apiRoute}/product/add`,
-          payload,
-          {
-            headers: {
-              Authorization: config.token,
-            },
-          }
-        );
+        const res = await NetworkClient.post(`product/add`, payload);
 
         // console.log(res.data);
         toast.success("Product created!");
@@ -326,12 +318,6 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
                 type="number"
                 value={formik.values.special_price}
               />
-              <Box sx={{ mt: 2 }}>
-                <FormControlLabel
-                  control={<Switch />}
-                  label="isMultipleAllowed"
-                />
-              </Box>
             </Grid>
           </Grid>
         </CardContent>

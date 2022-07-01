@@ -77,10 +77,7 @@ export const CategoryEditForm = ({ category }) => {
       };
       try {
         // NOTE: Make API request
-        const res = await NetworkClient.put(
-          `${config.apiRoute}/category/${category.id}`,
-          payload
-        );
+        const res = await NetworkClient.put(`category/${category.id}`, payload);
 
         // console.log(res.data);
         toast.success("Category Updated!");
