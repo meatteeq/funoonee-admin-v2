@@ -3,78 +3,67 @@ import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import axios from "axios";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Stack from "@mui/material/Stack";
 import config, { NetworkClient } from "../../../config";
 import {
   Box,
   Button,
   Card,
   CardContent,
-  FormControlLabel,
-  FormHelperText,
   Grid,
-  MenuItem,
-  Switch,
   TextField,
-  InputLabel,
   Typography,
 } from "@mui/material";
-import Select from "react-select";
 
-import { FileDropzone } from "../../file-dropzone";
-// import { QuillEditor } from "../../quill-editor";
-
-export const CreateNewCityForm = ({ cityAndCategory }) => {
+export const CreateNewCityForm = () => {
+  const [errorMessage, setErrorMessage] = useState();
+  const [checkError, setCheckError] = useState(false);
   const router = useRouter();
+  const AlertData = (message) => {
+    console.log("message");
+    return (
+      <>
+        <Alert severity="error" onClose={() => {}}>
+          <AlertTitle>Error</AlertTitle>
+          {message}
+        </Alert>
+      </>
+    );
+  };
   const formik = useFormik({
     initialValues: {
       name: "",
+      ar_name: "",
 
       status: true,
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Email is required"),
+      name: Yup.string().required("Name is required"),
+      ar_name: Yup.string().required("Ar Name is required"),
     }),
     onSubmit: async (values, helpers) => {
       try {
         // NOTE: Make API request
         const res = await NetworkClient.post(`city/add`, values);
 
-        // console.log(res.data);
-        toast.success("City created!");
+        console.log(res.data);
+        toast.success(res.data.message);
         router.push("/dashboard/cities").catch(console.error);
       } catch (err) {
         console.error(err);
-        toast.error("Something went wrong!");
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
+        setErrors(err.message);
       }
     },
   });
 
-  const handleDrop = (newFiles) => {
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-  };
-
-  const handleRemove = (file) => {
-    setFiles((prevFiles) =>
-      prevFiles.filter((_file) => _file.path !== file.path)
-    );
-  };
-
-  const handleRemoveAll = () => {
-    setFiles([]);
-  };
-  // console.log(formik.values);
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card>
+        {checkError && <AlertData message={errorMessage} />}
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item md={4} xs={12}>
-              <Typography variant="h6">Basic details</Typography>
-            </Grid>
             <Grid item md={8} xs={12}>
               <TextField
                 error={Boolean(formik.touched.name && formik.errors.name)}
@@ -85,6 +74,18 @@ export const CreateNewCityForm = ({ cityAndCategory }) => {
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.name}
+              />
+            </Grid>
+            <Grid item md={8} xs={12}>
+              <TextField
+                error={Boolean(formik.touched.ar_name && formik.errors.ar_name)}
+                fullWidth
+                helperText={formik.touched.ar_name && formik.errors.ar_name}
+                label="City Ar Name"
+                name="ar_name"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.ar_name}
               />
             </Grid>
           </Grid>
@@ -104,23 +105,11 @@ export const CreateNewCityForm = ({ cityAndCategory }) => {
           mt: 3,
         }}
       >
-        {/* <Button
-          color="error"
-          sx={{
-            m: 1,
-            mr: "auto",
-          }}
-        >
-          Delete
-        </Button> */}
-        {/* <Button sx={{ m: 1 }} variant="outlined">
-          Cancel
-        </Button> */}
         <Button
           sx={{ m: 1 }}
           type="submit"
           variant="contained"
-          disabled={formik.isSubmitting}
+          disabled={!(formik.isValid && formik.dirty)}
         >
           Create
         </Button>

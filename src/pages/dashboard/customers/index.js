@@ -272,21 +272,6 @@ const CustomerList = ({ data }) => {
                   placeholder="Search customers"
                 />
               </Box>
-              <TextField
-                label="Sort By"
-                name="sort"
-                onChange={handleSortChange}
-                select
-                SelectProps={{ native: true }}
-                sx={{ m: 1.5 }}
-                value={sort}
-              >
-                {sortOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
             </Box>
             <CustomerListTable
               customers={paginatedCustomers}

@@ -1,16 +1,14 @@
 import { Fragment, useState } from "react";
 import numeral from "numeral";
 import PropTypes from "prop-types";
-import { toast } from "react-hot-toast";
+import { Modal8 } from "../../modal-8";
 import {
   Box,
   Button,
   CardContent,
   Divider,
+  Modal,
   Grid,
-  IconButton,
-  InputAdornment,
-  LinearProgress,
   MenuItem,
   Switch,
   Table,
@@ -18,6 +16,7 @@ import {
   Checkbox,
   TableBody,
   TableCell,
+  IconButton,
   TableHead,
   TablePagination,
   TableRow,
@@ -29,36 +28,9 @@ import { ChevronRight as ChevronRightIcon } from "../../../icons/chevron-right";
 import { DotsHorizontal as DotsHorizontalIcon } from "../../../icons/dots-horizontal";
 import { Image as ImageIcon } from "../../../icons/image";
 import { Scrollbar } from "../../scrollbar";
-import { SeverityPill } from "../../severity-pill";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
 import Link from "next/link";
-
-const categoryOptions = [
-  {
-    label: "Healthcare",
-    value: "healthcare",
-  },
-  {
-    label: "Makeup",
-    value: "makeup",
-  },
-  {
-    label: "Dress",
-    value: "dress",
-  },
-  {
-    label: "Skincare",
-    value: "skincare",
-  },
-  {
-    label: "Jewelry",
-    value: "jewelry",
-  },
-  {
-    label: "Blouse",
-    value: "blouse",
-  },
-];
 
 export const CategoriesListTable = (props) => {
   const {
@@ -76,18 +48,13 @@ export const CategoriesListTable = (props) => {
     setOpenProduct((prevValue) => (prevValue === productId ? null : productId));
   };
 
-  const handleUpdateProduct = () => {
-    setOpenProduct(null);
-    toast.success("Product updated");
+  const [open, setOpen] = useState(false);
+  const [id, setId] = useState("");
+  const handleOpen = (pId) => {
+    setId(pId);
+    setOpen(true);
   };
-
-  const handleCancelEdit = () => {
-    setOpenProduct(null);
-  };
-
-  const handleDeleteProduct = () => {
-    toast.error("Product cannot be deleted");
-  };
+  const handleClose = () => setOpen(false);
 
   return (
     <div {...other}>
@@ -98,7 +65,8 @@ export const CategoriesListTable = (props) => {
               <TableCell />
               <TableCell>Name</TableCell>
               <TableCell>Ar Name</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>Edit</TableCell>
+              <TableCell>Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -181,20 +149,21 @@ export const CategoriesListTable = (props) => {
                           <Typography variant="subtitle2">
                             {product.name}
                           </Typography>
-                          {/* <Typography color="textSecondary" variant="body2">
-                            in {product.category}
-                          </Typography> */}
                         </Box>
                       </Box>
                     </TableCell>
                     <TableCell width="25%">{product.arName}</TableCell>
-                    {/* <TableCell width="25%">{product.status}</TableCell> */}
 
-                    <TableCell>
+                    <TableCell width="10%">
                       <IconButton>
                         <Link href={`/dashboard/category/${product.id}`}>
                           <PencilAltIcon fontSize="small" />
                         </Link>
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleOpen(product.id)}>
+                        <DeleteOutlineIcon fontSize="small" />
                       </IconButton>
                     </TableCell>
                   </TableRow>
@@ -290,20 +259,6 @@ export const CategoriesListTable = (props) => {
                                     name="status"
                                   />
                                 </Grid>
-                                {/* <Grid
-                                  item
-                                  md={6}
-                                  xs={12}
-                                  sx={{
-                                    alignItems: "center",
-                                    display: "flex",
-                                  }}
-                                >
-                                  <Switch />
-                                  <Typography variant="subtitle2">
-                                    Keep selling when stock is empty
-                                  </Typography>
-                                </Grid> */}
                               </Grid>
                             </Grid>
                           </Grid>
@@ -316,33 +271,7 @@ export const CategoriesListTable = (props) => {
                             px: 2,
                             py: 1,
                           }}
-                        >
-                          {/* <Button
-                            onClick={handleUpdateProduct}
-                            sx={{ m: 1 }}
-                            type="submit"
-                            variant="contained"
-                          >
-                            Update
-                          </Button>
-                          <Button
-                            onClick={handleCancelEdit}
-                            sx={{ m: 1 }}
-                            variant="outlined"
-                          >
-                            Cancel
-                          </Button> */}
-                          {/* <Button
-                            onClick={handleDeleteProduct}
-                            color="error"
-                            sx={{
-                              m: 1,
-                              ml: "auto",
-                            }}
-                          >
-                            Delete product
-                          </Button> */}
-                        </Box>
+                        ></Box>
                       </TableCell>
                     </TableRow>
                   )}
@@ -352,6 +281,14 @@ export const CategoriesListTable = (props) => {
           </TableBody>
         </Table>
       </Scrollbar>
+      <Modal open={open} onClose={handleClose}>
+        <Modal8
+          close={handleClose}
+          id={id}
+          query={"category"}
+          page={"category"}
+        />
+      </Modal>
       <TablePagination
         component="div"
         count={productsCount}

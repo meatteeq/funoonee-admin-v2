@@ -28,14 +28,14 @@ import {
 } from "@mui/material";
 import { ChevronDown as ChevronDownIcon } from "../../../icons/chevron-down";
 import { ChevronRight as ChevronRightIcon } from "../../../icons/chevron-right";
-import { DotsHorizontal as DotsHorizontalIcon } from "../../../icons/dots-horizontal";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { Image as ImageIcon } from "../../../icons/image";
 import { Scrollbar } from "../../scrollbar";
 import { PencilAlt as PencilAltIcon } from "../../../icons/pencil-alt";
-
-import { SeverityPill } from "../../severity-pill";
+import Modal from "@mui/material/Modal";
 import Link from "next/link";
 import Select from "react-select";
+import { Modal8 } from "../../modal-8";
 export const ProductListTable = (props) => {
   const [city, selectCity] = useState();
 
@@ -56,32 +56,38 @@ export const ProductListTable = (props) => {
     ...other
   } = props;
   const [openProduct, setOpenProduct] = useState(null);
-  useEffect(() => {
-    const filteredData = cityData.filter((e) =>
-      getCitisAndCat?.city?.includes(e.id)
-    );
-    const cityFiltered =
-      filteredData &&
-      filteredData?.map(function (ser) {
-        return { value: ser.id, label: ser.name };
-      });
-    const filteredDataCat = catData.filter((e) =>
-      getCitisAndCat?.cat?.includes(e.id)
-    );
-    const catFiltered =
-      filteredDataCat &&
-      filteredDataCat?.map(function (ser) {
-        return { value: ser.id, label: ser.name };
-      });
+  // useEffect(() => {
+  //   const filterCity = cityData.filter((e) =>
+  //     getCitisAndCat?.city?.includes(e.id)
+  //   );
+  //   const cityFiltered =
+  //     filterCity &&
+  //     filterCity?.map(function (ser) {
+  //       return { value: ser.id, label: ser.name };
+  //     });
+  //   const filteredDataCat = catData.filter((e) =>
+  //     getCitisAndCat?.cat?.includes(e.id)
+  //   );
+  //   const catFiltered =
+  //     filteredDataCat &&
+  //     filteredDataCat?.map(function (ser) {
+  //       return { value: ser.id, label: ser.name };
+  //     });
+  //   console.log("dkjfklsdjfklsjdfseifsjfskljfiefisdkfjlk");
 
-    selectCity(cityFiltered);
-    selectCat(catFiltered);
-  }, [city, cat]);
+  //   selectCity(cityFiltered);
+  //   selectCat(catFiltered);
+  // }, [city, cat, cityData]);
   const handleOpenProduct = (productId, city, cat) => {
-    setGetCitisAndCat({ ...getCitisAndCat, city: city, cat: cat });
     setOpenProduct((prevValue) => (prevValue === productId ? null : productId));
   };
-
+  const [open, setOpen] = useState(false);
+  const [id, setId] = useState("");
+  const handleOpen = (pId) => {
+    setId(pId);
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
   return (
     <div>
       <Scrollbar>
@@ -93,8 +99,8 @@ export const ProductListTable = (props) => {
               <TableCell>Ar Name</TableCell>
               <TableCell>Price</TableCell>
               <TableCell>sku</TableCell>
-              <TableCell>Special Price</TableCell>
               <TableCell>Edit</TableCell>
+              <TableCell>Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -195,15 +201,18 @@ export const ProductListTable = (props) => {
                       )}
                     </TableCell>
                     <TableCell>{product.sku}</TableCell>
-                    <TableCell>
-                      {product.specialPrice ? product.specialPrice : 0}
-                    </TableCell>
+
                     <TableCell>
                       <Link href={`/dashboard/products/${product.id}`}>
                         <IconButton>
                           <PencilAltIcon fontSize="small" />
                         </IconButton>
                       </Link>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleOpen(product.id)}>
+                        <DeleteOutlineIcon fontSize="small" />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                   {open && (
@@ -327,7 +336,7 @@ export const ProductListTable = (props) => {
                                     type="number"
                                   />
                                 </Grid>
-                                <Grid item md={6} xs={12}>
+                                {/* <Grid item md={6} xs={12}>
                                   <Typography variant="h7">Category</Typography>
                                   <Select
                                     labelId="demo-simple-select-label"
@@ -338,8 +347,8 @@ export const ProductListTable = (props) => {
                                     label=" Category"
                                     // onChange={(selectCat) => setCat(selectCat)}
                                   />
-                                </Grid>
-                                <Grid item md={6} xs={12}>
+                                </Grid> */}
+                                {/* <Grid item md={6} xs={12}>
                                   <Typography variant="h7">City</Typography>
 
                                   <Select
@@ -352,7 +361,7 @@ export const ProductListTable = (props) => {
                                     label=" Category"
                                     // onChange={(selectCat) => setCat(selectCat)}
                                   />
-                                </Grid>
+                                </Grid> */}
                                 <Grid item md={6} xs={12}>
                                   <FormControlLabel
                                     control={
@@ -409,6 +418,14 @@ export const ProductListTable = (props) => {
             })}
           </TableBody>
         </Table>
+        <Modal open={open} onClose={handleClose}>
+          <Modal8
+            close={handleClose}
+            id={id}
+            query={"product"}
+            page={"products"}
+          />
+        </Modal>
       </Scrollbar>
       <TablePagination
         component="div"

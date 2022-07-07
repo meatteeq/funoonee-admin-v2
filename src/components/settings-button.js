@@ -32,10 +32,10 @@ export const SettingsButton = () => {
           <AdjustmentsIcon fontSize="small" />
         </Fab>
       </Tooltip>
-      <SettingsDrawer
+      {/* <SettingsDrawer
         onClose={handleClose}
         open={open}
-      />
+      /> */}
     </>
   );
 };
