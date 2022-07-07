@@ -54,8 +54,8 @@ export const VendorAddForm = ({ cityAndCategory }) => {
   useEffect(async () => {
     if (city && cat) {
       try {
-        const res = await axios.get(
-          `${config.apiRoute}/category/products/${cat.value}&${city.value}`
+        const res = await NetworkClient.get(
+          `category/products/${cat.value}&${city.value}`
         );
         setServicesData(res.data);
         // console.log(res.data);

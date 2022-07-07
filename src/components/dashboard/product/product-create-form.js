@@ -15,6 +15,8 @@ import {
 import firebase from "../../../../Firebase";
 import {
   Box,
+  Snackbar,
+  Alert,
   Button,
   Card,
   FormControlLabel,
@@ -27,6 +29,7 @@ import {
   CardContent,
 } from "@mui/material";
 import Select from "react-select";
+import * as Yup from "yup";
 
 import { FileDropzone } from "../../file-dropzone";
 
@@ -48,6 +51,9 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
   const [percent, setPercent] = useState(0);
   const [imageUrl, setImageUrl] = useState();
   const router = useRouter();
+  const [isJustSaved, setIsJustSaved] = useState(false);
+  const [hasServerError, setHasServerError] = useState(false);
+  const [serverErrorMessage, setServerErrorMessage] = useState("");
   const catOptions =
     categoryData &&
     categoryData?.map(function (ser) {
@@ -112,6 +118,10 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
       status: true,
       isFeatured: false,
     },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Name is required"),
+      ar_name: Yup.string().required("Ar Name is required"),
+    }),
 
     onSubmit: async (values, helpers) => {
       const payload = {
@@ -124,18 +134,23 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
         // NOTE: Make API request
         const res = await NetworkClient.post(`product/add`, payload);
 
-        // console.log(res.data);
-        toast.success("Product created!");
+        setIsJustSaved(true);
         router.push("/dashboard/products").catch(console.error);
-      } catch (err) {
-        console.error(err);
-        toast.error("Something went wrong!");
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
+      } catch (error) {
+        console.log(error);
+
+        setHasServerError(true);
+        setServerErrorMessage(error.response.data.message);
+        if (error.message) {
+          formikHelpers.setErrors(camelcaseKeys(error.message));
+        }
       }
     },
   });
+  const clearErrorState = () => {
+    setHasServerError(false);
+    setServerErrorMessage("");
+  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -152,19 +167,11 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
                     onDrop={handleDropSingleFile}
                   />
                   <Card style={style.percentageCard}>{percent}%</Card>
-
-                  {/* <DropzoneArea
-                    file={file}
-                    onDrop={handleDropSingleFile}
-                    name="image"
-                    accept="image/*"
-                    value={formik.values.file}
-                  /> */}
                 </CardContent>
               </Card>
             </Grid>
             <Grid item md={4} xs={12}>
-              <Typography variant="h6">Basic detssails</Typography>
+              <Typography variant="h6">Basic details</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField
@@ -366,27 +373,33 @@ export const ProductCreateForm = ({ cityAndCategory }) => {
           mt: 3,
         }}
       >
-        {/* <Button
-          color="error"
-          sx={{
-            m: 1,
-            mr: "auto",
-          }}
-        >
-          Delete
-        </Button> */}
-        <Button sx={{ m: 1 }} variant="outlined">
-          Cancel
-        </Button>
         <Button
           sx={{ m: 1 }}
           type="submit"
           variant="contained"
-          disabled={formik.isSubmitting}
+          disabled={!(formik.isValid && formik.dirty)}
         >
           Create
         </Button>
       </Box>
+      <Snackbar
+        open={isJustSaved}
+        autoHideDuration={6000}
+        onClose={() => setIsJustSaved(false)}
+      >
+        <Alert onClose={() => setIsJustSaved(false)} severity="success">
+          Product is successfully saved.
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={hasServerError}
+        autoHideDuration={6000}
+        onClose={() => clearErrorState()}
+      >
+        <Alert onClose={() => clearErrorState()} severity="error">
+          Error: {serverErrorMessage}
+        </Alert>
+      </Snackbar>
     </form>
   );
 };

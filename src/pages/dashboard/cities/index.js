@@ -134,7 +134,7 @@ const Categories = ({ data }) => {
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
-              products={paginatedProducts}
+              cities={paginatedProducts}
               productsCount={filteredProducts.length}
               rowsPerPage={rowsPerPage}
             />

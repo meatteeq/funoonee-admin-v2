@@ -34,16 +34,13 @@ const ProductCreate = ({ data }) => {
           <Box sx={{ mb: 3 }}>
             <Typography variant="h4">Create a new product</Typography>
             <Breadcrumbs separator="/" sx={{ mt: 1 }}>
-              <NextLink href="/dashboard" passHref>
-                <Link variant="subtitle2">Dashboard</Link>
-              </NextLink>
-              <NextLink href="/dashboard" passHref>
+              <NextLink href="/dashboard/products" passHref>
                 <Link color="primary" variant="subtitle2">
-                  Management
-                </Link>
+                  Products
+                </Link>  
               </NextLink>
               <Typography color="textSecondary" variant="subtitle2">
-                Products
+                New Product
               </Typography>
             </Breadcrumbs>
           </Box>
