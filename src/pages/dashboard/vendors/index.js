@@ -307,10 +307,11 @@ export async function getServerSideProps(ctx) {
     redirectFromServerSideTo(ctx, "/");
   }
   isUserAuthenticated(ctx);
-  const res = await axios.get(`${config.apiRoute}vendor/list`);
-  // console.log(res.data);
+  try {
+    var res = await axios.get(`${config.apiRoute}vendor/list`);
+  } catch (e) {}
   return {
-    props: { data: res.data },
+    props: { data: res?.data || [] },
   };
 }
 

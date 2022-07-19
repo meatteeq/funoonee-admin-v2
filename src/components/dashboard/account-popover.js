@@ -1,7 +1,7 @@
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import PropTypes from 'prop-types';
-import toast from 'react-hot-toast';
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import PropTypes from "prop-types";
+import toast from "react-hot-toast";
 import {
   Avatar,
   Box,
@@ -10,33 +10,31 @@ import {
   ListItemText,
   MenuItem,
   Popover,
-  Typography
-} from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { useAuth } from '../../hooks/use-auth';
-import { Cog as CogIcon } from '../../icons/cog';
-import { UserCircle as UserCircleIcon } from '../../icons/user-circle';
-import { SwitchHorizontalOutlined as SwitchHorizontalOutlinedIcon } from '../../icons/switch-horizontal-outlined';
+  Typography,
+} from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useAuth } from "../../hooks/use-auth";
+import { Cog as CogIcon } from "../../icons/cog";
+import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
 
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
   const router = useRouter();
   const { logout } = useAuth();
-  // To get the user from the authContext, you can use
-  // `const { user } = useAuth();`
+
   const user = {
-    avatar: '/static/mock-images/avatars/avatar-anika_visser.png',
-    name: 'Anika Visser'
+    avatar: "/static/mock-images/avatars/avatar-anika_visser.png",
+    name: "Anika Visser",
   };
 
   const handleLogout = async () => {
     try {
       onClose?.();
       await logout();
-      router.push('/').catch(console.error);
+      router.push("/").catch(console.error);
     } catch (err) {
       console.error(err);
-      toast.error('Unable to logout.');
+      toast.error("Unable to logout.");
     }
   };
 
@@ -44,67 +42,56 @@ export const AccountPopover = (props) => {
     <Popover
       anchorEl={anchorEl}
       anchorOrigin={{
-        horizontal: 'center',
-        vertical: 'bottom'
+        horizontal: "center",
+        vertical: "bottom",
       }}
       keepMounted
       onClose={onClose}
       open={!!open}
       PaperProps={{ sx: { width: 300 } }}
       transitionDuration={0}
-      {...other}>
+      {...other}
+    >
       <Box
         sx={{
-          alignItems: 'center',
+          alignItems: "center",
           p: 2,
-          display: 'flex'
+          display: "flex",
         }}
       >
         <Avatar
           src={user.avatar}
           sx={{
             height: 40,
-            width: 40
+            width: 40,
           }}
         >
           <UserCircleIcon fontSize="small" />
         </Avatar>
         <Box
           sx={{
-            ml: 1
+            ml: 1,
           }}
         >
-          <Typography variant="body1">
-            {user.name}
-          </Typography>
-          <Typography
-            color="textSecondary"
-            variant="body2"
-          >
+          <Typography variant="body1">{user.name}</Typography>
+          <Typography color="textSecondary" variant="body2">
             Acme Inc
           </Typography>
         </Box>
       </Box>
       <Divider />
       <Box sx={{ my: 1 }}>
-        <NextLink
-          href="/dashboard/social/profile"
-          passHref
-        >
+        {/* <NextLink href="/dashboard/social/profile" passHref>
           <MenuItem component="a">
             <ListItemIcon>
               <UserCircleIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText
-              primary={(
-                <Typography variant="body1">
-                  Profile
-                </Typography>
-              )}
+              primary={<Typography variant="body1">Profile</Typography>}
             />
           </MenuItem>
-        </NextLink>
-        <NextLink
+        </NextLink> */}
+        {/* <NextLink
           href="/dashboard/account"
           passHref
         >
@@ -120,8 +107,8 @@ export const AccountPopover = (props) => {
               )}
             />
           </MenuItem>
-        </NextLink>
-        <NextLink
+        </NextLink> */}
+        {/* <NextLink
           href="/dashboard"
           passHref
         >
@@ -137,18 +124,14 @@ export const AccountPopover = (props) => {
               )}
             />
           </MenuItem>
-        </NextLink>
+        </NextLink> */}
         <Divider />
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <LogoutIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText
-            primary={(
-              <Typography variant="body1">
-                Logout
-              </Typography>
-            )}
+            primary={<Typography variant="body1">Logouts</Typography>}
           />
         </MenuItem>
       </Box>
@@ -159,5 +142,5 @@ export const AccountPopover = (props) => {
 AccountPopover.propTypes = {
   anchorEl: PropTypes.any,
   onClose: PropTypes.func,
-  open: PropTypes.bool
+  open: PropTypes.bool,
 };

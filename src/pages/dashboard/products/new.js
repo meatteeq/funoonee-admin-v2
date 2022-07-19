@@ -37,7 +37,7 @@ const ProductCreate = ({ data }) => {
               <NextLink href="/dashboard/products" passHref>
                 <Link color="primary" variant="subtitle2">
                   Products
-                </Link>  
+                </Link>
               </NextLink>
               <Typography color="textSecondary" variant="subtitle2">
                 New Product
@@ -74,7 +74,7 @@ export async function getServerSideProps(ctx) {
     });
   return {
     props: {
-      data: cityAndCategory,
+      data: cityAndCategory || [],
     },
   };
 }

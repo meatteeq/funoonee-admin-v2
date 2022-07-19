@@ -1,7 +1,7 @@
 import axios from "axios";
 import cookies from "next-cookies";
-export function redirectFromServerSideTo(ctx, path) {
-  ctx?.res?.writeHead(302, { Location: path });
+export function redirectFromServerSideTo(status, ctx, path) {
+  ctx?.res?.writeHead(status, { Location: path });
   ctx?.res?.end();
   return { props: {} };
 }

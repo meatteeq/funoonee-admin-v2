@@ -46,7 +46,10 @@ const Login = () => {
           challenge: challengeChannel.toString(),
           authSessionToken: authSessionToken,
         });
+        console.log(getToken);
         Cookies.set("accessToken", `Bearer ${getToken.data.accessToken}`);
+        Cookies.set("role", getToken.data?.roles[0]);
+
         Router.push("/dashboard/customers");
         return getToken.data;
       } catch (error) {

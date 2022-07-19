@@ -34,6 +34,8 @@ import {
   redirectFromServerSideTo,
 } from "../../../../helper";
 import { store } from "../../../store";
+import toast from "react-hot-toast";
+import Router from "next/router";
 
 const tabs = [
   {
@@ -291,19 +293,19 @@ const CustomerList = ({ data }) => {
 CustomerList.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 export async function getServerSideProps(ctx) {
   if (!ctx.req.cookies?.accessToken) {
-    redirectFromServerSideTo(ctx, "/");
+    redirectFromServerSideTo(302, ctx, "/");
   }
-  console.log("ctx", ctx.req.cookies?.accessToken);
+  if (ctx.req.cookies?.role !== "ADMIN") {
+    redirectFromServerSideTo(403, ctx, "/");
+  }
   isUserAuthenticated(ctx);
+
   try {
-    var { data } = await axios.get(`${config.apiRoute}admin/customers/list`);
-  } catch (error) {
-    console.log("error if tge", error);
+    var res = await axios.get(`${config.apiRoute}admin/customers/list`);
+  } catch (err) {
+    // console.log("", err);
   }
-  // console.log(res.data);
-  return {
-    props: { data: data },
-  };
+  return { props: { data: res?.data || [] } };
 }
 
 export default CustomerList;

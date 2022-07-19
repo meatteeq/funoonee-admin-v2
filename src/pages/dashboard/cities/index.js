@@ -155,10 +155,12 @@ export async function getServerSideProps(ctx) {
     redirectFromServerSideTo(ctx, "/");
   }
   isUserAuthenticated(ctx);
-  const res = await axios.get(`${config.apiRoute}city/list`);
+  try {
+    var res = await axios.get(`${config.apiRoute}city/list`);
+  } catch (error) {}
   // console.log(res.data);
   return {
-    props: { data: res.data },
+    props: { data: res?.data || [] },
   };
 }
 export default Categories;

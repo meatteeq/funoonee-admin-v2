@@ -104,7 +104,7 @@ export async function getServerSideProps({ params: { edit }, ...ctx }) {
   isUserAuthenticated(ctx);
   const res = await axios.get(`${config.apiRoute}category/${edit}`);
   return {
-    props: { data: res.data },
+    props: { data: res.data || [] },
   };
 }
 export default CategoryEdit;
