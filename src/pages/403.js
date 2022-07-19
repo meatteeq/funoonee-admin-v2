@@ -12,7 +12,7 @@ import { useTheme } from "@mui/material/styles";
 import { gtm } from "../lib/gtm";
 import toast from "react-hot-toast";
 
-const AuthorizationRequireds = () => {
+const AuthorizationRequired = () => {
   const theme = useTheme();
   const mobileDevice = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -37,7 +37,7 @@ const AuthorizationRequireds = () => {
       >
         <Container maxWidth="lg">
           <Typography align="center" variant={mobileDevice ? "h4" : "h1"}>
-            401: Authorization required
+            403: Authorization required
           </Typography>
           <Typography
             align="center"
@@ -46,7 +46,7 @@ const AuthorizationRequireds = () => {
             variant="subtitle2"
           >
             You either tried some shady route or you came here by mistake.
-            Whichever it is, try using the navigation.
+            Whichever it is, You are not allowed to visit this page.
           </Typography>
           <Box
             sx={{
@@ -85,4 +85,4 @@ const AuthorizationRequireds = () => {
   );
 };
 
-export default AuthorizationRequireds;
+export default AuthorizationRequired;

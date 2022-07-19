@@ -3,6 +3,8 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import LogoutIcon from "@mui/icons-material/Logout";
+
 import {
   Box,
   Button,
@@ -54,6 +56,11 @@ const getSections = (t) => [
         title: t("Cities"),
         icon: <LocationCityIcon fontSize="small" />,
         path: "/dashboard/cities",
+      },
+      {
+        title: t("LogOut"),
+        icon: <LogoutIcon fontSize="small" />,
+        path: "/",
       },
     ],
   },

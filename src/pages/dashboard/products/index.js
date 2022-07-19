@@ -20,7 +20,7 @@ import {
   redirectFromServerSideTo,
 } from "../../../../helper";
 const applyFilters = (products, filters) =>
-  products.filter((product) => {
+  products?.filter((product) => {
     if (filters.name) {
       const nameMatched = product.name
         .toLowerCase()
@@ -49,20 +49,11 @@ const applyFilters = (products, filters) =>
       }
     }
 
-    // Present only if filter required
-    if (typeof filters.inStock !== "undefined") {
-      const stockMatched = product.inStock === filters.inStock;
-
-      if (!stockMatched) {
-        return false;
-      }
-    }
-
     return true;
   });
 
 const applyPagination = (products, page, rowsPerPage) =>
-  products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  products?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
 const ProductList = ({ data }) => {
   console.log(data);
@@ -151,7 +142,7 @@ const ProductList = ({ data }) => {
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
               products={paginatedProducts}
-              productsCount={filteredProducts.length}
+              productsCount={filteredProducts?.length}
               rowsPerPage={rowsPerPage}
               catData={categoryData}
               cityData={cityData}
@@ -183,13 +174,10 @@ export async function getServerSideProps(ctx) {
       };
       return data;
     })
-    .catch((e) => {
-      console.log(e);
-    });
+    .catch((e) => {});
 
-  // console.log(res.data);
   return {
-    props: { data: cityAndCategory },
+    props: { data: cityAndCategory || [] },
   };
 }
 

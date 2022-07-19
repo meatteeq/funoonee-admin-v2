@@ -104,7 +104,7 @@ export const ProductListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((product) => {
+            {products?.map((product) => {
               const open = product.id === openProduct;
 
               return (

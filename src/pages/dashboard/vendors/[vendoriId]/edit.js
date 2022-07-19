@@ -135,7 +135,7 @@ export async function getServerSideProps({ params: { vendoriId }, ...ctx }) {
   const res = await axios.get(`${config.apiRoute}vendor/${vendoriId}`, {});
   // console.log("single customer id", res.data);
   return {
-    props: { data: res.data },
+    props: { data: res.data || "" },
   };
 }
 export default VendorEdit;

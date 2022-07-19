@@ -323,7 +323,7 @@ export async function getServerSideProps(ctx) {
     console.log(error);
   }
   return {
-    props: { data: data },
+    props: { data: data || [] },
   };
 }
 

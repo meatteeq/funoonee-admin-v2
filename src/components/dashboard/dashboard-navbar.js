@@ -70,7 +70,7 @@ const LanguageButton = () => {
             },
           }}
         >
-          <img alt='' src={languages[i18n.language]} />
+          <img alt="" src={languages[i18n.language]} />
         </Box>
       </IconButton>
       <LanguagePopover
@@ -95,9 +95,9 @@ const ContentSearchButton = () => {
 
   return (
     <>
-      <Tooltip title='Search'>
+      <Tooltip title="Search">
         <IconButton onClick={handleOpenSearchDialog} sx={{ ml: 1 }}>
-          <SearchIcon fontSize='small' />
+          <SearchIcon fontSize="small" />
         </IconButton>
       </Tooltip>
       <ContentSearchDialog
@@ -122,9 +122,9 @@ const ContactsButton = () => {
 
   return (
     <>
-      <Tooltip title='Contacts'>
+      <Tooltip title="Contacts">
         <IconButton onClick={handleOpenPopover} sx={{ ml: 1 }} ref={anchorRef}>
-          <UsersIcon fontSize='small' />
+          <UsersIcon fontSize="small" />
         </IconButton>
       </Tooltip>
       <ContactsPopover
@@ -157,10 +157,10 @@ const NotificationsButton = () => {
 
   return (
     <>
-      <Tooltip title='Notifications'>
+      <Tooltip title="Notifications">
         <IconButton ref={anchorRef} sx={{ ml: 1 }} onClick={handleOpenPopover}>
-          <Badge color='error' badgeContent={unread}>
-            <BellIcon fontSize='small' />
+          <Badge color="error" badgeContent={unread}>
+            <BellIcon fontSize="small" />
           </Badge>
         </IconButton>
       </Tooltip>
@@ -194,7 +194,7 @@ const AccountButton = () => {
 
   return (
     <>
-      <Box
+      {/* <Box
         component={ButtonBase}
         onClick={handleOpenPopover}
         ref={anchorRef}
@@ -211,14 +211,14 @@ const AccountButton = () => {
           }}
           src={user.avatar}
         >
-          <UserCircleIcon fontSize='small' />
+          <UserCircleIcon fontSize="small" />
         </Avatar>
       </Box>
       <AccountPopover
         anchorEl={anchorRef.current}
         onClose={handleClosePopover}
         open={openPopover}
-      />
+      /> */}
     </>
   );
 };
@@ -256,14 +256,14 @@ export const DashboardNavbar = (props) => {
               },
             }}
           >
-            <MenuIcon fontSize='small' />
+            <MenuIcon fontSize="small" />
           </IconButton>
-          {/* <Box sx={{ flexGrow: 1 }} />
-          <LanguageButton />
+          <Box sx={{ flexGrow: 1 }} />
+          {/* <LanguageButton />
           <ContentSearchButton />
           <ContactsButton />
-          <NotificationsButton />
-          <AccountButton /> */}
+          <NotificationsButton /> */}
+          <AccountButton />
         </Toolbar>
       </DashboardNavbarRoot>
     </>
